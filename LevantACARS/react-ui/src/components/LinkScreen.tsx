@@ -85,7 +85,7 @@ export default function LinkScreen({ auth, connection: _connection }: Props) {
           <div className="flex items-center gap-4">
             <Badge label="SSO" />
             <Badge label="Zero-Password" />
-            <Badge label="Device Code" />
+            <Badge label="OTP" />
           </div>
 
           {/* Login Button or Device Code */}
@@ -113,7 +113,7 @@ export default function LinkScreen({ auth, connection: _connection }: Props) {
           )}
 
           <p className="text-xs text-gray-600 text-center leading-relaxed">
-            A unique code will be generated for you to authorize<br />this device through the Levant Crew Center.
+            A unique OTP will be generated for you to authorize<br />this device through the Levant Crew Center.
           </p>
         </div>
       </div>
