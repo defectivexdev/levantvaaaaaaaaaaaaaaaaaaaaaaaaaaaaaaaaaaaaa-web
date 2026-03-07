@@ -26,7 +26,7 @@
                   Execute="deferred" 
                   Impersonate="no"
                   Return="ignore"
-                  ExeCommand='powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "try { Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?LinkId=2124703 -OutFile \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\" -UseBasicParsing; Start-Process -FilePath \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\" -ArgumentList \"/silent\",\"/install\" -Wait } catch { exit 0 }"' />
+                  ExeCommand='powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -Command "try { Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?LinkId=2124703 -OutFile \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\" -UseBasicParsing; Start-Process -FilePath \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\" -ArgumentList \"/silent\",\"/install\" -Wait -WindowStyle Hidden } catch { exit 0 }"' />
     
     <InstallExecuteSequence>
       <Custom Action="DownloadWebView2" Before="InstallFinalize">NOT WEBVIEW2INSTALLED AND NOT REMOVE</Custom>
