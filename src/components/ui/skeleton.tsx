@@ -1,0 +1,20 @@
+/**
+ * Skeleton Loading Components
+ * Enterprise-grade loading states for dashboards
+ */
+
+import { cn } from "@/lib/utils"
+
+function Skeleton({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn("animate-pulse rounded-md bg-white/[0.05]", className)}
+      {...props}
+    />
+  )
+}
+
+export { Skeleton }
