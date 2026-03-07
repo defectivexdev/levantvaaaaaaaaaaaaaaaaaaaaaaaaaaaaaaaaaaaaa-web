@@ -2,14 +2,38 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="*"
            Name="Levant ACARS"
-           Version="1.5.6"
+           Version="1.5.8"
            Manufacturer="Levant Virtual Airlines"
            UpgradeCode="B7E3F2A1-4C5D-4E6F-8A9B-1C2D3E4F5A6B"
            Language="1033">
 
-    <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" />
-    <MediaTemplate EmbedCab="yes" />
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" 
+             Description="Levant VA ACARS - Flight Tracking and PIREP Submission Client"
+             Comments="Professional ACARS client for Levant Virtual Airlines pilots"
+             Manufacturer="Levant Virtual Airlines" />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed. Please uninstall it first."
+                  AllowSameVersionUpgrades="yes" />
+    
+    <!-- UI Configuration -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <UIRef Id="WixUI_InstallDir" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+    
+    <!-- License Agreement -->
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    
+    <!-- Custom branding -->
+    <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
+    
+    <!-- Add/Remove Programs properties -->
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPURLINFOABOUT" Value="https://levant-va.com" />
+    <Property Id="ARPHELPLINK" Value="https://levant-va.com/support" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+    <Icon Id="AppIcon" SourceFile="..\LevantACARS\Assets\logo.png" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="LocalAppDataFolder">
@@ -23,10 +47,19 @@
       </Directory>
     </Directory>
 
-    <Feature Id="Main" Title="Levant ACARS" Level="1">
+    <Feature Id="Main" Title="Levant ACARS" Level="1" 
+             Description="Core ACARS application and required files" 
+             Display="expand" ConfigurableDirectory="INSTALLDIR">
       <ComponentGroupRef Id="PublishedFiles" />
       <ComponentRef Id="DesktopShortcut" />
       <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="UninstallShortcut" />
+      <ComponentRef Id="RegistryEntries" />
+    </Feature>
+    
+    <Feature Id="BridgeFiles" Title="Bridge Configuration" Level="1"
+             Description="FSUIPC and XPUIPC configuration files for simulator integration">
+      <ComponentRef Id="BridgeComponent" />
     </Feature>
 
     <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="C1A2B3D4-E5F6-7890-ABCD-EF1234567890">
@@ -47,11 +80,48 @@
                 Name="Levant ACARS"
                 Description="Levant VA Flight Tracking Client"
                 Target="[INSTALLDIR]LevantACARS.exe"
-                WorkingDirectory="INSTALLDIR" />
+                WorkingDirectory="INSTALLDIR"
+                Icon="AppIcon" />
       <RemoveFolder Id="CleanStartMenu" On="uninstall" />
       <RegistryValue Root="HKCU"
                      Key="Software\LevantVA\ACARS"
                      Name="StartMenuShortcut"
+                     Type="integer" Value="1"
+                     KeyPath="yes" />
+    </Component>
+    
+    <Component Id="UninstallShortcut" Directory="ApplicationProgramsFolder" Guid="E3C4D5F6-A7B8-9012-CDEF-123456789ABC">
+      <Shortcut Id="UninstallLink"
+                Name="Uninstall Levant ACARS"
+                Description="Uninstall Levant ACARS"
+                Target="[SystemFolder]msiexec.exe"
+                Arguments="/x [ProductCode]" />
+      <RemoveFolder Id="CleanStartMenu2" Directory="ApplicationProgramsFolder" On="uninstall" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\LevantVA\ACARS"
+                     Name="UninstallShortcut"
+                     Type="integer" Value="1"
+                     KeyPath="yes" />
+    </Component>
+    
+    <Component Id="RegistryEntries" Directory="INSTALLDIR" Guid="F4D5E6A7-B8C9-0123-DEFG-234567890BCD">
+      <RegistryKey Root="HKCU" Key="Software\LevantVA\ACARS">
+        <RegistryValue Name="InstallPath" Type="string" Value="[INSTALLDIR]" />
+        <RegistryValue Name="Version" Type="string" Value="1.5.8" />
+        <RegistryValue Name="InstallDate" Type="string" Value="[Date]" />
+      </RegistryKey>
+      <RegistryValue Root="HKCU"
+                     Key="Software\LevantVA\ACARS"
+                     Name="Installed"
+                     Type="integer" Value="1"
+                     KeyPath="yes" />
+    </Component>
+    
+    <Component Id="BridgeComponent" Directory="INSTALLDIR" Guid="A5B6C7D8-E9F0-1234-5678-9ABCDEF01234">
+      <CreateFolder Directory="INSTALLDIR" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\LevantVA\ACARS"
+                     Name="BridgeInstalled"
                      Type="integer" Value="1"
                      KeyPath="yes" />
     </Component>
