@@ -53,9 +53,9 @@ function FollowAircraft({ lat, lon, follow }: { lat: number; lon: number; follow
 
   useEffect(() => {
     if (!follow || lat === 0 || lon === 0) return;
-    // Only pan if position actually changed (avoid jitter)
-    if (Math.abs(lat - prevPos.current[0]) > 0.0001 || Math.abs(lon - prevPos.current[1]) > 0.0001) {
-      map.panTo([lat, lon], { animate: true, duration: 1.0 });
+    // Only pan if position changed significantly (reduce GPU strain)
+    if (Math.abs(lat - prevPos.current[0]) > 0.001 || Math.abs(lon - prevPos.current[1]) > 0.001) {
+      map.panTo([lat, lon], { animate: false }); // Disable animation to reduce GPU load
       prevPos.current = [lat, lon];
     }
   }, [lat, lon, follow, map]);
@@ -105,7 +105,7 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
   const [followAircraft, setFollowAircraft] = useState(true);
   const [trail, setTrail] = useState<TrailPoint[]>([]);
   const [showTrail, setShowTrail] = useState(true);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   // ── 15-second buffered position update ────────────────────────
   const latestTelemetryRef = useRef(telemetry);

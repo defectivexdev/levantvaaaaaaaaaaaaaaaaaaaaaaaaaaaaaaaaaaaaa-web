@@ -1,29 +1,16 @@
-import { useEffect, useRef } from 'react';
-import { motion, useMotionTemplate, useMotionValue, animate } from 'motion/react';
 import { cn } from './utils';
 
-const BEAM_COLORS = ['#C5A059', '#2DCE89', '#C5A059'];
-
+// Disabled continuous animations to prevent Vulkan device loss in X-Plane
+// Static background only to reduce GPU strain
 export function BackgroundBeams({ className, children }: { className?: string; children?: React.ReactNode }) {
-  const color = useMotionValue(BEAM_COLORS[0]);
-  const bg = useMotionTemplate`radial-gradient(ellipse 80% 50% at 50% -20%, ${color}08 0%, transparent 60%)`;
-  const idxRef = useRef(0);
-
-  useEffect(() => {
-    const step = () => {
-      idxRef.current = (idxRef.current + 1) % BEAM_COLORS.length;
-      animate(color, BEAM_COLORS[idxRef.current], { duration: 6, ease: 'easeInOut' });
-    };
-    step();
-    const iv = setInterval(step, 6000);
-    return () => clearInterval(iv);
-  }, [color]);
-
   return (
     <div className={cn('relative overflow-hidden', className)}>
-      <motion.div
+      {/* Static gradient background - no animation */}
+      <div 
         className="pointer-events-none absolute inset-0 z-0"
-        style={{ background: bg }}
+        style={{ 
+          background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(197, 160, 89, 0.03) 0%, transparent 60%)'
+        }}
       />
       {/* Static subtle beams */}
       <div className="pointer-events-none absolute inset-0 z-0">
