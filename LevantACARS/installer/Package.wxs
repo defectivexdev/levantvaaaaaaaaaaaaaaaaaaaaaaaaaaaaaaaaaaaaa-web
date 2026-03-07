@@ -101,7 +101,7 @@
                      KeyPath="yes" />
     </Component>
     
-    <Component Id="RegistryEntries" Directory="INSTALLDIR" Guid="F4D5E6A7-B8C9-0123-DEFG-234567890BCD">
+    <Component Id="RegistryEntries" Directory="INSTALLDIR" Guid="F4D5E6A7-B8C9-0123-DE4F-234567890BCD">
       <RegistryKey Root="HKCU" Key="Software\LevantVA\ACARS">
         <RegistryValue Name="InstallPath" Type="string" Value="[INSTALLDIR]" />
         <RegistryValue Name="Version" Type="string" Value="1.5.8" />
@@ -114,7 +114,7 @@
                      KeyPath="yes" />
     </Component>
     
-    <Component Id="BridgeComponent" Directory="INSTALLDIR" Guid="A5B6C7D8-E9F0-1234-5678-9ABCDEF01234">
+    <Component Id="BridgeComponent" Directory="INSTALLDIR" Guid="A5B6C7D8-E9F0-1234-5678-9ABCDE401234">
       <CreateFolder Directory="INSTALLDIR" />
       <RegistryValue Root="HKCU"
                      Key="Software\LevantVA\ACARS"
