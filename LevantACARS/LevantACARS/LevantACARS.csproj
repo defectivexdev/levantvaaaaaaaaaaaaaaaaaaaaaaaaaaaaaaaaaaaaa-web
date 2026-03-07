@@ -24,6 +24,9 @@
     <!-- Strip debug symbols from release -->
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    
+    <!-- Application Icon -->
+    <ApplicationIcon>Assets\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <!-- NuGet Packages -->
@@ -70,6 +73,9 @@
   <ItemGroup>
     <Resource Include="Assets\**" />
     <None Update="Assets\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\favicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
