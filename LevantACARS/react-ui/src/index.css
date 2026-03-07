@@ -204,6 +204,7 @@
 /* ── Text gradient ───────────────────────────────────────────── */
 .text-gradient {
   background: linear-gradient(135deg, #ffffff 0%, #C5A059 100%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
