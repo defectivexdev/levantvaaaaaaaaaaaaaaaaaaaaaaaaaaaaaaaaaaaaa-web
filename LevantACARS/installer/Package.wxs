@@ -15,14 +15,23 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed. Please uninstall it first."
                   AllowSameVersionUpgrades="yes" />
     
-    <!-- WebView2 Runtime Check -->
+    <!-- WebView2 Runtime Check and Auto-Install -->
     <Property Id="WEBVIEW2INSTALLED">
       <RegistrySearch Id="WebView2Search" Root="HKLM" Key="SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" Name="pv" Type="raw" />
     </Property>
     
-    <Condition Message="This application requires Microsoft Edge WebView2 Runtime. Please install it from https://go.microsoft.com/fwlink/p/?LinkId=2124703">
-      WEBVIEW2INSTALLED OR Installed
-    </Condition>
+    <!-- Download and install WebView2 if not present -->
+    <CustomAction Id="DownloadWebView2" 
+                  Execute="deferred" 
+                  Impersonate="no"
+                  Return="check"
+                  BinaryKey="WixCA"
+                  DllEntry="CAQuietExec"
+                  ExeCommand='powershell -Command "Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?LinkId=2124703 -OutFile \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\"; Start-Process -FilePath \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\" -ArgumentList \"/silent /install\" -Wait"' />
+    
+    <InstallExecuteSequence>
+      <Custom Action="DownloadWebView2" Before="InstallFinalize">NOT WEBVIEW2INSTALLED AND NOT REMOVE</Custom>
+    </InstallExecuteSequence>
     
     <!-- UI Configuration -->
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
