@@ -3,7 +3,6 @@ const nextConfig = {
     reactStrictMode: true,
     compress: true,
     poweredByHeader: false,
-    output: 'standalone',
     images: {
         remotePatterns: [
             {
