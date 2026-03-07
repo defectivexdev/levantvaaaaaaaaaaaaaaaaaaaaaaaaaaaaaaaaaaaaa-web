@@ -22,12 +22,11 @@
     
     <!-- Download and install WebView2 if not present -->
     <CustomAction Id="DownloadWebView2" 
+                  Directory="TARGETDIR"
                   Execute="deferred" 
                   Impersonate="no"
-                  Return="check"
-                  BinaryKey="WixCA"
-                  DllEntry="CAQuietExec"
-                  ExeCommand='powershell -Command "Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?LinkId=2124703 -OutFile \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\"; Start-Process -FilePath \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\" -ArgumentList \"/silent /install\" -Wait"' />
+                  Return="ignore"
+                  ExeCommand='powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "try { Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?LinkId=2124703 -OutFile \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\" -UseBasicParsing; Start-Process -FilePath \"$env:TEMP\MicrosoftEdgeWebview2Setup.exe\" -ArgumentList \"/silent\",\"/install\" -Wait } catch { exit 0 }"' />
     
     <InstallExecuteSequence>
       <Custom Action="DownloadWebView2" Before="InstallFinalize">NOT WEBVIEW2INSTALLED AND NOT REMOVE</Custom>
