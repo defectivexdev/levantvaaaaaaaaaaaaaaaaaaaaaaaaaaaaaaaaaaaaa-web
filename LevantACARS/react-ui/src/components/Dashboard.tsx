@@ -19,7 +19,7 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
 
       {/* ═══ Flight Info Bar (when active) ═══ */}
       {flight.isActive && (
-        <div className="flex items-center justify-between px-[18px] py-3 mx-3.5 mt-3 bg-surface-card border border-border-subtle rounded-lg flight-bar-glow animated-border">
+        <div className="flex items-center justify-between px-[18px] py-3 mx-3.5 mt-3 glass-panel-primary rounded-xl flight-bar-glow">
           <div className="flex items-center gap-3">
             <span className="text-[15px] font-bold text-accent">{flight.flightNumber}</span>
             <span className="text-[13px] text-txt-secondary">
@@ -52,7 +52,7 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
 
       {/* ═══ Flight Progress Bar ═══ */}
       {flight.isActive && telemetry.plannedDistanceNm > 0 && (
-        <div className="mx-3.5 mt-2 p-3 bg-surface-card border border-border-subtle rounded-lg">
+        <div className="mx-3.5 mt-2 p-4 glass-panel rounded-xl">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-bold text-accent-gold uppercase tracking-[0.15em]">{flight.departureIcao}</span>
             <span className="text-[9px] text-txt-disabled font-mono">
@@ -79,7 +79,7 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
 
       {/* ═══ Score Card (after flight) ═══ */}
       {score && (
-        <div className="mx-3.5 mt-3 p-4 bg-surface-card border border-border-subtle rounded-lg animate-score-reveal">
+        <div className="mx-3.5 mt-3 p-5 glass-panel-success rounded-xl animate-score-reveal">
           <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px] mb-3">FLIGHT REPORT</div>
           <div className="grid grid-cols-3 gap-1.5 mb-2">
             <ScoreItem label="SCORE" value={`${score.finalScore}%`} className="text-accent" />
@@ -97,7 +97,7 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
       <div className="flex-1 overflow-y-auto p-3.5">
 
         {/* Aircraft + Phase */}
-        <div className="p-3.5 bg-surface-card border border-border-subtle rounded-lg mb-2 card-hover-glow">
+        <div className="p-4 glass-panel rounded-xl mb-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px] mb-1">AIRCRAFT</div>
@@ -133,7 +133,7 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
         {flight.isActive && (
           <>
             {/* Integrity Meter */}
-            <div className="p-3.5 bg-surface-card border border-border-subtle rounded-lg mb-3 crt-scanlines">
+            <div className="p-4 glass-panel rounded-xl mb-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px]">FLIGHT INTEGRITY</div>
                 <span className="value-mono text-[18px] font-bold" style={{ color: integrityColor(telemetry.integrityScore) }}>
@@ -153,7 +153,7 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
 
             <div className="grid grid-cols-3 gap-3 mb-3">
               {/* Comfort */}
-              <div className="p-3.5 bg-surface-card border border-border-subtle rounded-lg">
+              <div className="p-4 glass-panel rounded-xl">
                 <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px] mb-1">COMFORT</div>
                 <div className="flex items-center gap-3">
                   <span className="value-mono text-[22px] font-bold text-success">{flight.comfortScore}%</span>
@@ -166,12 +166,12 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
                 </div>
               </div>
               {/* Violations */}
-              <div className="p-3.5 bg-surface-card border border-border-subtle rounded-lg">
+              <div className="p-4 glass-panel rounded-xl">
                 <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px] mb-1">VIOLATIONS</div>
                 <span className="value-mono text-[22px] font-bold text-warning">{flight.exceedanceCount}</span>
               </div>
               {/* Pause Time */}
-              <div className="p-3.5 bg-surface-card border border-border-subtle rounded-lg">
+              <div className="p-4 glass-panel rounded-xl">
                 <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px] mb-1">PAUSE TIME</div>
                 <span className={`value-mono text-[22px] font-bold ${telemetry.totalPauseSeconds > 0 ? 'text-danger' : 'text-txt-secondary'}`}>
                   {Math.floor(telemetry.totalPauseSeconds / 60)}m {Math.floor(telemetry.totalPauseSeconds % 60)}s
