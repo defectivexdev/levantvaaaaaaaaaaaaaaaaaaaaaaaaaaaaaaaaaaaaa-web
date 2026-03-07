@@ -72,12 +72,6 @@
   <!-- Assets copied to output -->
   <ItemGroup>
     <Resource Include="Assets\**" />
-    <None Update="Assets\logo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\favicon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <!-- React dist (wwwroot) copied to output via post-build robocopy -->
