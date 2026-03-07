@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { memo } from 'react';
 
 interface Props {
   altitude: number;
@@ -8,7 +9,7 @@ interface Props {
 const TICK_HEIGHT = 32;
 const VISIBLE_TICKS = 12;
 
-export default function AltitudeTape({ altitude, displayAltitude }: Props) {
+function AltitudeTape({ altitude, displayAltitude }: Props) {
   const baseAlt = Math.floor(altitude / 100) * 100;
   const offset = ((altitude % 100) / 100) * TICK_HEIGHT;
 
@@ -24,7 +25,7 @@ export default function AltitudeTape({ altitude, displayAltitude }: Props) {
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           animate={{ y: offset }}
-          transition={{ type: 'tween', duration: 0.1, ease: 'linear' }}
+          transition={{ type: 'tween', duration: 0.3, ease: 'linear' }}
           className="absolute w-full"
           style={{ top: '50%', marginTop: -(VISIBLE_TICKS / 2) * TICK_HEIGHT }}
         >
@@ -68,3 +69,7 @@ export default function AltitudeTape({ altitude, displayAltitude }: Props) {
     </div>
   );
 }
+
+export default memo(AltitudeTape, (prev, next) => {
+  return prev.altitude === next.altitude && prev.displayAltitude === next.displayAltitude;
+});

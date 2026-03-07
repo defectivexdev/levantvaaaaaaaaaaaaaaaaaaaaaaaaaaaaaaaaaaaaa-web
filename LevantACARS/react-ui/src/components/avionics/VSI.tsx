@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { memo } from 'react';
 
 interface Props {
   verticalSpeed: number; // ft/min
@@ -7,7 +8,7 @@ interface Props {
 const SCALE_MAX = 2000; // ±2000 fpm full deflection
 const TRACK_HEIGHT = 280; // pixels for the full scale
 
-export default function VSI({ verticalSpeed }: Props) {
+function VSI({ verticalSpeed }: Props) {
   const clamped = Math.max(-SCALE_MAX, Math.min(SCALE_MAX, verticalSpeed));
   // Needle offset: positive VS moves needle UP (negative y)
   const needleY = -(clamped / SCALE_MAX) * (TRACK_HEIGHT / 2);
@@ -43,7 +44,7 @@ export default function VSI({ verticalSpeed }: Props) {
       {/* Animated needle */}
       <motion.div
         animate={{ y: needleY }}
-        transition={{ type: 'tween', duration: 0.15, ease: 'easeOut' }}
+        transition={{ type: 'tween', duration: 0.4, ease: 'easeOut' }}
         className="absolute top-1/2 left-1 right-1"
       >
         <div
@@ -69,3 +70,7 @@ export default function VSI({ verticalSpeed }: Props) {
     </div>
   );
 }
+
+export default memo(VSI, (prev, next) => {
+  return Math.abs(prev.verticalSpeed - next.verticalSpeed) < 10;
+});

@@ -1,4 +1,5 @@
 import { MapPin, Plane, Send } from 'lucide-react';
+import { useMemo } from 'react';
 import { SimBridge } from '../bridge';
 import PrimaryFlightDisplay from './avionics/PrimaryFlightDisplay';
 import FlightDataPanel from './FlightDataPanel';
@@ -14,6 +15,13 @@ interface Props {
 }
 
 export default function Dashboard({ telemetry, flight, score, activityLog, exceedanceLog }: Props) {
+  const integrityBarColor = useMemo(() => integrityColor(telemetry.integrityScore), [telemetry.integrityScore]);
+  const flightProgress = useMemo(() => Math.min(100, telemetry.flightProgress * 100), [telemetry.flightProgress]);
+  const distanceDisplay = useMemo(() => ({
+    flown: telemetry.distanceFlownNm.toFixed(0),
+    planned: telemetry.plannedDistanceNm.toFixed(0)
+  }), [telemetry.distanceFlownNm, telemetry.plannedDistanceNm]);
+  
   return (
     <div className="flex flex-col h-full">
 
@@ -56,18 +64,18 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-bold text-accent-gold uppercase tracking-[0.15em]">{flight.departureIcao}</span>
             <span className="text-[9px] text-txt-disabled font-mono">
-              {telemetry.distanceFlownNm.toFixed(0)} / {telemetry.plannedDistanceNm.toFixed(0)} nm
+              {distanceDisplay.flown} / {distanceDisplay.planned} nm
             </span>
             <span className="text-[10px] font-bold text-accent uppercase tracking-[0.15em]">{flight.arrivalIcao}</span>
           </div>
           <div className="relative h-[6px] rounded-full bg-surface-elevated overflow-visible">
             <div
               className="h-full rounded-full bg-gradient-to-r from-accent-gold/80 to-accent transition-all duration-[15s] ease-linear progress-shimmer"
-              style={{ width: `${Math.min(100, telemetry.flightProgress * 100)}%` }}
+              style={{ width: `${flightProgress}%` }}
             />
             <div
               className="absolute top-1/2 -translate-y-1/2 transition-all duration-[15s] ease-linear"
-              style={{ left: `${Math.min(100, telemetry.flightProgress * 100)}%`, transform: 'translate(-50%, -50%)' }}
+              style={{ left: `${flightProgress}%`, transform: 'translate(-50%, -50%)' }}
             >
               <div className="bg-surface-card border border-accent-gold/40 rounded-full p-[3px] shadow-[0_0_8px_rgba(212,175,55,0.4)]">
                 <Plane size={10} className="text-accent-gold" style={{ transform: 'rotate(90deg)' }} />
@@ -143,7 +151,7 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
               <div className="h-[5px] rounded-full bg-surface-elevated overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${telemetry.integrityScore}%`, backgroundColor: integrityColor(telemetry.integrityScore) }}
+                  style={{ width: `${telemetry.integrityScore}%`, backgroundColor: integrityBarColor }}
                 />
               </div>
               {telemetry.isNonStandard && (

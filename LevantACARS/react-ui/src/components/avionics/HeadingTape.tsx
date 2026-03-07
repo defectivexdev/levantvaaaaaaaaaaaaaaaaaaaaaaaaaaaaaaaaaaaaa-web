@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { memo } from 'react';
 
 interface Props {
   heading: number; // 0-359
@@ -24,7 +25,7 @@ function buildTicks() {
 }
 const TICKS = buildTicks();
 
-export default function HeadingTape({ heading }: Props) {
+function HeadingTape({ heading }: Props) {
   // Normalize heading to [0, 360)
   const hdg = ((heading % 360) + 360) % 360;
 
@@ -40,7 +41,7 @@ export default function HeadingTape({ heading }: Props) {
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           animate={{ x: translateX }}
-          transition={{ type: 'tween', duration: 0.1, ease: 'linear' }}
+          transition={{ type: 'tween', duration: 0.3, ease: 'linear' }}
           className="flex items-end h-full"
           style={{ paddingLeft: '50%', width: TAPE_WIDTH * 3 }}
         >
@@ -82,3 +83,7 @@ export default function HeadingTape({ heading }: Props) {
     </div>
   );
 }
+
+export default memo(HeadingTape, (prev, next) => {
+  return Math.abs(prev.heading - next.heading) < 1;
+});

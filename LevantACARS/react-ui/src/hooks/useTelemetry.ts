@@ -141,14 +141,15 @@ export function useTelemetry() {
   });
 
   // Throttle: skip telemetry setState if nothing visually changed (reduces re-renders)
+  // Increased thresholds to reduce GPU strain and prevent Vulkan device loss
   const lastTelemetryRef = useRef<TelemetryData | null>(null);
   function telemetryChanged(a: TelemetryData, b: TelemetryData): boolean {
     return a.phase !== b.phase || a.onGround !== b.onGround
       || a.stallWarning !== b.stallWarning || a.overspeedWarning !== b.overspeedWarning
-      || Math.abs(a.altitude - b.altitude) > 5 || Math.abs(a.ias - b.ias) > 1
-      || Math.abs(a.groundSpeed - b.groundSpeed) > 1 || Math.abs(a.heading - b.heading) > 0.5
-      || Math.abs(a.verticalSpeed - b.verticalSpeed) > 10 || Math.abs(a.gForce - b.gForce) > 0.005
-      || Math.abs(a.radioAltitude - b.radioAltitude) > 1;
+      || Math.abs(a.altitude - b.altitude) > 20 || Math.abs(a.ias - b.ias) > 3
+      || Math.abs(a.groundSpeed - b.groundSpeed) > 3 || Math.abs(a.heading - b.heading) > 2
+      || Math.abs(a.verticalSpeed - b.verticalSpeed) > 50 || Math.abs(a.gForce - b.gForce) > 0.02
+      || Math.abs(a.radioAltitude - b.radioAltitude) > 5;
   }
 
   const handleMessage = useCallback((data: unknown) => {

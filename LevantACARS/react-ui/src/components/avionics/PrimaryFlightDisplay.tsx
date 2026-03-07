@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
+import { memo } from 'react';
 import AltitudeTape from './AltitudeTape';
 import VSI from './VSI';
 import HeadingTape from './HeadingTape';
@@ -9,7 +10,7 @@ interface Props {
   telemetry: TelemetryData;
 }
 
-export default function PrimaryFlightDisplay({ telemetry }: Props) {
+function PrimaryFlightDisplay({ telemetry }: Props) {
   const altimeter = useAltimeter(telemetry.altitude, telemetry.verticalSpeed);
 
   return (
@@ -159,3 +160,16 @@ export default function PrimaryFlightDisplay({ telemetry }: Props) {
     </div>
   );
 }
+
+export default memo(PrimaryFlightDisplay, (prev, next) => {
+  return (
+    prev.telemetry.altitude === next.telemetry.altitude &&
+    prev.telemetry.verticalSpeed === next.telemetry.verticalSpeed &&
+    prev.telemetry.heading === next.telemetry.heading &&
+    prev.telemetry.ias === next.telemetry.ias &&
+    prev.telemetry.groundSpeed === next.telemetry.groundSpeed &&
+    prev.telemetry.gForce === next.telemetry.gForce &&
+    prev.telemetry.onGround === next.telemetry.onGround &&
+    prev.telemetry.enginesOn === next.telemetry.enginesOn
+  );
+});

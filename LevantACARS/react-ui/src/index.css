@@ -486,6 +486,45 @@
   will-change: contents;
 }
 
+/* ── GPU Performance Optimizations (Prevent Vulkan Device Loss) ── */
+/* Limit composite layers and reduce GPU strain */
+.glass-panel,
+.glass-panel-primary,
+.glass-panel-success {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize animations for GPU */
+@media (prefers-reduced-motion: no-preference) {
+  .progress-shimmer,
+  .moving-border,
+  .sidebar-glow::before {
+    will-change: background-position;
+  }
+  
+  .status-breathe {
+    will-change: box-shadow, opacity;
+  }
+  
+  .card-hover-glow:hover {
+    will-change: transform, box-shadow;
+  }
+}
+
+/* Reduce animation complexity on lower-end systems */
+@media (prefers-reduced-motion: reduce) {
+  .progress-shimmer,
+  .moving-border,
+  .sidebar-glow::before,
+  .status-breathe,
+  .pulse-ring::before,
+  .animated-border::before {
+    animation: none !important;
+  }
+}
+
 /* ── Flight Active Pulse Ring ────────────────────────────────── */
 @keyframes pulse-ring {
   0% { transform: scale(1); opacity: 0.6; }
