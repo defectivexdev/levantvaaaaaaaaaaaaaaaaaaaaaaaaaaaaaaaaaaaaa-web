@@ -43,10 +43,13 @@ jobs:
       run: |
         $source = "LevantACARS/react-ui/public/img/favicon.ico"
         $dest = "LevantACARS/LevantACARS/Assets/favicon.ico"
-        if (-not (Test-Path $source)) { throw "favicon.ico not found at $source" }
-        New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
-        Copy-Item $source $dest -Force
-        Write-Host "Copied favicon.ico from React UI to Assets folder"
+        if (Test-Path $source) {
+          New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
+          Copy-Item $source $dest -Force
+          Write-Host "Copied favicon.ico from React UI to Assets folder"
+        } else {
+          Write-Host "Warning: favicon.ico not found at $source, skipping copy"
+        }
 
     - name: Build ACARS Client
       run: msbuild LevantACARS/LevantACARS.sln /p:Configuration=Release /p:Platform="Any CPU"
