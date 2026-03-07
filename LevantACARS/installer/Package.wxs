@@ -30,8 +30,6 @@
     <!-- Add/Remove Programs properties -->
     <Property Id="ARPURLINFOABOUT" Value="https://levant-va.com" />
     <Property Id="ARPHELPLINK" Value="https://levant-va.com/support" />
-    <Property Id="ARPNOMODIFY" Value="1" />
-    <Property Id="ARPNOREPAIR" Value="1" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="LocalAppDataFolder">
