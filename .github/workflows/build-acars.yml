@@ -98,8 +98,8 @@ jobs:
         $version = "${{ steps.version.outputs.VERSION }}"
         cd LevantACARS/installer
         
-        # Harvest all published files
-        heat.exe dir publish -cg PublishedFiles -gg -sfrag -srd -dr INSTALLDIR -out HarvestedFiles.wxs
+        # Harvest all published files (suppress harmless warnings)
+        heat.exe dir publish -cg PublishedFiles -gg -sfrag -srd -dr INSTALLDIR -nologo -sw5150 -sw5151 -out HarvestedFiles.wxs
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         
         # Compile WiX sources
