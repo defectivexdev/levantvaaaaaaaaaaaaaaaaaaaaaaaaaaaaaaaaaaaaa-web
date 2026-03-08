@@ -460,7 +460,7 @@ public sealed class FlightManager : IDisposable
                            absRate <= 400 ? "NORMAL" :
                            absRate <= 600 ? "HARD" :
                            absRate <= 900 ? "VERY HARD" : "CRASH";
-            OnFlightEvent?.Invoke($"Touchdown: {absRate:F0} fpm ({gradeText})");
+            OnFlightEvent?.Invoke($"Touchdown: {_lastGroundSpeed} kts · {absRate:F0} fpm · {_landingGForce:F2}G ({gradeText})");
         }
     }
 
