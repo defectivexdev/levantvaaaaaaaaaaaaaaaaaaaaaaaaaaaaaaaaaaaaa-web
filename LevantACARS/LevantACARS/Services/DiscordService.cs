@@ -140,6 +140,12 @@ public sealed class DiscordService : IDisposable
     {
         if (!_initialized || _client == null) return;
 
+        // Initialize timestamp if not set (shouldn't happen, but safety check)
+        if (_flightStartTimestamp == null)
+        {
+            _flightStartTimestamp = Timestamps.Now;
+        }
+
         _client.SetPresence(new RichPresence
         {
             Details = $"{flightNumber} — {departure} → {arrival}",
@@ -151,7 +157,7 @@ public sealed class DiscordService : IDisposable
                 SmallImageKey = "status_flying",
                 SmallImageText = $"Flying {flightNumber}"
             },
-            Timestamps = _flightStartTimestamp ?? Timestamps.Now // Preserve flight start time
+            Timestamps = _flightStartTimestamp // Always use the stored timestamp
         });
     }
 
