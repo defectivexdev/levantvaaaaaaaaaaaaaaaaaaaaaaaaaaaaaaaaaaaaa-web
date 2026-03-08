@@ -307,6 +307,47 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
             <FollowAircraft lat={displayPos.lat} lon={displayPos.lon} follow={followAircraft} />
           </MapContainer>
 
+          {/* Flight Status Info Boxes */}
+          {displayPos.lat !== 0 && (
+            <div className="absolute top-2 left-2 z-[1000] grid grid-cols-3 gap-2">
+              {/* Altitude */}
+              <div className="bg-blue-600/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-blue-400/30 min-w-[90px]">
+                <div className="text-white text-xl font-bold leading-none">{telemetry.altitude.toLocaleString()}</div>
+                <div className="text-blue-100 text-[9px] font-semibold uppercase tracking-wider mt-0.5">Altitude</div>
+              </div>
+              
+              {/* Ground Speed */}
+              <div className="bg-blue-600/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-blue-400/30 min-w-[90px]">
+                <div className="text-white text-xl font-bold leading-none">{telemetry.groundSpeed}</div>
+                <div className="text-blue-100 text-[9px] font-semibold uppercase tracking-wider mt-0.5">GS</div>
+              </div>
+              
+              {/* IAS */}
+              <div className="bg-blue-600/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-blue-400/30 min-w-[90px]">
+                <div className="text-white text-xl font-bold leading-none">{telemetry.ias}</div>
+                <div className="text-blue-100 text-[9px] font-semibold uppercase tracking-wider mt-0.5">IAS</div>
+              </div>
+              
+              {/* Heading */}
+              <div className="bg-blue-600/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-blue-400/30 min-w-[90px]">
+                <div className="text-white text-xl font-bold leading-none">{telemetry.heading}°</div>
+                <div className="text-blue-100 text-[9px] font-semibold uppercase tracking-wider mt-0.5">Heading</div>
+              </div>
+              
+              {/* Distance */}
+              <div className="bg-blue-600/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-blue-400/30 min-w-[90px]">
+                <div className="text-white text-xl font-bold leading-none">{telemetry.distanceFlownNm.toFixed(0)}</div>
+                <div className="text-blue-100 text-[9px] font-semibold uppercase tracking-wider mt-0.5">Distance</div>
+              </div>
+              
+              {/* Vertical Speed */}
+              <div className="bg-blue-600/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-blue-400/30 min-w-[90px]">
+                <div className="text-white text-xl font-bold leading-none">{telemetry.verticalSpeed > 0 ? '+' : ''}{telemetry.verticalSpeed}</div>
+                <div className="text-blue-100 text-[9px] font-semibold uppercase tracking-wider mt-0.5">V/S</div>
+              </div>
+            </div>
+          )}
+
           {/* Countdown badge */}
           {displayPos.lat !== 0 && (
             <div className="absolute top-2 right-2 z-[1000] px-2.5 py-1 rounded-lg text-xs font-bold tracking-wider uppercase border bg-[#0f1318]/90 border-white/10 text-gray-400 font-mono">
