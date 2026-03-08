@@ -13,6 +13,7 @@ public sealed class DiscordService : IDisposable
     private readonly ILogger<DiscordService> _logger;
     private DiscordRpcClient? _client;
     private bool _initialized;
+    private Timestamps? _flightStartTimestamp; // Track flight start time for elapsed duration
 
     public DiscordService(ILogger<DiscordService> logger)
     {
@@ -59,6 +60,8 @@ public sealed class DiscordService : IDisposable
     {
         if (!_initialized || _client == null) return;
 
+        _flightStartTimestamp = null; // Clear flight timer
+
         _client.SetPresence(new RichPresence
         {
             Details = "Levant Virtual Airlines",
@@ -79,6 +82,8 @@ public sealed class DiscordService : IDisposable
     {
         if (!_initialized || _client == null) return;
 
+        _flightStartTimestamp = Timestamps.Now; // Start flight timer
+
         _client.SetPresence(new RichPresence
         {
             Details = $"{flightNumber} — {departure} → {arrival}",
@@ -90,7 +95,7 @@ public sealed class DiscordService : IDisposable
                 SmallImageKey = "status_flying",
                 SmallImageText = $"Flying {flightNumber}"
             },
-            Timestamps = Timestamps.Now
+            Timestamps = _flightStartTimestamp
         });
     }
 
@@ -103,6 +108,7 @@ public sealed class DiscordService : IDisposable
         if (current != null)
         {
             current.State = $"Phase: {phase}";
+            current.Timestamps = _flightStartTimestamp; // Preserve flight start time
             _client.SetPresence(current);
         }
     }
@@ -122,8 +128,11 @@ public sealed class DiscordService : IDisposable
                 LargeImageText = "Levant Virtual Airlines",
                 SmallImageKey = "status_online",
                 SmallImageText = "Flight Complete"
-            }
+            },
+            Timestamps = _flightStartTimestamp // Show total flight duration
         });
+
+        _flightStartTimestamp = null; // Clear after showing completion
     }
 
     /// <summary>Update presence with live flight details (altitude, speed, phase).</summary>
@@ -142,7 +151,7 @@ public sealed class DiscordService : IDisposable
                 SmallImageKey = "status_flying",
                 SmallImageText = $"Flying {flightNumber}"
             },
-            Timestamps = Timestamps.Now
+            Timestamps = _flightStartTimestamp ?? Timestamps.Now // Preserve flight start time
         });
     }
 
@@ -194,6 +203,7 @@ public sealed class DiscordService : IDisposable
             _client.Dispose();
             _client = null;
             _initialized = false;
+            _flightStartTimestamp = null;
             _logger.LogInformation("[Discord] Rich Presence disposed");
         }
     }
