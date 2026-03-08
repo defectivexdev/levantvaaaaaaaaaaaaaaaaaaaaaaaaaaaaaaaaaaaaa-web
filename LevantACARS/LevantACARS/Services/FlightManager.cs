@@ -451,6 +451,16 @@ public sealed class FlightManager : IDisposable
 
             // Fire touchdown event with coordinates for map marker
             OnTouchdown?.Invoke(_lastLat, _lastLon, _landingRate, _lastGroundSpeed);
+
+            // Log landing rate to activity log
+            var absRate = Math.Abs(_landingRate);
+            var gradeText = absRate <= 50 ? "BUTTER" :
+                           absRate <= 150 ? "VERY SMOOTH" :
+                           absRate <= 250 ? "SMOOTH" :
+                           absRate <= 400 ? "NORMAL" :
+                           absRate <= 600 ? "HARD" :
+                           absRate <= 900 ? "VERY HARD" : "CRASH";
+            OnFlightEvent?.Invoke($"Touchdown: {absRate:F0} fpm ({gradeText})");
         }
     }
 
