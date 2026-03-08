@@ -47,7 +47,16 @@ export function AnimatedTooltip({ items }: { items: TooltipItem[] }) {
                   : '!border-white/10',
               )}
             >
-              <img src={item.image} alt={item.name} className="pilot-badge-img" />
+              <img 
+                src={item.image} 
+                alt={item.name} 
+                className="pilot-badge-img"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null; // Prevent infinite loop
+                  target.src = 'img/icon.jpg'; // Fallback to default icon
+                }}
+              />
             </div>
           ) : (
             <div

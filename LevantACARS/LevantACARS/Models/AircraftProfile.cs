@@ -5,7 +5,7 @@ namespace LevantACARS.Models;
 /// </summary>
 public sealed record AircraftLimits
 {
-    public int MaxTaxiSpeed { get; init; } = 25;
+    public int MaxTaxiSpeed { get; init; } = 30;
     public int Vmo { get; init; } = 340;
     public int MaxFlapExtendSpeed { get; init; } = 230;
     public int MaxGearExtendSpeed { get; init; } = 270;
