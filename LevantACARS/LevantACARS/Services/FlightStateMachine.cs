@@ -5,7 +5,7 @@ namespace LevantACARS.Services;
 
 /// <summary>
 /// Thread-safe flight phase state machine.
-/// Transitions: Preflight → TaxiOut → TakeoffRoll → Takeoff → InitialClimb → Climb → Cruise → Descend → Approach → FinalApproach → Landing → Landed → TaxiIn → Arrived → Shutdown
+/// Transitions: Preflight → Pushback → TaxiOut → TakeoffRoll → Takeoff → InitialClimb → Climb → Cruise → Descend → Approach → FinalApproach → Landing → Landed → TaxiIn → Arrived → Shutdown
 /// Debounce logic prevents rapid toggling between phases.
 /// </summary>
 public sealed class FlightStateMachine
@@ -62,13 +62,29 @@ public sealed class FlightStateMachine
             switch (_currentPhase)
             {
                 case FlightPhase.Preflight:
-                    // Engines on + parking brake off → taxi out
-                    if (data.EnginesOn && !data.ParkingBrake && data.GroundSpeed > 2)
+                    // Engines on + moving backwards → pushback
+                    if (data.EnginesOn && data.GroundSpeed > 1 && data.GroundSpeed < 10)
+                        TransitionTo(FlightPhase.Pushback, now);
+                    // Engines on + parking brake off + moving forward → taxi out
+                    else if (data.EnginesOn && !data.ParkingBrake && data.GroundSpeed > 2)
                         TransitionTo(FlightPhase.TaxiOut, now);
                     break;
 
                 case FlightPhase.Boarding:
-                    if (data.EnginesOn && !data.ParkingBrake && data.GroundSpeed > 2)
+                    // Engines on + moving → pushback
+                    if (data.EnginesOn && data.GroundSpeed > 1 && data.GroundSpeed < 10)
+                        TransitionTo(FlightPhase.Pushback, now);
+                    // Engines on + parking brake off + moving forward → taxi out
+                    else if (data.EnginesOn && !data.ParkingBrake && data.GroundSpeed > 2)
+                        TransitionTo(FlightPhase.TaxiOut, now);
+                    break;
+
+                case FlightPhase.Pushback:
+                    // Speed increases (taxi out begins)
+                    if (data.GroundSpeed > 10 && timeSinceChange > 3000)
+                        TransitionTo(FlightPhase.TaxiOut, now);
+                    // Stopped after pushback
+                    if (data.GroundSpeed < 1 && timeSinceChange > 5000)
                         TransitionTo(FlightPhase.TaxiOut, now);
                     break;
 

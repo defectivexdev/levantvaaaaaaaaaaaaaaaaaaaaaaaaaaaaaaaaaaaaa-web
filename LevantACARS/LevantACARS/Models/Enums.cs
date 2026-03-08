@@ -5,6 +5,7 @@ public enum FlightPhase
 {
     Preflight,
     Boarding,
+    Pushback,
     TaxiOut,
     TakeoffRoll,
     Takeoff,
