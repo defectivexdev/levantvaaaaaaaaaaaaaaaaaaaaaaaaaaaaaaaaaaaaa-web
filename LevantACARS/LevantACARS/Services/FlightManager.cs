@@ -683,52 +683,150 @@ public sealed class FlightManager : IDisposable
     // ─── Geographic Location Context ──────────────────────────────────────
     
     /// <summary>
-    /// Provides geographic context based on coordinates (e.g., "Mediterranean Sea", "Europe", "Atlantic Ocean")
+    /// Provides worldwide geographic context based on coordinates
     /// </summary>
     private string GetLocationContext(double lat, double lon)
     {
-        // Mediterranean Region (30-45°N, 0-40°E)
+        // ═══ SEAS & GULFS ═══
+        
+        // Mediterranean Sea (30-45°N, 0-40°E)
         if (lat >= 30 && lat <= 45 && lon >= 0 && lon <= 40)
             return "Mediterranean Sea";
         
-        // Middle East (15-40°N, 35-65°E)
-        if (lat >= 15 && lat <= 40 && lon >= 35 && lon <= 65)
-            return "Middle East";
-        
-        // Europe (40-70°N, -10-40°E)
-        if (lat >= 40 && lat <= 70 && lon >= -10 && lon <= 40)
-            return "Europe";
-        
-        // North Atlantic (30-60°N, -70 to -10°E)
-        if (lat >= 30 && lat <= 60 && lon >= -70 && lon <= -10)
-            return "Atlantic Ocean";
-        
-        // Arabian Peninsula/Gulf (15-30°N, 40-60°E)
-        if (lat >= 15 && lat <= 30 && lon >= 40 && lon <= 60)
+        // Arabian Gulf / Persian Gulf (23-30°N, 48-57°E)
+        if (lat >= 23 && lat <= 30 && lon >= 48 && lon <= 57)
             return "Arabian Gulf";
         
-        // North Africa (15-35°N, -20-35°E)
-        if (lat >= 15 && lat <= 35 && lon >= -20 && lon <= 35)
-            return "North Africa";
+        // Red Sea (12-30°N, 32-43°E)
+        if (lat >= 12 && lat <= 30 && lon >= 32 && lon <= 43)
+            return "Red Sea";
         
-        // Asia (20-50°N, 65-150°E)
-        if (lat >= 20 && lat <= 50 && lon >= 65 && lon <= 150)
-            return "Asia";
+        // Caribbean Sea (10-25°N, -85 to -60°W)
+        if (lat >= 10 && lat <= 25 && lon >= -85 && lon <= -60)
+            return "Caribbean Sea";
         
-        // North America (25-70°N, -170 to -50°W)
-        if (lat >= 25 && lat <= 70 && lon >= -170 && lon <= -50)
-            return "North America";
+        // Gulf of Mexico (18-31°N, -98 to -80°W)
+        if (lat >= 18 && lat <= 31 && lon >= -98 && lon <= -80)
+            return "Gulf of Mexico";
         
-        // Pacific Ocean (broad area)
-        if (lon >= 100 || lon <= -100)
+        // South China Sea (0-25°N, 100-120°E)
+        if (lat >= 0 && lat <= 25 && lon >= 100 && lon <= 120)
+            return "South China Sea";
+        
+        // Baltic Sea (53-66°N, 10-30°E)
+        if (lat >= 53 && lat <= 66 && lon >= 10 && lon <= 30)
+            return "Baltic Sea";
+        
+        // Black Sea (41-47°N, 27-42°E)
+        if (lat >= 41 && lat <= 47 && lon >= 27 && lon <= 42)
+            return "Black Sea";
+        
+        // ═══ OCEANS ═══
+        
+        // North Atlantic Ocean (0-70°N, -80 to -10°W)
+        if (lat >= 0 && lat <= 70 && lon >= -80 && lon <= -10)
+            return "Atlantic Ocean";
+        
+        // South Atlantic Ocean (-60 to 0°S, -60 to 20°E)
+        if (lat >= -60 && lat < 0 && lon >= -60 && lon <= 20)
+            return "Atlantic Ocean";
+        
+        // North Pacific Ocean (0-70°N, 120-180°E or -180 to -100°W)
+        if (lat >= 0 && lat <= 70 && ((lon >= 120 && lon <= 180) || (lon >= -180 && lon <= -100)))
             return "Pacific Ocean";
         
-        // Indian Ocean (rough approximation)
-        if (lat >= -40 && lat <= 30 && lon >= 40 && lon <= 100)
+        // South Pacific Ocean (-60 to 0°S, 140°E to -70°W)
+        if (lat >= -60 && lat < 0 && ((lon >= 140 && lon <= 180) || (lon >= -180 && lon <= -70)))
+            return "Pacific Ocean";
+        
+        // Indian Ocean (-60 to 30°N, 20-120°E)
+        if (lat >= -60 && lat <= 30 && lon >= 20 && lon <= 120)
             return "Indian Ocean";
         
-        // Default - no specific region
-        return "";
+        // Arctic Ocean (66-90°N)
+        if (lat >= 66 && lat <= 90)
+            return "Arctic Ocean";
+        
+        // Southern Ocean (-90 to -60°S)
+        if (lat >= -90 && lat < -60)
+            return "Southern Ocean";
+        
+        // ═══ CONTINENTS & MAJOR REGIONS ═══
+        
+        // Western Europe (40-72°N, -10 to 20°E)
+        if (lat >= 40 && lat <= 72 && lon >= -10 && lon <= 20)
+            return "Western Europe";
+        
+        // Eastern Europe (40-72°N, 20-50°E)
+        if (lat >= 40 && lat <= 72 && lon >= 20 && lon <= 50)
+            return "Eastern Europe";
+        
+        // Scandinavia (55-72°N, 4-32°E)
+        if (lat >= 55 && lat <= 72 && lon >= 4 && lon <= 32)
+            return "Scandinavia";
+        
+        // Middle East (12-42°N, 35-65°E)
+        if (lat >= 12 && lat <= 42 && lon >= 35 && lon <= 65)
+            return "Middle East";
+        
+        // North Africa (0-37°N, -18 to 52°E)
+        if (lat >= 0 && lat <= 37 && lon >= -18 && lon <= 52)
+            return "North Africa";
+        
+        // Sub-Saharan Africa (-35 to 15°N, -20 to 52°E)
+        if (lat >= -35 && lat <= 15 && lon >= -20 && lon <= 52)
+            return "Africa";
+        
+        // Central Asia (35-55°N, 45-90°E)
+        if (lat >= 35 && lat <= 55 && lon >= 45 && lon <= 90)
+            return "Central Asia";
+        
+        // East Asia (20-55°N, 100-145°E)
+        if (lat >= 20 && lat <= 55 && lon >= 100 && lon <= 145)
+            return "East Asia";
+        
+        // Southeast Asia (-10 to 28°N, 92-140°E)
+        if (lat >= -10 && lat <= 28 && lon >= 92 && lon <= 140)
+            return "Southeast Asia";
+        
+        // South Asia (5-37°N, 60-95°E)
+        if (lat >= 5 && lat <= 37 && lon >= 60 && lon <= 95)
+            return "South Asia";
+        
+        // Australia & Oceania (-50 to -10°S, 110-180°E)
+        if (lat >= -50 && lat <= -10 && lon >= 110 && lon <= 180)
+            return "Australia";
+        
+        // New Zealand (-48 to -34°S, 165-180°E)
+        if (lat >= -48 && lat <= -34 && lon >= 165 && lon <= 180)
+            return "New Zealand";
+        
+        // North America - Canada (45-85°N, -170 to -50°W)
+        if (lat >= 45 && lat <= 85 && lon >= -170 && lon <= -50)
+            return "Canada";
+        
+        // North America - USA (25-50°N, -125 to -65°W)
+        if (lat >= 25 && lat <= 50 && lon >= -125 && lon <= -65)
+            return "United States";
+        
+        // Central America (7-25°N, -120 to -75°W)
+        if (lat >= 7 && lat <= 25 && lon >= -120 && lon <= -75)
+            return "Central America";
+        
+        // South America (-56 to 13°N, -82 to -34°W)
+        if (lat >= -56 && lat <= 13 && lon >= -82 && lon <= -34)
+            return "South America";
+        
+        // Greenland (59-84°N, -75 to -10°W)
+        if (lat >= 59 && lat <= 84 && lon >= -75 && lon <= -10)
+            return "Greenland";
+        
+        // Antarctica (-90 to -60°S)
+        if (lat >= -90 && lat < -60)
+            return "Antarctica";
+        
+        // Default - over ocean/remote area
+        return "the skies";
     }
 
     public double FlightProgress
