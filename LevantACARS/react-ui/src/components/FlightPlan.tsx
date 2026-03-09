@@ -178,7 +178,7 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
             </div>
 
             {/* Status badges */}
-            <div className="flex items-center gap-2 px-4 pt-3 pb-2 flex-wrap">
+            <div className="flex items-center gap-2 px-4 pt-4 pb-3 flex-wrap">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.12em] border bg-emerald-500/10 border-emerald-500/20 text-emerald-400 whitespace-nowrap">
                 <div className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
                 DATA LINK ACTIVE
@@ -192,7 +192,7 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
             </div>
 
             {/* DEP → ARR */}
-            <div className="flex items-center justify-between px-4 py-2">
+            <div className="flex items-center justify-between px-4 py-3">
               <div className="flex flex-col">
                 <span className="text-xs font-mono text-accent-gold/60 tracking-[0.3em] font-bold">DEP</span>
                 <span className="text-3xl font-display font-bold text-white tracking-tighter">{flight.departureIcao}</span>
