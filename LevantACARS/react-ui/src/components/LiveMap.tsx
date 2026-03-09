@@ -233,7 +233,7 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
                     <div style={{ color: '#888' }}>{flight.departureIcao} → {flight.arrivalIcao}</div>
                     <div style={{ color: '#888' }}>{flight.aircraftType}</div>
                     <div style={{ marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '4px' }}>
-                      <span style={{ color: '#00a3ff' }}>FL{Math.round(flight.altitude / 100)}</span>
+                      <span style={{ color: '#00a3ff' }}>{flight.altitude >= 18000 ? `FL${Math.round(flight.altitude / 100)}` : `${flight.altitude.toLocaleString()} ft`}</span>
                       <span style={{ margin: '0 6px', color: '#333' }}>·</span>
                       <span>{flight.groundSpeed} kts</span>
                       <span style={{ margin: '0 6px', color: '#333' }}>·</span>
@@ -404,7 +404,9 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
                       <span className="text-[10px] font-mono text-white/50">{f.arrivalIcao}</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] text-gray-600">FL{Math.round(f.altitude / 100)}</span>
+                      <span className="text-[10px] text-gray-600">
+                        {f.altitude >= 18000 ? `FL${Math.round(f.altitude / 100)}` : `${f.altitude.toLocaleString()} ft`}
+                      </span>
                       <span className="text-[10px] text-gray-600">{f.groundSpeed}kts</span>
                       <span className="text-[9px] text-gray-700 ml-auto">{timeSince(f.lastUpdate)}</span>
                     </div>

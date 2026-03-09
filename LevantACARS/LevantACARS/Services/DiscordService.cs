@@ -194,7 +194,8 @@ public sealed class DiscordService : IDisposable
         }
         else
         {
-            stateText = $"{phase} · FL{altitude / 100:D3} · {groundSpeed}kt";
+            string altText = altitude >= 18000 ? $"FL{altitude / 100:D3}" : $"{altitude:N0} ft";
+            stateText = $"{phase} · {altText} · {groundSpeed}kt";
         }
 
         _client.SetPresence(new RichPresence
