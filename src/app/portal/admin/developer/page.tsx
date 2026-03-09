@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Wrench, Trash2, Database, Loader2 } from 'lucide-react';
+import { Wrench, Trash2, Database, Loader2, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function DeveloperManagementPage() {
     const [loading, setLoading] = useState<string | null>(null);
+    const [testEmail, setTestEmail] = useState('');
 
     const handleClearDownloadLogs = async () => {
         if (!confirm('Are you sure you want to clear all download logs? This action cannot be undone.')) {
@@ -57,6 +58,36 @@ export default function DeveloperManagementPage() {
         }
     };
 
+    const handleTestEmail = async () => {
+        if (!testEmail) {
+            toast.error('Please enter an email address');
+            return;
+        }
+
+        setLoading('email');
+        try {
+            const res = await fetch('/api/admin/test-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ testEmail }),
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success(`Email sent successfully! Check ${testEmail}`);
+                console.log('[Email Test] Result:', data);
+            } else {
+                toast.error(`Email failed: ${data.error}`);
+                console.error('[Email Test] Error:', data);
+            }
+        } catch (error) {
+            console.error('Error testing email:', error);
+            toast.error('Failed to test email');
+        } finally {
+            setLoading(null);
+        }
+    };
+
     return (
         <div className="p-6 space-y-6">
             {/* Header */}
@@ -90,6 +121,47 @@ export default function DeveloperManagementPage() {
 
             {/* Actions Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Test Email */}
+                <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6 hover:border-blue-500/30 transition-all">
+                    <div className="flex items-start gap-3 mb-4">
+                        <div className="p-2 rounded-lg bg-blue-500/10">
+                            <Mail className="w-5 h-5 text-blue-400" />
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="text-sm font-bold text-white">Test Email Service</h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Verify SMTP configuration and send a test email
+                            </p>
+                        </div>
+                    </div>
+                    <div className="space-y-3">
+                        <input
+                            type="email"
+                            value={testEmail}
+                            onChange={(e) => setTestEmail(e.target.value)}
+                            placeholder="Enter test email address"
+                            className="w-full px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
+                        />
+                        <button
+                            onClick={handleTestEmail}
+                            disabled={loading !== null}
+                            className="w-full px-4 py-2.5 rounded-lg bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-400 hover:border-blue-500/50 hover:from-blue-500/30 hover:to-cyan-500/30 transition-all font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                            {loading === 'email' ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Testing...
+                                </>
+                            ) : (
+                                <>
+                                    <Mail className="w-4 h-4" />
+                                    Send Test Email
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+
                 {/* Clear Download Logs */}
                 <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6 hover:border-purple-500/30 transition-all">
                     <div className="flex items-start gap-3 mb-4">
