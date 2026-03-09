@@ -96,7 +96,6 @@ export default function Sidebar() {
         const operationsItems = isGroupflightRole
             ? [{ name: 'Group Flights', path: '/portal/multiplayer-events', icon: Users }]
             : [
-                { name: 'Dispatch', path: '/portal/dispatch', icon: PlaneTakeoff },
                 { name: 'Book Flight', path: '/portal/simbrief', icon: Plane },
                 { name: 'My Reports', path: '/portal/reports', icon: FileText },
                 { name: 'Tours', path: '/portal/tours', icon: Map },
