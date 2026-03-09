@@ -13,10 +13,9 @@ public class AcarsClient : IDisposable
 {
     private const string HOPPIE_URL_CONNECT = "https://www.hoppie.nl/acars/system/connect.html";
     private string logonSecret = null;
-    private int messageCounter = 0;
-
+    
     private HttpClient httpClient;
-    private Thread messagePollThread;
+    private CancellationTokenSource _pollingCts;
     private Regex messageRegex = new Regex(@"\{(\S*)\s(\S*)\s\{(\/\S*\/|TELEX\s)([^\}]*)\}\}");
     private DateTime _connectionStartTime;
     private ConnectionState _connectionState = ConnectionState.Disconnected;
@@ -29,12 +28,12 @@ public class AcarsClient : IDisposable
     /// <summary>
     /// Event is triggered when automatic polling of new messages gets at least one message
     /// </summary>
-    public event EventHandler<AcarsMessageEventArgs> MessageRecieved;
+    public event EventHandler<AcarsMessageEventArgs>? MessageRecieved;
 
     /// <summary>
     /// Event triggered when connection state changes
     /// </summary>
-    public event EventHandler<ConnectionStateChangedEventArgs> OnConnectionStateChanged;
+    public event EventHandler<ConnectionStateChangedEventArgs>? OnConnectionStateChanged;
 
     /// <summary>
     /// List of all messages recieved since client instance was created
@@ -81,7 +80,7 @@ public class AcarsClient : IDisposable
     /// <param name="logonSecret">The hopplie secret token you get when registering on www.hoppie.nl</param>
     /// <param name="pollForMessages">Controls if the acars client should start listening to new messaged automatically, triggering the MessageRecieved event</param>
     /// <param name="httpClient">ONLY FOR UNIT TEST USE</param>
-    public AcarsClient(string callsign, string logonSecret, bool pollForMessages = true, HttpClient httpClient = null)
+    public AcarsClient(string callsign, string logonSecret, bool pollForMessages = true, HttpClient? httpClient = null)
     {
         if (logonSecret == null || logonSecret.Length < 6)
             throw new ArgumentException("Invalid logon secret.");
@@ -93,25 +92,19 @@ public class AcarsClient : IDisposable
 
         if (httpClient != null)
         {
-            // Unit test is mocking the http client
             this.httpClient = httpClient;
         }
         else
         { 
-            // Normal http client implementation (non-mocked)
             this.httpClient = new HttpClient();
             this.httpClient.Timeout = TimeSpan.FromSeconds(5);
         }
 
         MessageHistory = new List<AcarsMessage>();
-        messagePollThread = new Thread(MessagePollRunner);
         
         if(pollForMessages)
         {
-            State = ConnectionState.Connecting;
-            _connectionStartTime = DateTime.Now;
-            messagePollThread.Start();
-            State = ConnectionState.Connected;
+            StartPolling();
         }
     }
 
@@ -148,10 +141,10 @@ public class AcarsClient : IDisposable
     };
     #endregion
 
-    #region Message polling thread
-    private async void MessagePollRunner()
+    #region Message polling task
+    private async Task MessagePollRunner(CancellationToken token)
     {
-        while (true)
+        while (!token.IsCancellationRequested)
         {
             try
             {
@@ -172,8 +165,7 @@ public class AcarsClient : IDisposable
                         Logger.AppendToLog(msg);
                     }
                     
-                    EventHandler<AcarsMessageEventArgs> handler = MessageRecieved;
-                    handler?.Invoke(this, new AcarsMessageEventArgs(messages, MessageHistory.ToArray()));
+                    MessageRecieved?.Invoke(this, new AcarsMessageEventArgs(messages, MessageHistory.ToArray()));
                 }
                 
                 // Update average response time
@@ -184,17 +176,17 @@ public class AcarsClient : IDisposable
                         (Stats.AverageResponseTime.TotalMilliseconds + responseTime.TotalMilliseconds) / 2
                     );
                 
-                Thread.Sleep(5000);
+                await Task.Delay(5000, token);
             }
             catch(TimeoutException ex)
             {
                 Stats.FailedMessages++;
                 Stats.LastError = ex.Message;
                 Stats.LastErrorTime = DateTime.Now;
-                Thread.Sleep(1000);
+                try { await Task.Delay(1000, token); } catch { }
                 continue;
             }
-            catch(ThreadAbortException)
+            catch(TaskCanceledException)
             {
                 State = ConnectionState.Disconnected;
                 return;
@@ -205,7 +197,7 @@ public class AcarsClient : IDisposable
                 Stats.LastError = ex.Message;
                 Stats.LastErrorTime = DateTime.Now;
                 State = ConnectionState.Error;
-                Thread.Sleep(5000);
+                try { await Task.Delay(5000, token); } catch { }
             }
         }
     }
@@ -220,11 +212,12 @@ public class AcarsClient : IDisposable
     /// </summary>
     public void StartPolling()
     {
-        if(messagePollThread.ThreadState != ThreadState.Running)
+        if (_pollingCts == null || _pollingCts.IsCancellationRequested)
         {
             State = ConnectionState.Connecting;
             _connectionStartTime = DateTime.Now;
-            messagePollThread.Start();
+            _pollingCts = new CancellationTokenSource();
+            _ = Task.Run(() => MessagePollRunner(_pollingCts.Token));
             State = ConnectionState.Connected;
         }
     }
@@ -234,10 +227,12 @@ public class AcarsClient : IDisposable
     /// </summary>
     public void StopPolling()
     {
-        if (messagePollThread.ThreadState == ThreadState.Running)
+        if (_pollingCts != null && !_pollingCts.IsCancellationRequested)
         {
             State = ConnectionState.Disconnected;
-            messagePollThread.Abort();
+            _pollingCts.Cancel();
+            _pollingCts.Dispose();
+            _pollingCts = null;
         }
     }
     #endregion
@@ -501,7 +496,6 @@ public class AcarsClient : IDisposable
         
         if(httpClient != null)
             httpClient.Dispose();
-        if(messagePollThread != null)
-            messagePollThread.Abort();
+        StopPolling();
     }
 }

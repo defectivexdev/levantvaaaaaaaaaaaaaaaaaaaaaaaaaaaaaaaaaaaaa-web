@@ -194,6 +194,28 @@ export default function HoppiePanel({ messages, logs, callsign }: Props) {
                     }`}>
                       {msg.content}
                     </div>
+                    {msg.isInbound && (
+                      <div className="flex gap-2 mt-1.5 ml-1">
+                        <button 
+                          onClick={() => { setCpdlcRecipient(msg.from); setCpdlcMessage('WILCO'); }}
+                          className="px-2 py-0.5 text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded hover:bg-emerald-500/20 transition-colors uppercase tracking-wider"
+                        >
+                          WILCO
+                        </button>
+                        <button 
+                          onClick={() => { setCpdlcRecipient(msg.from); setCpdlcMessage('STANDBY'); }}
+                          className="px-2 py-0.5 text-[9px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded hover:bg-amber-500/20 transition-colors uppercase tracking-wider"
+                        >
+                          STANDBY
+                        </button>
+                        <button 
+                          onClick={() => { setCpdlcRecipient(msg.from); setCpdlcMessage('UNABLE'); }}
+                          className="px-2 py-0.5 text-[9px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded hover:bg-rose-500/20 transition-colors uppercase tracking-wider"
+                        >
+                          UNABLE
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))
               )}
