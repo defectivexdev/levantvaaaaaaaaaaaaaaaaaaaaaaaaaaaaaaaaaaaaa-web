@@ -49,6 +49,7 @@ export default function Sidebar() {
     const isGroupflightRole = user?.role === 'Groupflight';
     const [vaultBalance, setVaultBalance] = useState<number | null>(null);
     const [manualPirepCount, setManualPirepCount] = useState(0);
+    const [avatarError, setAvatarError] = useState(false);
 
     const isActive = useCallback((path: string) => {
         if (!pathname) return false;
@@ -292,22 +293,18 @@ export default function Sidebar() {
                 {user && (
                     <Link href="/portal/profile" className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-500/5 to-transparent border border-cyan-500/10 hover:border-cyan-500/20 transition-all group">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-[10px] font-bold flex-shrink-0 shadow-lg shadow-cyan-500/20 overflow-hidden">
-                            <img 
-                                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || ''}/image/upload/c_fill,w_100,h_100,f_auto,q_auto/avatars/pilot_${user.pilotId}`}
-                                alt="Avatar"
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    target.style.display = 'none';
-                                    const parent = target.parentElement;
-                                    if (parent && !parent.querySelector('.initials')) {
-                                        const initials = document.createElement('span');
-                                        initials.className = 'initials';
-                                        initials.textContent = (user.pilotId || 'P').charAt(0);
-                                        parent.appendChild(initials);
-                                    }
-                                }}
-                            />
+                            {!avatarError ? (
+                                <img 
+                                    src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || ''}/image/upload/c_fill,w_100,h_100,f_auto,q_auto/avatars/pilot_${user.pilotId}`}
+                                    alt="Avatar"
+                                    className="w-full h-full object-cover"
+                                    onError={() => setAvatarError(true)}
+                                />
+                            ) : (
+                                <span className="text-cyan-400 text-[10px] font-bold">
+                                    {(user.pilotId || 'P').charAt(0)}
+                                </span>
+                            )}
                         </div>
                         <div className="min-w-0">
                             <div className="text-[10px] font-bold text-cyan-400 truncate group-hover:text-cyan-300 transition-colors">{user.customCallsign || user.pilotId || 'Pilot'}</div>
