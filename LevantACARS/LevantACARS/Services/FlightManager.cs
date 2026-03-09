@@ -356,7 +356,7 @@ public sealed class FlightManager : IDisposable
                 int distanceRemaining = 0;
                 if (_arrivalLat != 0 && _arrivalLon != 0)
                 {
-                    distanceRemaining = (int)CalculateDistance(data.Latitude, data.Longitude, _arrivalLat, _arrivalLon);
+                    distanceRemaining = (int)HaversineNm(data.Latitude, data.Longitude, _arrivalLat, _arrivalLon);
                 }
 
                 // Get location context based on coordinates (simple region detection)
