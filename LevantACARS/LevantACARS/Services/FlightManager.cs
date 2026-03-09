@@ -362,8 +362,8 @@ public sealed class FlightManager : IDisposable
                 // Get location context based on coordinates (simple region detection)
                 string locationContext = GetLocationContext(data.Latitude, data.Longitude);
 
-                // Check if on VATSIM/IVAO (you can add network detection logic here)
-                string networkStatus = ""; // TODO: Add network detection if available
+                // Check if on IVAO network (you can add IVAO detection logic here)
+                string networkStatus = ""; // TODO: Add IVAO network detection if available
 
                 _discord.UpdateFlightDetails(
                     _flightNumber ?? "", 
