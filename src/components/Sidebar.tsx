@@ -45,7 +45,7 @@ interface AdminSubGroup {
 
 export default function Sidebar() {
     const pathname = usePathname();
-    const { isAdmin, user } = useAuth();
+    const { isAdmin, user, refresh } = useAuth();
     const isGroupflightRole = user?.role === 'Groupflight';
     const [vaultBalance, setVaultBalance] = useState<number | null>(null);
     const [manualPirepCount, setManualPirepCount] = useState(0);
@@ -61,6 +61,9 @@ export default function Sidebar() {
     }, [pathname]);
 
     useEffect(() => {
+        // Refresh user data on mount to ensure fresh session data
+        refresh();
+        
         if (isAdmin) {
             fetch('/api/admin/stats')
                 .then(res => res.json())
@@ -79,7 +82,7 @@ export default function Sidebar() {
                 setAvatarTimestamp(parseInt(cachedVersion, 10));
             }
         }
-    }, [isAdmin, user?.pilotId]);
+    }, [isAdmin, user?.pilotId, refresh]);
 
     const menuItems = useMemo<{ category: string; items: MenuItem[] }[]>(() => {
         // Filter PILOT and OPERATIONS sections for Groupflight role - hide most items except Group Flights
