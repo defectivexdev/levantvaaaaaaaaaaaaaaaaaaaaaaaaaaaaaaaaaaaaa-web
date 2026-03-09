@@ -78,20 +78,30 @@ public sealed class DiscordService : IDisposable
     }
 
     /// <summary>Update presence with active flight data.</summary>
-    public void SetFlightActive(string flightNumber, string departure, string arrival, FlightPhase phase)
+    public void SetFlightActive(
+        string flightNumber, 
+        string departure, 
+        string arrival, 
+        FlightPhase phase,
+        string departureFormatted = "",
+        string arrivalFormatted = "")
     {
         if (!_initialized || _client == null) return;
 
         _flightStartTimestamp = Timestamps.Now; // Start flight timer
 
+        // Use formatted names if available, otherwise fall back to ICAO
+        var depDisplay = !string.IsNullOrEmpty(departureFormatted) ? departureFormatted : departure;
+        var arrDisplay = !string.IsNullOrEmpty(arrivalFormatted) ? arrivalFormatted : arrival;
+
         string stateText;
         if (phase is FlightPhase.Preflight or FlightPhase.Boarding or FlightPhase.Pushback)
         {
-            stateText = $"Currently at {departure}";
+            stateText = $"Currently at {depDisplay}";
         }
         else if (phase is FlightPhase.Arrived or FlightPhase.Shutdown or FlightPhase.TaxiIn)
         {
-            stateText = $"Currently at {arrival}";
+            stateText = $"Currently at {arrDisplay}";
         }
         else
         {
@@ -183,7 +193,9 @@ public sealed class DiscordService : IDisposable
         string aircraftType = "",
         int distanceRemaining = 0,
         string networkStatus = "",
-        string locationContext = "")
+        string locationContext = "",
+        string departureFormatted = "",
+        string arrivalFormatted = "")
     {
         if (!_initialized || _client == null) return;
 
@@ -193,14 +205,18 @@ public sealed class DiscordService : IDisposable
             _flightStartTimestamp = Timestamps.Now;
         }
 
+        // Use formatted names if available, otherwise fall back to ICAO
+        var depDisplay = !string.IsNullOrEmpty(departureFormatted) ? departureFormatted : departure;
+        var arrDisplay = !string.IsNullOrEmpty(arrivalFormatted) ? arrivalFormatted : arrival;
+
         string stateText;
         if (phase is FlightPhase.Preflight or FlightPhase.Boarding or FlightPhase.Pushback)
         {
-            stateText = $"Currently at {departure}";
+            stateText = $"Currently at {depDisplay}";
         }
         else if (phase is FlightPhase.Arrived or FlightPhase.Shutdown or FlightPhase.TaxiIn)
         {
-            stateText = $"Currently at {arrival}";
+            stateText = $"Currently at {arrDisplay}";
         }
         else
         {
@@ -215,7 +231,7 @@ public sealed class DiscordService : IDisposable
                 stateParts.Add($"{distanceRemaining}nm to go");
             }
             
-            // Add location context if available (e.g., "over Mediterranean Sea")
+            // Add location context if available (e.g., "Dubai, UAE" or "Mediterranean Sea")
             if (!string.IsNullOrEmpty(locationContext))
             {
                 stateParts.Add($"over {locationContext}");

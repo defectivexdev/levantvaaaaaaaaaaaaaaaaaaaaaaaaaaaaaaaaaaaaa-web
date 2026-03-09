@@ -21,6 +21,7 @@ public sealed class FlightManager : IDisposable
     private readonly DiscordWebhookService _webhook;
     private readonly DiscordService _discord;
     private readonly RunwayDetector _runwayDetector;
+    private readonly AirportDbService _airportDb;
 
     // ── Active flight state ─────────────────────────────────────────────────
     private string? _pilotId;
@@ -114,7 +115,8 @@ public sealed class FlightManager : IDisposable
         LevantApiClient api,
         DiscordWebhookService webhook,
         DiscordService discord,
-        RunwayDetector runwayDetector)
+        RunwayDetector runwayDetector,
+        AirportDbService airportDb)
     {
         _logger = logger;
         _fsuipc = fsuipc;
@@ -124,6 +126,7 @@ public sealed class FlightManager : IDisposable
         _webhook = webhook;
         _discord = discord;
         _runwayDetector = runwayDetector;
+        _airportDb = airportDb;
 
         // Wire up events
         _fsuipc.OnFlightDataReceived += HandleFlightData;
@@ -226,13 +229,15 @@ public sealed class FlightManager : IDisposable
         _arrivalLat = 0;
         _arrivalLon = 0;
 
-        // Preload runway GPS data for departure & arrival airports
-        _ = _runwayDetector.PreloadAsync(p.DepartureIcao, p.ArrivalIcao)
-            .ContinueWith(t =>
+        // Preload runway GPS data & airport info for departure & arrival airports
+        _ = Task.WhenAll(
+            _runwayDetector.PreloadAsync(p.DepartureIcao, p.ArrivalIcao),
+            _airportDb.PreloadAirportsAsync(p.DepartureIcao, p.ArrivalIcao)
+        ).ContinueWith(t =>
             {
                 if (t.IsFaulted)
                 {
-                    _logger.LogWarning(t.Exception, "[FlightManager] Runway data preload failed");
+                    _logger.LogWarning(t.Exception, "[FlightManager] Runway/airport data preload failed");
                     return;
                 }
                 // Calculate planned distance from airport coordinates
@@ -249,9 +254,17 @@ public sealed class FlightManager : IDisposable
         // Notify API (fire-and-forget) - API handles Discord notifications
         _ = _api.NotifyFlightStartAsync(p.PilotId, p.FlightNumber, p.Callsign, p.DepartureIcao, p.ArrivalIcao, p.AircraftType);
 
-        // Discord Rich Presence — show active flight
-        try { _discord.SetFlightActive(p.FlightNumber, p.DepartureIcao, p.ArrivalIcao, FlightPhase.Preflight); }
-        catch { /* non-critical */ }
+        // Discord Rich Presence — show active flight with rich airport names
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var depFormatted = await _airportDb.GetFormattedLocationAsync(p.DepartureIcao);
+                var arrFormatted = await _airportDb.GetFormattedLocationAsync(p.ArrivalIcao);
+                _discord.SetFlightActive(p.FlightNumber, p.DepartureIcao, p.ArrivalIcao, FlightPhase.Preflight, depFormatted, arrFormatted);
+            }
+            catch { /* non-critical */ }
+        });
 
         // Start heartbeat
         StartHeartbeat();
@@ -350,35 +363,44 @@ public sealed class FlightManager : IDisposable
         // ── Discord RPC live update (every 20th tick ≈ every 10s) ────────
         if (_updateCounter % 20 == 0)
         {
-            try 
-            { 
-                // Calculate distance remaining to destination
-                int distanceRemaining = 0;
-                if (_arrivalLat != 0 && _arrivalLon != 0)
-                {
-                    distanceRemaining = (int)HaversineNm(data.Latitude, data.Longitude, _arrivalLat, _arrivalLon);
+            _ = Task.Run(async () =>
+            {
+                try 
+                { 
+                    // Calculate distance remaining to destination
+                    int distanceRemaining = 0;
+                    if (_arrivalLat != 0 && _arrivalLon != 0)
+                    {
+                        distanceRemaining = (int)HaversineNm(data.Latitude, data.Longitude, _arrivalLat, _arrivalLon);
+                    }
+
+                    // Get rich airport location info for Discord presence
+                    var depFormatted = await _airportDb.GetFormattedLocationAsync(_departureIcao ?? "");
+                    var arrFormatted = await _airportDb.GetFormattedLocationAsync(_arrivalIcao ?? "");
+
+                    // Get location context - use nearest airport city/country if available
+                    string locationContext = GetLocationContext(data.Latitude, data.Longitude);
+
+                    // Check if on IVAO network (you can add IVAO detection logic here)
+                    string networkStatus = ""; // TODO: Add IVAO network detection if available
+
+                    _discord.UpdateFlightDetails(
+                        _flightNumber ?? "", 
+                        _departureIcao ?? "", 
+                        _arrivalIcao ?? "", 
+                        phase, 
+                        data.Altitude, 
+                        data.GroundSpeed,
+                        _aircraftType ?? "",
+                        distanceRemaining,
+                        networkStatus,
+                        locationContext,
+                        depFormatted,
+                        arrFormatted
+                    );
                 }
-
-                // Get location context based on coordinates (simple region detection)
-                string locationContext = GetLocationContext(data.Latitude, data.Longitude);
-
-                // Check if on IVAO network (you can add IVAO detection logic here)
-                string networkStatus = ""; // TODO: Add IVAO network detection if available
-
-                _discord.UpdateFlightDetails(
-                    _flightNumber ?? "", 
-                    _departureIcao ?? "", 
-                    _arrivalIcao ?? "", 
-                    phase, 
-                    data.Altitude, 
-                    data.GroundSpeed,
-                    _aircraftType ?? "",
-                    distanceRemaining,
-                    networkStatus,
-                    locationContext
-                );
-            }
-            catch { /* non-critical */ }
+                catch { /* non-critical */ }
+            });
         }
 
         if (data.CrashDetected) _crashed = true;

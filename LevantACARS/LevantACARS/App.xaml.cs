@@ -114,6 +114,7 @@ public partial class App : Application
         services.AddSingleton<FlightStateMachine>();
         services.AddSingleton<ExceedanceProxy>();
         services.AddSingleton<RunwayDetector>();
+        services.AddSingleton<AirportDbService>();
         services.AddSingleton<ScoringEngine>();
         services.AddSingleton<FlightManager>();
         services.AddSingleton<DiscordService>();
