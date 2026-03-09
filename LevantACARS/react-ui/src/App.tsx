@@ -332,31 +332,6 @@ function DashboardView({
       {/* Landing Summary (after flight) */}
       {score && <LandingSummary score={score} flight={flight} />}
 
-      {/* Recent Flights */}
-      {stats && stats.recentFlights.length > 0 && (
-        <div className="glass-card rounded-xl border border-white/5 p-4">
-          <div className="text-xs font-bold text-accent-gold/60 uppercase tracking-[0.2em] mb-3">Recent Flights</div>
-          <div className="space-y-1">
-            {stats.recentFlights.slice(0, 5).map((f, i) => (
-              <div key={i} className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-dark-950/40 border border-white/[0.03]">
-                <span className="text-xs font-bold text-white w-16 truncate">{f.callsign}</span>
-                <span className="text-xs font-mono text-accent-gold/70">{f.departureIcao}</span>
-                <span className="text-xs text-gray-700">→</span>
-                <span className="text-xs font-mono text-white/50">{f.arrivalIcao}</span>
-                <span className="text-xs text-gray-600 ml-auto">{f.aircraftType}</span>
-                <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${f.landingGrade === 'Butter' ? 'bg-accent-gold/10 text-accent-gold' : f.landingGrade === 'Smooth' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-gray-400'}`}>
-                  {f.landingGrade || '—'}
-                </span>
-                <span className="text-xs font-mono text-gray-500 w-8 text-right">{f.score}%</span>
-                <span className={`text-xs font-bold uppercase tracking-wider px-1 py-0.5 rounded ${f.status === 'Approved' ? 'text-emerald-400' : f.status === 'Rejected' ? 'text-rose-400' : 'text-amber-400'}`}>
-                  {f.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Activity Log — flex-1 takes all remaining vertical space */}
       <div className="flex-1 min-h-[160px] rounded-xl bg-dark-900/40 backdrop-blur-md border border-white/[0.04] overflow-hidden">
         <FlightLogs activityLog={activityLog} exceedanceLog={exceedanceLog} />

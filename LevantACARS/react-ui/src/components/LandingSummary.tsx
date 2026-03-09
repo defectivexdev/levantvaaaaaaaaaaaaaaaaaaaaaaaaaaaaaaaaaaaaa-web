@@ -69,12 +69,6 @@ export default function LandingSummary({ score, flight }: Props) {
             <span className="telemetry-label block mb-1">Rate</span>
             <span className="telemetry-value text-2xl font-bold" style={{ color: Math.abs(fpm) <= 250 ? '#00cfd5' : Math.abs(fpm) <= 500 ? '#f8fafc' : Math.abs(fpm) <= 700 ? '#fbbf24' : '#ef4444' }}>{fpm.toFixed(0)} <span className="telemetry-unit">FPM</span></span>
           </div>
-          {score.xpEarned > 0 && (
-            <div>
-              <span className="telemetry-label block mb-1">XP Earned</span>
-              <span className="telemetry-value text-2xl text-accent-cyan">+{score.xpEarned}</span>
-            </div>
-          )}
         </div>
 
         {score.rejected && (
