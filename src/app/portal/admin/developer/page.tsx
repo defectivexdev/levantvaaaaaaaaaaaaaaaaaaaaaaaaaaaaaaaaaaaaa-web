@@ -33,7 +33,7 @@ export default function DeveloperManagementPage() {
     };
 
     const handleClearBids = async () => {
-        if (!confirm('Are you sure you want to clear all bids? This action cannot be undone.')) {
+        if (!confirm('Clear all inactive bids (completed, cancelled, and expired)? Active and in-progress flights will be preserved.')) {
             return;
         }
 
@@ -129,9 +129,9 @@ export default function DeveloperManagementPage() {
                             <Trash2 className="w-5 h-5 text-pink-400" />
                         </div>
                         <div className="flex-1">
-                            <h3 className="text-sm font-bold text-white">Clear All Bids</h3>
+                            <h3 className="text-sm font-bold text-white">Clear Inactive Bids</h3>
                             <p className="text-xs text-gray-500 mt-1">
-                                Remove all flight bids from the database
+                                Remove completed, cancelled, and expired bids (preserves active flights)
                             </p>
                         </div>
                     </div>
@@ -148,7 +148,7 @@ export default function DeveloperManagementPage() {
                         ) : (
                             <>
                                 <Trash2 className="w-4 h-4" />
-                                Clear All Bids
+                                Clear Inactive Bids
                             </>
                         )}
                     </button>

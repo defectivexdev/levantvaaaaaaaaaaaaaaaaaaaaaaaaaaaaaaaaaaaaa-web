@@ -12,12 +12,20 @@ export async function POST(request: NextRequest) {
 
         await connectDB();
 
-        const result = await Bid.deleteMany({});
+        // Only delete bids that are not in progress
+        // Delete: Completed, Cancelled, or expired Active bids
+        const result = await Bid.deleteMany({
+            $or: [
+                { status: 'Completed' },
+                { status: 'Cancelled' },
+                { status: 'Active', expires_at: { $lt: new Date() } }
+            ]
+        });
 
         return NextResponse.json({
             success: true,
             deletedCount: result.deletedCount,
-            message: `Successfully deleted ${result.deletedCount} bids`,
+            message: `Successfully deleted ${result.deletedCount} inactive bids`,
         });
     } catch (error: any) {
         console.error('[Clear Bids] Error:', error);
