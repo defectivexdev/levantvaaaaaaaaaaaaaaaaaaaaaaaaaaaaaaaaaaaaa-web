@@ -35,7 +35,7 @@ public class NetworkStats
     /// <summary>
     /// Last error that occurred
     /// </summary>
-    public string LastError { get; set; }
+    public string LastError { get; set; } = string.Empty;
 
     /// <summary>
     /// When the last error occurred
@@ -73,7 +73,7 @@ public class NetworkStats
         MessagesReceived = 0;
         FailedMessages = 0;
         AverageResponseTime = TimeSpan.Zero;
-        LastError = null;
+        LastError = string.Empty;
         LastErrorTime = null;
         ReconnectionAttempts = 0;
         Uptime = TimeSpan.Zero;

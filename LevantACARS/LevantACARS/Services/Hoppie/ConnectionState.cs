@@ -21,10 +21,10 @@ public class ConnectionStateChangedEventArgs : EventArgs
 {
     public ConnectionState OldState { get; }
     public ConnectionState NewState { get; }
-    public string Message { get; }
-    public Exception Error { get; }
+    public string? Message { get; }
+    public Exception? Error { get; }
 
-    public ConnectionStateChangedEventArgs(ConnectionState oldState, ConnectionState newState, string message = null, Exception error = null)
+    public ConnectionStateChangedEventArgs(ConnectionState oldState, ConnectionState newState, string? message = null, Exception? error = null)
     {
         OldState = oldState;
         NewState = newState;

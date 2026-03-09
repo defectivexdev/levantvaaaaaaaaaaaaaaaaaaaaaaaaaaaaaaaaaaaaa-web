@@ -13,7 +13,7 @@ public class MessageLogger
 {
     private readonly string _logDirectory;
 
-    public MessageLogger(string logDirectory = null)
+    public MessageLogger(string? logDirectory = null)
     {
         _logDirectory = logDirectory ?? Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -30,7 +30,7 @@ public class MessageLogger
     /// <summary>
     /// Save message history to a JSON file
     /// </summary>
-    public void SaveMessageHistory(List<AcarsMessage> messages, string filename = null)
+    public void SaveMessageHistory(List<AcarsMessage> messages, string? filename = null)
     {
         try
         {
@@ -82,7 +82,7 @@ public class MessageLogger
     /// <summary>
     /// Export messages to a human-readable text file
     /// </summary>
-    public void ExportToText(List<AcarsMessage> messages, string filename = null)
+    public void ExportToText(List<AcarsMessage> messages, string? filename = null)
     {
         try
         {
@@ -149,7 +149,8 @@ public class MessageLogger
     {
         return Directory.GetFiles(_logDirectory, "*.json")
             .Concat(Directory.GetFiles(_logDirectory, "*.txt"))
-            .Select(Path.GetFileName)
+            .Select(f => Path.GetFileName(f) ?? string.Empty)
+            .Where(f => !string.IsNullOrEmpty(f))
             .ToArray();
     }
 

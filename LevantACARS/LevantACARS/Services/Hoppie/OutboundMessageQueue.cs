@@ -10,14 +10,14 @@ namespace LevantACARS.Services.Hoppie;
 public class PendingMessage
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-    public string FromCallsign { get; set; }
-    public string ToCallsign { get; set; }
+    public string FromCallsign { get; set; } = string.Empty;
+    public string ToCallsign { get; set; } = string.Empty;
     public AcarsClient.MessageType MessageType { get; set; }
-    public string Data { get; set; }
+    public string Data { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public int RetryCount { get; set; }
     public DateTime? LastAttempt { get; set; }
-    public string LastError { get; set; }
+    public string LastError { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -41,12 +41,12 @@ public class OutboundMessageQueue
     /// <summary>
     /// Event triggered when a message fails after all retries
     /// </summary>
-    public event EventHandler<PendingMessage> OnMessageFailed;
+    public event EventHandler<PendingMessage>? OnMessageFailed;
 
     /// <summary>
     /// Event triggered when a message is successfully sent
     /// </summary>
-    public event EventHandler<PendingMessage> OnMessageSent;
+    public event EventHandler<PendingMessage>? OnMessageSent;
 
     /// <summary>
     /// Number of pending messages in queue
@@ -76,7 +76,7 @@ public class OutboundMessageQueue
     /// <summary>
     /// Get the next message to send
     /// </summary>
-    public PendingMessage Dequeue()
+    public PendingMessage? Dequeue()
     {
         lock (_lock)
         {
@@ -87,7 +87,7 @@ public class OutboundMessageQueue
     /// <summary>
     /// Peek at the next message without removing it
     /// </summary>
-    public PendingMessage Peek()
+    public PendingMessage? Peek()
     {
         lock (_lock)
         {

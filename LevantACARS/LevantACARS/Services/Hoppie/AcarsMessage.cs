@@ -25,12 +25,12 @@ public class AcarsMessage
     /// <summary>
     /// Callsign from which the message was recieved
     /// </summary>
-    public string From { get; private set; }
+    public string From { get; private set; } = string.Empty;
 
     /// <summary>
     /// Callsign to which the message was addressed
     /// </summary>
-    public string To { get; private set; }
+    public string To { get; private set; } = string.Empty;
 
     /// <summary>
     /// Type of ACARS message
@@ -40,7 +40,7 @@ public class AcarsMessage
     /// <summary>
     /// Data contained in the message
     /// </summary>
-    public string Data { get; private set; }
+    public string Data { get; private set; } = string.Empty;
 
     /// <summary>
     /// Message priority level
@@ -70,7 +70,7 @@ public class AcarsMessage
     /// <summary>
     /// ID of the response message if one was sent
     /// </summary>
-    public string ResponseMessageId { get; set; }
+    public string ResponseMessageId { get; set; } = string.Empty;
 
     /// <summary>
     /// Use to create a generic ACARS message

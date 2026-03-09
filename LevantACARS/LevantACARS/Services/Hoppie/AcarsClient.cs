@@ -12,10 +12,10 @@ namespace LevantACARS.Services.Hoppie;
 public class AcarsClient : IDisposable
 {
     private const string HOPPIE_URL_CONNECT = "https://www.hoppie.nl/acars/system/connect.html";
-    private string logonSecret = null;
+    private string? logonSecret = null;
     
-    private HttpClient httpClient;
-    private CancellationTokenSource _pollingCts;
+    private HttpClient httpClient = new HttpClient();
+    private CancellationTokenSource _pollingCts = new CancellationTokenSource();
     private Regex messageRegex = new Regex(@"\{(\S*)\s(\S*)\s\{(\/\S*\/|TELEX\s)([^\}]*)\}\}");
     private DateTime _connectionStartTime;
     private ConnectionState _connectionState = ConnectionState.Disconnected;
@@ -23,7 +23,7 @@ public class AcarsClient : IDisposable
     /// <summary>
     /// 
     /// </summary>
-    public string Callsign { get; private set; }
+    public string Callsign { get; private set; } = string.Empty;
 
     /// <summary>
     /// Event is triggered when automatic polling of new messages gets at least one message
@@ -72,6 +72,16 @@ public class AcarsClient : IDisposable
     /// Message logger for persistence
     /// </summary>
     public MessageLogger Logger { get; private set; } = new MessageLogger();
+
+    /// <summary>
+    /// Helper to safely get logonSecret, throws if not set
+    /// </summary>
+    private string GetLogonSecret()
+    {
+        if (string.IsNullOrEmpty(logonSecret))
+            throw new InvalidOperationException("Logon secret not set");
+        return logonSecret;
+    }
 
     /// <summary>
     /// 
@@ -232,7 +242,7 @@ public class AcarsClient : IDisposable
             State = ConnectionState.Disconnected;
             _pollingCts.Cancel();
             _pollingCts.Dispose();
-            _pollingCts = null;
+            _pollingCts = new CancellationTokenSource();
         }
     }
     #endregion
@@ -248,7 +258,7 @@ public class AcarsClient : IDisposable
         try
         {
             string response = await sendMessageToHoppie(
-                logonSecret,
+                GetLogonSecret(),
                 callsign,
                 "SERVER",
                 MessageType.Poll,
@@ -279,9 +289,9 @@ public class AcarsClient : IDisposable
             MessageHistory.AddRange(messages);
             return messages.ToArray();
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            throw e;
+            throw;
         }
     }
 
@@ -294,7 +304,7 @@ public class AcarsClient : IDisposable
         try
         {
             string response = await sendMessageToHoppie(
-                logonSecret,
+                GetLogonSecret(),
                 "TEST",
                 "TEST",
                 MessageType.Ping,
@@ -304,9 +314,9 @@ public class AcarsClient : IDisposable
             return response.Trim('{', '}', ' ').Split(' ');
 
         }
-        catch(Exception e)
+        catch(Exception)
         {
-            throw e;
+            throw;
         }
     }
 
@@ -337,7 +347,7 @@ public class AcarsClient : IDisposable
             if (data != null)
             {
                 string response = await sendMessageToHoppie(
-                    logonSecret,
+                    GetLogonSecret(),
                     fromCallsign,
                     toCallsign,
                     MessageType.CPDLC,
@@ -351,9 +361,9 @@ public class AcarsClient : IDisposable
                 throw new Exception("Could not create valid CPDLC data based on input parameters");
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            throw e;
+            throw;
         }
     }
 
@@ -365,7 +375,7 @@ public class AcarsClient : IDisposable
         try
         {
             string response = await sendMessageToHoppie(
-                logonSecret,
+                GetLogonSecret(),
                 fromCallsign,
                 toCallsign,
                 MessageType.Telex,
@@ -374,9 +384,9 @@ public class AcarsClient : IDisposable
 
             return response;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            throw e;
+            throw;
         }
     }
 
@@ -387,7 +397,7 @@ public class AcarsClient : IDisposable
         try
         {
             string response = await sendMessageToHoppie(
-                logonSecret,
+                GetLogonSecret(),
                 fromCallsign,
                 toCallsign,
                 MessageType.DataRequest,
@@ -396,9 +406,9 @@ public class AcarsClient : IDisposable
 
             return response;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            throw e;
+            throw;
         }
     }
 
@@ -438,7 +448,7 @@ public class AcarsClient : IDisposable
                 throw new Exception("Got unknown response from Hoppie Server: " + response);
             }
         }
-        catch(OperationCanceledException oce)
+        catch(OperationCanceledException)
         {
             throw new TimeoutException("Request to Hoppie timed out");
         }
@@ -477,7 +487,7 @@ public class AcarsClient : IDisposable
     /// <summary>
     /// Save current message history to file
     /// </summary>
-    public void SaveMessageHistory(string filename = null)
+    public void SaveMessageHistory(string? filename = null)
     {
         Logger.SaveMessageHistory(MessageHistory, filename);
     }
@@ -485,7 +495,7 @@ public class AcarsClient : IDisposable
     /// <summary>
     /// Export messages to text file
     /// </summary>
-    public void ExportMessagesToText(string filename = null)
+    public void ExportMessagesToText(string? filename = null)
     {
         Logger.ExportToText(MessageHistory, filename);
     }
