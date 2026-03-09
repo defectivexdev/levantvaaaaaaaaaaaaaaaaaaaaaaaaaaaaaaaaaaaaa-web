@@ -172,8 +172,18 @@ public sealed class DiscordService : IDisposable
         _flightStartTimestamp = null; // Clear after showing completion
     }
 
-    /// <summary>Update presence with live flight details (altitude, speed, phase).</summary>
-    public void UpdateFlightDetails(string flightNumber, string departure, string arrival, FlightPhase phase, int altitude, int groundSpeed)
+    /// <summary>Update presence with live flight details (altitude, speed, phase, aircraft, location).</summary>
+    public void UpdateFlightDetails(
+        string flightNumber, 
+        string departure, 
+        string arrival, 
+        FlightPhase phase, 
+        int altitude, 
+        int groundSpeed,
+        string aircraftType = "",
+        int distanceRemaining = 0,
+        string networkStatus = "",
+        string locationContext = "")
     {
         if (!_initialized || _client == null) return;
 
@@ -195,12 +205,39 @@ public sealed class DiscordService : IDisposable
         else
         {
             string altText = altitude >= 18000 ? $"FL{altitude / 100:D3}" : $"{altitude:N0} ft";
-            stateText = $"{phase} · {altText} · {groundSpeed}kt";
+            
+            // Build state text with optional components
+            var stateParts = new List<string> { $"{phase}", altText, $"{groundSpeed}kt" };
+            
+            // Add distance if available
+            if (distanceRemaining > 0)
+            {
+                stateParts.Add($"{distanceRemaining}nm to go");
+            }
+            
+            // Add location context if available (e.g., "over Mediterranean Sea")
+            if (!string.IsNullOrEmpty(locationContext))
+            {
+                stateParts.Add($"over {locationContext}");
+            }
+            
+            // Add network badge if flying on network
+            if (!string.IsNullOrEmpty(networkStatus))
+            {
+                stateParts.Add($"🌐 {networkStatus}");
+            }
+            
+            stateText = string.Join(" · ", stateParts);
         }
+
+        // Build details with aircraft type if available
+        string details = string.IsNullOrEmpty(aircraftType)
+            ? $"{flightNumber} — {departure} → {arrival}"
+            : $"{flightNumber} — {departure} → {arrival} • {aircraftType}";
 
         _client.SetPresence(new RichPresence
         {
-            Details = $"{flightNumber} — {departure} → {arrival}",
+            Details = details,
             State = stateText,
             Assets = new Assets
             {

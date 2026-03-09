@@ -350,7 +350,34 @@ public sealed class FlightManager : IDisposable
         // ── Discord RPC live update (every 20th tick ≈ every 10s) ────────
         if (_updateCounter % 20 == 0)
         {
-            try { _discord.UpdateFlightDetails(_flightNumber ?? "", _departureIcao ?? "", _arrivalIcao ?? "", phase, data.Altitude, data.GroundSpeed); }
+            try 
+            { 
+                // Calculate distance remaining to destination
+                int distanceRemaining = 0;
+                if (_arrivalLat != 0 && _arrivalLon != 0)
+                {
+                    distanceRemaining = (int)CalculateDistance(data.Latitude, data.Longitude, _arrivalLat, _arrivalLon);
+                }
+
+                // Get location context based on coordinates (simple region detection)
+                string locationContext = GetLocationContext(data.Latitude, data.Longitude);
+
+                // Check if on VATSIM/IVAO (you can add network detection logic here)
+                string networkStatus = ""; // TODO: Add network detection if available
+
+                _discord.UpdateFlightDetails(
+                    _flightNumber ?? "", 
+                    _departureIcao ?? "", 
+                    _arrivalIcao ?? "", 
+                    phase, 
+                    data.Altitude, 
+                    data.GroundSpeed,
+                    _aircraftType ?? "",
+                    distanceRemaining,
+                    networkStatus,
+                    locationContext
+                );
+            }
             catch { /* non-critical */ }
         }
 
@@ -652,6 +679,57 @@ public sealed class FlightManager : IDisposable
     public bool IsNonStandard => _isNonStandard;
 
     public int IntegrityScore => _flightActive ? CalculateIntegrityScore() : 100;
+
+    // ─── Geographic Location Context ──────────────────────────────────────
+    
+    /// <summary>
+    /// Provides geographic context based on coordinates (e.g., "Mediterranean Sea", "Europe", "Atlantic Ocean")
+    /// </summary>
+    private string GetLocationContext(double lat, double lon)
+    {
+        // Mediterranean Region (30-45°N, 0-40°E)
+        if (lat >= 30 && lat <= 45 && lon >= 0 && lon <= 40)
+            return "Mediterranean Sea";
+        
+        // Middle East (15-40°N, 35-65°E)
+        if (lat >= 15 && lat <= 40 && lon >= 35 && lon <= 65)
+            return "Middle East";
+        
+        // Europe (40-70°N, -10-40°E)
+        if (lat >= 40 && lat <= 70 && lon >= -10 && lon <= 40)
+            return "Europe";
+        
+        // North Atlantic (30-60°N, -70 to -10°E)
+        if (lat >= 30 && lat <= 60 && lon >= -70 && lon <= -10)
+            return "Atlantic Ocean";
+        
+        // Arabian Peninsula/Gulf (15-30°N, 40-60°E)
+        if (lat >= 15 && lat <= 30 && lon >= 40 && lon <= 60)
+            return "Arabian Gulf";
+        
+        // North Africa (15-35°N, -20-35°E)
+        if (lat >= 15 && lat <= 35 && lon >= -20 && lon <= 35)
+            return "North Africa";
+        
+        // Asia (20-50°N, 65-150°E)
+        if (lat >= 20 && lat <= 50 && lon >= 65 && lon <= 150)
+            return "Asia";
+        
+        // North America (25-70°N, -170 to -50°W)
+        if (lat >= 25 && lat <= 70 && lon >= -170 && lon <= -50)
+            return "North America";
+        
+        // Pacific Ocean (broad area)
+        if (lon >= 100 || lon <= -100)
+            return "Pacific Ocean";
+        
+        // Indian Ocean (rough approximation)
+        if (lat >= -40 && lat <= 30 && lon >= 40 && lon <= 100)
+            return "Indian Ocean";
+        
+        // Default - no specific region
+        return "";
+    }
 
     public double FlightProgress
     {
