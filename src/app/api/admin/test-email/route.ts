@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
         console.log('[Email Test] Configuration:', config);
 
-        // Create transporter
+        // Create transporter with extended timeouts
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: parseInt(process.env.SMTP_PORT || '587'),
@@ -36,9 +36,11 @@ export async function POST(request: NextRequest) {
                 rejectUnauthorized: false,
                 minVersion: 'TLSv1.2',
             },
-            connectionTimeout: 10000,
-            greetingTimeout: 5000,
-            socketTimeout: 15000,
+            connectionTimeout: 30000, // 30 seconds
+            greetingTimeout: 30000,
+            socketTimeout: 30000,
+            logger: true, // Enable logging
+            debug: true, // Enable debug output
         });
 
         // Verify connection
