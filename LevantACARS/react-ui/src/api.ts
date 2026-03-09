@@ -4,7 +4,9 @@ const API_BASE = 'https://www.levant-va.com/api/acars';
 
 export interface TrafficFlight {
   callsign: string;
+  flightNumber: string;
   pilotName: string;
+  pilotId: string;
   departureIcao: string;
   arrivalIcao: string;
   aircraftType: string;
@@ -62,7 +64,9 @@ export interface PilotStats {
 function normalizeFlight(f: any): TrafficFlight {
   return {
     callsign: f.callsign || '',
+    flightNumber: f.flightNumber || f.flight_number || '',
     pilotName: f.pilotName || f.pilot_name || f.pilot || '',
+    pilotId: f.pilotId || f.pilot_id || '',
     departureIcao: f.departureIcao || f.departure_icao || f.departure || '',
     arrivalIcao: f.arrivalIcao || f.arrival_icao || f.arrival || '',
     aircraftType: f.aircraftType || f.aircraft_type || f.equipment || '',

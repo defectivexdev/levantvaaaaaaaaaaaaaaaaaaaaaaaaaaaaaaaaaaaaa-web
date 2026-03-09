@@ -173,11 +173,6 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
                   </div>
                 </div>
               </div>
-              {/* Violations */}
-              <div className="p-4 glass-panel rounded-xl">
-                <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px] mb-1">VIOLATIONS</div>
-                <span className="value-mono text-[22px] font-bold text-warning">{flight.exceedanceCount}</span>
-              </div>
               {/* Pause Time */}
               <div className="p-4 glass-panel rounded-xl">
                 <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px] mb-1">PAUSE TIME</div>

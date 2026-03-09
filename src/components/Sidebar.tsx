@@ -138,6 +138,12 @@ export default function Sidebar() {
                 { name: 'Blacklist', path: '/portal/admin/blacklist', icon: ShieldAlert },
             ],
         },
+        {
+            label: 'Developer',
+            items: [
+                { name: 'Developer Management', path: '/portal/admin/developer', icon: Wrench },
+            ],
+        },
     ], []);
 
     const handleLogout = useCallback(async () => {

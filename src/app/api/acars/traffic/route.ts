@@ -18,7 +18,9 @@ export async function GET() {
 
         const traffic = flights.map((f: any) => ({
             callsign: f.callsign,
+            flightNumber: f.flight_number || '',
             pilotName: f.pilot_name,
+            pilotId: f.pilot_id || '',
             departureIcao: f.departure_icao || '',
             arrivalIcao: f.arrival_icao || '',
             aircraftType: f.aircraft_type || '',

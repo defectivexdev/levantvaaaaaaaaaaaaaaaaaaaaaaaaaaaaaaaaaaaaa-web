@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
                 color: 0x2ECC71,
                 footer: { text: 'Levant Virtual Airlines • Payroll System' },
                 timestamp: new Date().toISOString(),
-            }], 'finance');
+            }]);
         } catch { /* non-fatal */ }
 
         return NextResponse.json({

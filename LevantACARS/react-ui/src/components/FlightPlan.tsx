@@ -222,11 +222,10 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
             </div>
 
             {/* Flight Metrics Row */}
-            <div className="grid grid-cols-4 gap-px mx-4 mb-2 rounded-lg overflow-hidden border border-white/[0.04]">
+            <div className="grid grid-cols-3 gap-px mx-4 mb-2 rounded-lg overflow-hidden border border-white/[0.04]">
               <MetricCell icon={<Timer size={9} />} label="FLT TIME" value={flight.flightTime} />
               <MetricCell icon={<Route size={9} />} label="DISTANCE" value={`${Math.round(flight.distanceNm)} nm`} />
               <MetricCell icon={<Shield size={9} />} label="COMFORT" value={`${flight.comfortScore}%`} color={flight.comfortScore >= 90 ? 'text-emerald-400' : flight.comfortScore >= 70 ? 'text-amber-400' : 'text-rose-400'} />
-              <MetricCell label="EXCEEDANCES" value={String(flight.exceedanceCount)} color={flight.exceedanceCount > 0 ? 'text-rose-400' : 'text-emerald-400'} />
             </div>
 
             {/* Action buttons: Submit + Cancel */}

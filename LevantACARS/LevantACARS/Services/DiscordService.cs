@@ -84,10 +84,24 @@ public sealed class DiscordService : IDisposable
 
         _flightStartTimestamp = Timestamps.Now; // Start flight timer
 
+        string stateText;
+        if (phase is FlightPhase.Preflight or FlightPhase.Boarding or FlightPhase.Pushback)
+        {
+            stateText = $"Currently at {departure}";
+        }
+        else if (phase is FlightPhase.Arrived or FlightPhase.Shutdown or FlightPhase.TaxiIn)
+        {
+            stateText = $"Currently at {arrival}";
+        }
+        else
+        {
+            stateText = $"Phase: {phase}";
+        }
+
         _client.SetPresence(new RichPresence
         {
             Details = $"{flightNumber} — {departure} → {arrival}",
-            State = $"Phase: {phase}",
+            State = stateText,
             Assets = new Assets
             {
                 LargeImageKey = "logo_large",
@@ -107,7 +121,30 @@ public sealed class DiscordService : IDisposable
         var current = _client.CurrentPresence;
         if (current != null)
         {
-            current.State = $"Phase: {phase}";
+            // If we only have the phase update, we can't easily rebuild the full state text with airport ICAO
+            // unless we parse it from Details or store it.
+            // But this method is usually quickly followed by UpdateFlightDetails which has all info.
+            // Just let it be or extract ICAO from Details.
+            var details = current.Details ?? "";
+            string stateText = $"Phase: {phase}";
+
+            if (details.Contains(" — ") && details.Contains(" → "))
+            {
+                var parts = details.Split(" — ")[1].Split(" → ");
+                var departure = parts[0].Trim();
+                var arrival = parts[1].Trim();
+
+                if (phase is FlightPhase.Preflight or FlightPhase.Boarding or FlightPhase.Pushback)
+                {
+                    stateText = $"Currently at {departure}";
+                }
+                else if (phase is FlightPhase.Arrived or FlightPhase.Shutdown or FlightPhase.TaxiIn)
+                {
+                    stateText = $"Currently at {arrival}";
+                }
+            }
+
+            current.State = stateText;
             current.Timestamps = _flightStartTimestamp; // Preserve flight start time
             _client.SetPresence(current);
         }
@@ -146,10 +183,24 @@ public sealed class DiscordService : IDisposable
             _flightStartTimestamp = Timestamps.Now;
         }
 
+        string stateText;
+        if (phase is FlightPhase.Preflight or FlightPhase.Boarding or FlightPhase.Pushback)
+        {
+            stateText = $"Currently at {departure}";
+        }
+        else if (phase is FlightPhase.Arrived or FlightPhase.Shutdown or FlightPhase.TaxiIn)
+        {
+            stateText = $"Currently at {arrival}";
+        }
+        else
+        {
+            stateText = $"{phase} · FL{altitude / 100:D3} · {groundSpeed}kt";
+        }
+
         _client.SetPresence(new RichPresence
         {
             Details = $"{flightNumber} — {departure} → {arrival}",
-            State = $"{phase} · FL{altitude / 100:D3} · {groundSpeed}kt",
+            State = stateText,
             Assets = new Assets
             {
                 LargeImageKey = "logo_large",

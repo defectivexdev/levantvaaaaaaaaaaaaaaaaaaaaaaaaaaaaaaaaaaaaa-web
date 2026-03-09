@@ -53,7 +53,7 @@ public sealed class ExceedanceProxy
     /// Evaluate all exceedance rules against the current telemetry snapshot.
     /// Returns a list of violations (may be empty).
     /// </summary>
-    public List<Exceedance> Evaluate(FlightData data, string aircraftType = "")
+    public List<Exceedance> Evaluate(FlightData data, string aircraftType = "", string? departureIcao = null, string? arrivalIcao = null)
     {
         var results = new List<Exceedance>();
         var limits = AircraftProfiles.GetLimits(aircraftType);
@@ -77,7 +77,13 @@ public sealed class ExceedanceProxy
                 or FlightPhase.Landing or FlightPhase.Landed;
 
             // GPS runway detection: suppress if aircraft is physically on a runway
+            // Check departure, arrival, or anywhere else cached
             bool isOnRunway = _runwayDetector.IsOnRunway(data.Latitude, data.Longitude);
+            
+            if (!string.IsNullOrEmpty(departureIcao) && _runwayDetector.IsOnRunwayAt(data.Latitude, data.Longitude, departureIcao))
+                isOnRunway = true;
+            if (!string.IsNullOrEmpty(arrivalIcao) && _runwayDetector.IsOnRunwayAt(data.Latitude, data.Longitude, arrivalIcao))
+                isOnRunway = true;
 
             bool speedExceeded = data.OnGround && data.GroundSpeed > limits.MaxTaxiSpeed;
             bool isTakeoffRollContext = data.Ias > 80 || data.GroundSpeed > 60;

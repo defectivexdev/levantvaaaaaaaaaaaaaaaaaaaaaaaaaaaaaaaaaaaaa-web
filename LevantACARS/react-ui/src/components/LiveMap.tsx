@@ -102,9 +102,9 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [selected, setSelected] = useState<TrafficFlight | null>(null);
-  const [followAircraft, setFollowAircraft] = useState(true);
+  const [followAircraft] = useState(true);
   const [trail, setTrail] = useState<TrailPoint[]>([]);
-  const [showTrail, setShowTrail] = useState(true);
+  const [showTrail] = useState(true);
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   // ── 15-second buffered position update ────────────────────────
@@ -354,33 +354,6 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
               Next update: <span className="text-accent-gold">{countdown}s</span>
             </div>
           )}
-
-          {/* Map control buttons */}
-          {displayPos.lat !== 0 && (
-            <div className="absolute bottom-2 right-2 z-[1000] flex gap-1.5">
-              <button
-                onClick={() => setShowTrail(t => !t)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase border transition-all cursor-pointer ${
-                  showTrail
-                    ? 'bg-blue-500/20 border-blue-500/30 text-blue-400'
-                    : 'bg-white/5 border-white/10 text-gray-500 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                Trail
-              </button>
-              <button
-                onClick={() => setFollowAircraft(f => !f)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase border transition-all cursor-pointer ${
-                  followAircraft
-                    ? 'bg-accent-gold/20 border-accent-gold/30 text-accent-gold'
-                    : 'bg-white/5 border-white/10 text-gray-500 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                <Plane size={10} />
-                {followAircraft ? 'Following' : 'Follow'}
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Traffic List Sidebar */}
@@ -401,23 +374,41 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
                 onClick={() => setSelected(f)}
                 className={`w-full text-left px-3 py-2 border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors cursor-pointer bg-transparent border-none ${selected?.callsign === f.callsign ? 'bg-accent-gold/[0.06]' : ''}`}
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-white">{f.callsign}</span>
-                  <span className="text-xs font-mono text-gray-600">{f.phase}</span>
-                </div>
-                <div className="text-xs text-gray-500 mt-0.5">
-                  {f.pilotName}
-                </div>
-                <div className="flex items-center gap-1 mt-0.5">
-                  <span className="text-xs font-mono text-accent-gold/70">{f.departureIcao}</span>
-                  <span className="text-xs text-gray-700">→</span>
-                  <span className="text-xs font-mono text-white/50">{f.arrivalIcao}</span>
-                  <span className="text-xs text-gray-700 ml-auto">{f.aircraftType}</span>
-                </div>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-xs text-gray-600">FL{Math.round(f.altitude / 100)}</span>
-                  <span className="text-xs text-gray-600">{f.groundSpeed}kts</span>
-                  <span className="text-xs text-gray-700 ml-auto">{timeSince(f.lastUpdate)}</span>
+                <div className="flex items-center gap-3">
+                  {f.pilotId ? (
+                    <div className="pilot-badge-container !w-8 !h-8 shrink-0 relative">
+                      <img 
+                        src={`https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dofvnnlpd"}/image/upload/c_fill,w_200,h_200,f_auto,q_auto/avatars/pilot_${f.pilotId}`}
+                        alt={f.pilotName} 
+                        className="pilot-badge-img"
+                        onError={(e) => { (e.target as HTMLImageElement).src = 'img/icon.jpg'; }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center shrink-0 bg-dark-800">
+                      <Users size={14} className="text-gray-500" />
+                    </div>
+                  )}
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-white">{f.flightNumber || f.callsign}</span>
+                      <span className="text-[10px] font-mono text-gray-500">{f.phase}</span>
+                    </div>
+                    <div className="text-[10px] text-gray-400 mt-0.5 truncate">
+                      {f.pilotName}
+                    </div>
+                    <div className="flex items-center gap-1 mt-1">
+                      <span className="text-[10px] font-mono text-accent-gold/70">{f.departureIcao}</span>
+                      <span className="text-[10px] text-gray-700">→</span>
+                      <span className="text-[10px] font-mono text-white/50">{f.arrivalIcao}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[10px] text-gray-600">FL{Math.round(f.altitude / 100)}</span>
+                      <span className="text-[10px] text-gray-600">{f.groundSpeed}kts</span>
+                      <span className="text-[9px] text-gray-700 ml-auto">{timeSince(f.lastUpdate)}</span>
+                    </div>
+                  </div>
                 </div>
               </button>
             ))}

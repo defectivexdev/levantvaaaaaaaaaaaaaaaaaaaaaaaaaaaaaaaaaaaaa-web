@@ -302,7 +302,7 @@ public sealed class FlightManager : IDisposable
             _startFuel = data.TotalFuel;
 
         // ── Exceedance Proxy (uses updatedData with correct phase) ─────
-        var exceedances = _proxy.Evaluate(updatedData, _aircraftType ?? "");
+        var exceedances = _proxy.Evaluate(updatedData, _aircraftType ?? "", _departureIcao, _arrivalIcao);
         if (exceedances.Count > 0)
         {
             foreach (var exc in exceedances) _exceedanceBuffer.Add(exc);

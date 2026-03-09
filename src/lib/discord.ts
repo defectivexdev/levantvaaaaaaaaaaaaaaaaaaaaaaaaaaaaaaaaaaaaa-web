@@ -7,12 +7,10 @@ const DISCORD_WEBHOOKS: Record<DiscordEvent, string> = {
     landing:      process.env.DISCORD_WEBHOOK_LANDING       || '',
     rankPromote:  process.env.DISCORD_WEBHOOK_RANK_PROMOTE  || '',
     award:        process.env.DISCORD_WEBHOOK_AWARD         || process.env.DISCORD_WEBHOOK_RANK_PROMOTE || '',
-    errorLog:     process.env.DISCORD_WEBHOOK_ERROR_LOG     || '',
     moderation:   process.env.DISCORD_MOD_WEBHOOK           || '',
-    finance:      process.env.DISCORD_FINANCE_WEBHOOK       || '',
 };
 
-type DiscordEvent = 'takeoff' | 'landing' | 'rankPromote' | 'award' | 'errorLog' | 'moderation' | 'finance';
+type DiscordEvent = 'takeoff' | 'landing' | 'rankPromote' | 'award' | 'moderation';
 
 interface DiscordEmbed {
     title?: string;
@@ -26,7 +24,7 @@ interface DiscordEmbed {
     author?: { name: string; icon_url?: string; url?: string };
 }
 
-export async function sendDiscordNotification(content: string, embeds?: DiscordEmbed[], event: DiscordEvent = 'errorLog') {
+export async function sendDiscordNotification(content: string, embeds?: DiscordEmbed[], event: DiscordEvent = 'moderation') {
     const webhookUrl = DISCORD_WEBHOOKS[event];
     if (!webhookUrl) return;
 
@@ -238,13 +236,6 @@ export async function notifyBlacklist(pilotName: string, pilotId: string, reason
 }
 
 export async function notifyError(errorTitle: string, errorMessage: string, context?: string) {
-    await sendDiscordNotification('', [{
-        author: { name: 'SYSTEM ALERT', icon_url: LOGO },
-        title: `\u{1F6A8} ${errorTitle}`,
-        description: `\`\`\`\n${errorMessage}\n\`\`\``,
-        color: 0xE74C3C,
-        fields: context ? [{ name: '\u{1F4CB} Context', value: context, inline: false }] : [],
-        footer: { text: `${FOOTER_MAIN} \u2022 System Monitor`, icon_url: LOGO },
-        timestamp: new Date().toISOString(),
-    }], 'errorLog');
+    // Logging errors directly instead of Discord since errorLog is removed
+    console.error(`[SYSTEM ALERT] ${errorTitle}\n${errorMessage}\n${context ? 'Context: ' + context : ''}`);
 }

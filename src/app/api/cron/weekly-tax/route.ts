@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
                     footer: { text: 'Levant Virtual Airlines — Airline Vault' },
                     timestamp: new Date().toISOString(),
                 }
-            ], 'finance');
+            ]);
         } catch (webhookErr) {
             console.error('Discord webhook failed (non-fatal):', webhookErr);
         }

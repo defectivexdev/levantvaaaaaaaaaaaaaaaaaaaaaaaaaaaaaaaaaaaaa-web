@@ -169,9 +169,30 @@ public sealed class AuthService
 
             if (res.IsSuccessStatusCode)
             {
-                _logger.LogInformation("[Auth] Profile refresh successful for {PilotId}", pilotId);
-                config.PilotId = pilotId;
-                config.Save();
+                var responseJson = await res.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(responseJson);
+                var root = doc.RootElement;
+                
+                if (root.TryGetProperty("pilot", out var pilot))
+                {
+                    config.PilotId = GetString(pilot, "pilotId") ?? GetString(pilot, "id") ?? "";
+                    config.PilotName = GetString(pilot, "name") ?? "Pilot";
+                    config.PilotRank = GetString(pilot, "rank") ?? "New Hire";
+                    config.PilotAvatar = GetString(pilot, "avatarUrl") ?? "";
+                    config.PilotHours = GetDouble(pilot, "totalHours") ?? 0;
+                    config.PilotXp = GetInt(pilot, "xp") ?? 0;
+                    config.WeightUnit = GetString(pilot, "weightUnit") ?? "lbs";
+                    config.HoppieCode = GetString(pilot, "hoppieCode") ?? "";
+                    
+                    config.Save();
+                    _logger.LogInformation("[Auth] Profile refresh successful for {PilotId}", config.PilotId);
+                }
+                else
+                {
+                    // Fallback to old logic if no pilot object
+                    config.PilotId = pilotId;
+                    config.Save();
+                }
             }
 
             OnAuthStateChanged?.Invoke(true);

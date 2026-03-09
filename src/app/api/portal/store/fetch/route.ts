@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     try {
         await connectDB();
 
-        const items = await StoreItem.find({ active: true, category: { $ne: 'Skin' } }).sort({ price: 1 }).lean();
+        const items = await StoreItem.find({ active: true }).sort({ price: 1 }).lean();
 
         return NextResponse.json({ success: true, items });
 

@@ -338,15 +338,6 @@
 
                 <!-- Right: Exceedance Log -->
                 <Border Grid.Column="1" Style="{StaticResource InstrumentCard}" Margin="4,4,0,4" Padding="16,14">
-                    <DockPanel>
-                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
-                            <materialDesign:PackIcon Kind="ShieldAlert" Width="16" Height="16"
-                                Foreground="{StaticResource WarningBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
-                            <TextBlock Text="EXCEEDANCES" Style="{StaticResource LabelStyle}" Margin="0"
-                                       Foreground="{StaticResource WarningBrush}" />
-                        </StackPanel>
-                        <ListBox ItemsSource="{Binding ExceedanceLog}" Style="{StaticResource DarkListBoxStyle}" />
-                    </DockPanel>
                 </Border>
             </Grid>
 
