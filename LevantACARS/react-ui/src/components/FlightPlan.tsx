@@ -178,16 +178,16 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
             </div>
 
             {/* Status badges */}
-            <div className="flex items-center gap-2 px-4 pt-3 pb-1">
-              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-bold tracking-[0.15em] border bg-emerald-500/10 border-emerald-500/20 text-emerald-400">
+            <div className="flex items-center gap-2 px-4 pt-3 pb-2 flex-wrap">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.12em] border bg-emerald-500/10 border-emerald-500/20 text-emerald-400 whitespace-nowrap">
                 <div className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
                 DATA LINK ACTIVE
               </div>
               {flight.callsign && (
-                <span className="text-xs font-mono font-bold text-accent-gold/50 tracking-widest">{flight.callsign}</span>
+                <span className="text-[11px] font-mono font-bold text-accent-gold/50 tracking-wider whitespace-nowrap">{flight.callsign}</span>
               )}
               {flight.aircraftType && (
-                <span className="text-xs font-mono text-gray-600 tracking-widest">{flight.aircraftType}</span>
+                <span className="text-[11px] font-mono text-gray-600 tracking-wider whitespace-nowrap">{flight.aircraftType}</span>
               )}
             </div>
 
@@ -222,7 +222,7 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
             </div>
 
             {/* Flight Metrics Row */}
-            <div className="grid grid-cols-3 gap-px mx-4 mb-2 rounded-lg overflow-hidden border border-white/[0.04]">
+            <div className="grid grid-cols-3 gap-px mx-4 mb-2 rounded-lg overflow-hidden border border-white/[0.04] min-w-0">
               <MetricCell icon={<Timer size={9} />} label="FLT TIME" value={flight.flightTime} />
               <MetricCell icon={<Route size={9} />} label="DISTANCE" value={`${Math.round(flight.distanceNm)} nm`} />
               <MetricCell icon={<Shield size={9} />} label="COMFORT" value={`${flight.comfortScore}%`} color={flight.comfortScore >= 90 ? 'text-emerald-400' : flight.comfortScore >= 70 ? 'text-amber-400' : 'text-rose-400'} />
@@ -438,12 +438,12 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
 
 function MetricCell({ icon, label, value, color }: { icon?: React.ReactNode; label: string; value: string; color?: string }) {
   return (
-    <div className="bg-dark-950/50 py-1.5 px-2 flex flex-col items-center gap-0.5">
+    <div className="bg-dark-950/50 py-2 px-3 flex flex-col items-center gap-1 min-w-0">
       <div className="flex items-center gap-1 text-gray-600">
         {icon}
-        <span className="text-xs font-bold uppercase tracking-widest">{label}</span>
+        <span className="text-[10px] font-bold uppercase tracking-[0.1em] whitespace-nowrap">{label}</span>
       </div>
-      <span className={`text-xs font-bold font-mono ${color || 'text-white'}`}>{value}</span>
+      <span className={`text-sm font-bold font-mono ${color || 'text-white'} whitespace-nowrap`}>{value}</span>
     </div>
   );
 }

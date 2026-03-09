@@ -26,6 +26,10 @@ interface EmailConfig {
         user: string;
         pass: string;
     };
+    tls: {
+        rejectUnauthorized: boolean;
+        minVersion: string;
+    };
     from: {
         name: string;
         email: string;
@@ -40,9 +44,13 @@ const emailConfig: EmailConfig = {
         user: process.env.SMTP_USER || '',
         pass: process.env.SMTP_PASSWORD || '',
     },
+    tls: {
+        rejectUnauthorized: false,
+        minVersion: 'TLSv1.2',
+    },
     from: {
         name: process.env.EMAIL_FROM_NAME || 'Levant Virtual Airline',
-        email: process.env.EMAIL_FROM || 'noreply@levantva.com',
+        email: process.env.EMAIL_FROM || 'noreply@levant-va.com',
     },
 };
 
@@ -63,6 +71,20 @@ export class EmailService {
                 port: emailConfig.port,
                 secure: emailConfig.secure,
                 auth: emailConfig.auth,
+                tls: emailConfig.tls,
+                connectionTimeout: 10000,
+                greetingTimeout: 5000,
+                socketTimeout: 15000,
+            } as any);
+
+            this.transporter.verify((error: any) => {
+                if (error) {
+                    console.error('[EmailService] SMTP connection verification failed:', error.message);
+                    console.error('[EmailService] Host:', emailConfig.host, 'Port:', emailConfig.port);
+                } else {
+                    console.log('[EmailService] SMTP server connection verified and ready');
+                    console.log('[EmailService] Host:', emailConfig.host, 'Port:', emailConfig.port);
+                }
             });
         } else {
             console.warn('Email service not configured. Emails will be logged only.');
@@ -105,7 +127,11 @@ export class EmailService {
             console.log('[EMAIL] Sent:', info.messageId);
             return { success: true, messageId: info.messageId };
         } catch (error: any) {
-            console.error('[EMAIL] Failed:', error);
+            console.error('[EmailService] Failed to send email');
+            console.error('[EmailService] Recipient:', to);
+            console.error('[EmailService] Subject:', subject);
+            console.error('[EmailService] Error:', error.message);
+            console.error('[EmailService] SMTP Host:', emailConfig.host, 'Port:', emailConfig.port);
             return { success: false, error: error.message };
         }
     }

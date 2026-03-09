@@ -8,6 +8,10 @@ const SMTP_CONFIG = {
         user: process.env.SMTP_USER || "",
         pass: process.env.SMTP_PASSWORD || "",
     },
+    tls: {
+        rejectUnauthorized: false,
+        minVersion: 'TLSv1.2' as const,
+    },
     from: process.env.SMTP_FROM || "",
 };
 
@@ -25,6 +29,20 @@ const getTransporter = () => {
                 user: SMTP_CONFIG.auth.user,
                 pass: SMTP_CONFIG.auth.pass,
             },
+            tls: SMTP_CONFIG.tls,
+            connectionTimeout: 10000,
+            greetingTimeout: 5000,
+            socketTimeout: 15000,
+        });
+
+        _transporter.verify((error: any) => {
+            if (error) {
+                console.error('[SMTP] Connection verification failed:', error.message);
+                console.error('[SMTP] Host:', SMTP_CONFIG.host, 'Port:', SMTP_CONFIG.port);
+            } else {
+                console.log('[SMTP] Server connection verified and ready');
+                console.log('[SMTP] Host:', SMTP_CONFIG.host, 'Port:', SMTP_CONFIG.port);
+            }
         });
     }
     return _transporter;
@@ -63,6 +81,7 @@ export const sendPasswordResetEmail = async (to: string, token: string) => {
         return true;
     } catch (error) {
         console.error('Error sending password reset email:', error);
+        console.error('[EMAIL] Failed to send to:', to, 'Type: Password Reset');
         console.error('Full error details:', JSON.stringify(error, null, 2));
         throw error;
     }
@@ -133,6 +152,7 @@ export async function sendWelcomeEmail(to: string, pilotId: string, firstName: s
         return true;
     } catch (error) {
         console.error('Error sending welcome email:', error);
+        console.error('[EMAIL] Failed to send to:', to, 'Type: Welcome Email');
         return false;
     }
 }
@@ -173,6 +193,7 @@ export const sendAccountActivatedEmail = async (to: string, pilotId: string, fir
         return true;
     } catch (error) {
         console.error('Error sending account activated email:', error);
+        console.error('[EMAIL] Failed to send to:', to, 'Type: Account Activated');
         return false;
     }
 };
@@ -225,6 +246,7 @@ export const sendPirepReviewEmail = async (
         return true;
     } catch (error) {
         console.error(`Error sending PIREP ${status} email:`, error);
+        console.error('[EMAIL] Failed to send to:', to, `Type: PIREP ${status}`);
         return false;
     }
 };
@@ -260,6 +282,7 @@ export const sendInactivityReminderEmail = async (to: string, pilotId: string, f
         return true;
     } catch (error) {
         console.error('Error sending inactivity reminder email:', error);
+        console.error('[EMAIL] Failed to send to:', to, 'Type: Inactivity Reminder');
         return false;
     }
 };
@@ -293,6 +316,7 @@ export const sendBlacklistNotificationEmail = async (to: string, pilotId: string
         return true;
     } catch (error) {
         console.error('Error sending blacklist notification email:', error);
+        console.error('[EMAIL] Failed to send to:', to, 'Type: Blacklist Notification');
         return false;
     }
 };
@@ -333,6 +357,7 @@ export const sendProfileEditedEmail = async (to: string, pilotId: string, firstN
         return true;
     } catch (error) {
         console.error('Error sending profile edited email:', error);
+        console.error('[EMAIL] Failed to send to:', to, 'Type: Profile Edited');
         return false;
     }
 };
@@ -367,11 +392,12 @@ export const sendAccountInactiveEmail = async (to: string, pilotId: string, firs
     };
 
     try {
-        const info = await _transporter.sendMail(mailOptions);
+        const info = await getTransporter().sendMail(mailOptions);
         console.log('Account inactive email sent:', info.messageId);
         return true;
     } catch (error) {
         console.error('Error sending account inactive email:', error);
+        console.error('[EMAIL] Failed to send to:', to, 'Type: Account Inactive');
         return false;
     }
 };
