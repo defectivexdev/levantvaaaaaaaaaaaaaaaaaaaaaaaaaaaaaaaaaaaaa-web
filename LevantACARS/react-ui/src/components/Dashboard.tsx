@@ -89,10 +89,9 @@ export default function Dashboard({ telemetry, flight, score, activityLog, excee
       {score && (
         <div className="mx-3.5 mt-3 p-5 glass-panel-success rounded-xl animate-score-reveal">
           <div className="text-[9px] font-bold text-txt-disabled uppercase tracking-[1px] mb-3">FLIGHT REPORT</div>
-          <div className="grid grid-cols-3 gap-1.5 mb-2">
+          <div className="grid grid-cols-2 gap-1.5 mb-2">
             <ScoreItem label="SCORE" value={`${score.finalScore}%`} className="text-accent" />
             <ScoreItem label="LANDING" value={score.landingGrade} className="text-gold" />
-            <ScoreItem label="XP EARNED" value={`+${score.xpEarned}`} className="text-success" />
           </div>
           <div className="text-[11px] text-txt-secondary">{score.landingDescription}</div>
           {score.rejected && (

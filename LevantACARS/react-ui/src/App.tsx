@@ -315,10 +315,9 @@ function DashboardView({
 
       {/* Pilot Stats Row (below flight card) */}
       {stats && (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <StatCard label="Total Hours" value={stats.pilot.totalHours.toFixed(1)} color="text-accent-gold" />
           <StatCard label="Total Flights" value={String(stats.pilot.totalFlights)} color="text-accent-emerald" />
-          <StatCard label="XP" value={stats.pilot.xp.toLocaleString()} color="text-accent-cyan" />
           <StatCard label="Rank" value={stats.pilot.rank} color="text-purple-400" small />
         </div>
       )}
