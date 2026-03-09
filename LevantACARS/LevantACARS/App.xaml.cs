@@ -127,7 +127,6 @@ public partial class App : Application
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<FlightViewModel>();
         services.AddSingleton<DashboardViewModel>();
-        services.AddSingleton<DispatchViewModel>();
 
         // Views
         services.AddSingleton<Views.MainWindow>();
