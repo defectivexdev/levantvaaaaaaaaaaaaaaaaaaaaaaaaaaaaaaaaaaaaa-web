@@ -91,8 +91,8 @@ const Dispatch: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] text-gray-100 p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="w-full">
+      <div className="max-w-5xl mx-auto">
         {/* Modal Card */}
         <div className="bg-[#141418] border border-amber-500/30 rounded-lg shadow-2xl overflow-hidden">
           {/* Header */}
