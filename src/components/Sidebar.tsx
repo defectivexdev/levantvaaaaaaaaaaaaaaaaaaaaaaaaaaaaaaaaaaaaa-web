@@ -50,6 +50,7 @@ export default function Sidebar() {
     const [vaultBalance, setVaultBalance] = useState<number | null>(null);
     const [manualPirepCount, setManualPirepCount] = useState(0);
     const [avatarError, setAvatarError] = useState(false);
+    const [avatarTimestamp, setAvatarTimestamp] = useState(Date.now());
 
     const isActive = useCallback((path: string) => {
         if (!pathname) return false;
@@ -71,7 +72,14 @@ export default function Sidebar() {
                 .then(data => { if (data.count != null) setManualPirepCount(data.count); })
                 .catch(() => {});
         }
-    }, [isAdmin]);
+        // Load avatar timestamp from localStorage
+        if (user?.pilotId) {
+            const cachedVersion = localStorage.getItem(`avatar_version_${user.pilotId}`);
+            if (cachedVersion) {
+                setAvatarTimestamp(parseInt(cachedVersion, 10));
+            }
+        }
+    }, [isAdmin, user?.pilotId]);
 
     const menuItems = useMemo<{ category: string; items: MenuItem[] }[]>(() => {
         // Filter PILOT and OPERATIONS sections for Groupflight role - hide most items except Group Flights
@@ -295,7 +303,8 @@ export default function Sidebar() {
                         <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-[10px] font-bold flex-shrink-0 shadow-lg shadow-cyan-500/20 overflow-hidden">
                             {!avatarError ? (
                                 <img 
-                                    src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || ''}/image/upload/c_fill,w_100,h_100,f_auto,q_auto/avatars/pilot_${user.pilotId}`}
+                                    key={avatarTimestamp}
+                                    src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || ''}/image/upload/c_fill,w_100,h_100,f_auto,q_auto/v${avatarTimestamp}/avatars/pilot_${user.pilotId}`}
                                     alt="Avatar"
                                     className="w-full h-full object-cover"
                                     onError={() => setAvatarError(true)}
