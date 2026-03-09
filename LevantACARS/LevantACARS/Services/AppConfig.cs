@@ -92,6 +92,9 @@ public sealed class AppConfig
     [JsonPropertyName("hoppie_code")]
     public string? HoppieCode { get; set; }
 
+    [JsonPropertyName("simbrief_username")]
+    public string? SimBriefUsername { get; set; }
+
     // ── Singleton ─────────────────────────────────────────────────────
     private static AppConfig? _instance;
     private static readonly object _lock = new();
