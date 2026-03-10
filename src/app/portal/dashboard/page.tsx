@@ -475,6 +475,30 @@ export default function DashboardPage() {
                             )}
                         </div>
                     </motion.div>
+
+                    {/* Discord Widget */}
+                    <motion.div variants={itemVariants} className="bg-[#0a0a0a] rounded-2xl border border-white/[0.04] overflow-hidden">
+                        <div className="px-5 py-4 border-b border-white/[0.04] flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+                                <Users className="w-5 h-5 text-indigo-500" />
+                            </div>
+                            <div>
+                                <h2 className="text-sm font-bold text-white">Discord Community</h2>
+                                <p className="text-xs text-gray-500">Join the conversation</p>
+                            </div>
+                        </div>
+                        <div className="p-4">
+                            <iframe 
+                                src="https://discordapp.com/widget?id=1292816415866359869&theme=dark" 
+                                width="100%" 
+                                height="500" 
+                                allowTransparency={true}
+                                frameBorder="0" 
+                                sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+                                className="rounded-xl"
+                            />
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </motion.div>
