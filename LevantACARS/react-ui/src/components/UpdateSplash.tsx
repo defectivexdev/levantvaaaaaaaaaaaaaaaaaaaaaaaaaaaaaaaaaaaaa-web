@@ -36,7 +36,7 @@ export function UpdateSplash() {
               <img src="img/icon.jpg" alt="Update" className="pilot-badge-img" />
             </div>
             <div>
-              <h4 className="text-white font-bold text-sm font-display">Levant ACARS <span className="font-mono text-cyan-400">v3.0</span></h4>
+              <h4 className="text-white font-bold text-sm font-display">Levant ACARS <span className="font-mono text-cyan-400">v3.1.4</span></h4>
               <p className="text-slate-400 text-xs mt-0.5">Asset Update Complete. Welcome, Captain.</p>
             </div>
             <button
