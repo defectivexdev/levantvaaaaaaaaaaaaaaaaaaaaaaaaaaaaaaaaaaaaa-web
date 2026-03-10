@@ -16,7 +16,6 @@ import {
     LogOut,
     Trophy,
     Map,
-    ShoppingBag,
     Download,
     Award,
     LucideIcon,
@@ -109,7 +108,6 @@ export default function Sidebar() {
             ? []
             : [
                 { name: 'Discord', path: 'https://discord.levant-va.com/', icon: MessageSquare, external: true },
-                { name: 'Pilot Store', path: '/portal/store', icon: ShoppingBag },
                 { name: 'Settings', path: '/portal/settings', icon: Settings },
             ];
         
@@ -137,7 +135,6 @@ export default function Sidebar() {
                 { name: 'Event Management', path: '/portal/admin/events', icon: Calendar },
                 { name: 'Group Flights', path: '/portal/admin/multiplayer-events', icon: Users },
                 { name: 'Award Management', path: '/portal/admin/badges', icon: Award },
-                { name: 'Store Management', path: '/portal/admin/store', icon: ShoppingBag },
                 { name: 'DOTM Management', path: '/portal/admin/dotm', icon: Award },
                 { name: 'Finance Dashboard', path: '/portal/admin/finance', icon: Landmark },
             ],
