@@ -1,0 +1,94 @@
+name: Build and Release LevantACARS
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: LevantACARS/react-ui/package-lock.json
+          
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          
+      - name: Install React dependencies
+        working-directory: LevantACARS/react-ui
+        run: npm ci
+        
+      - name: Build React UI
+        working-directory: LevantACARS/react-ui
+        run: npm run build
+        
+      - name: Copy React build to wwwroot
+        shell: pwsh
+        run: |
+          Copy-Item -Path "LevantACARS/react-ui/dist/*" -Destination "LevantACARS/LevantACARS/wwwroot/" -Recurse -Force
+          
+      - name: Restore .NET dependencies
+        working-directory: LevantACARS
+        run: dotnet restore LevantACARS.sln
+        
+      - name: Build .NET Release
+        working-directory: LevantACARS
+        run: dotnet build LevantACARS.sln --configuration Release --no-restore
+        
+      - name: Publish .NET Application
+        working-directory: LevantACARS
+        run: dotnet publish LevantACARS/LevantACARS.csproj --configuration Release --output ./publish --no-build
+        
+      - name: Create ZIP archive
+        shell: pwsh
+        run: |
+          $tagName = "${{ github.ref_name }}"
+          Compress-Archive -Path "LevantACARS/publish/*" -DestinationPath "LevantACARS-$tagName.zip"
+          
+      - name: Extract version info
+        id: version
+        shell: pwsh
+        run: |
+          $tagName = "${{ github.ref_name }}"
+          echo "tag=$tagName" >> $env:GITHUB_OUTPUT
+          echo "version=$($tagName -replace '^v', '')" >> $env:GITHUB_OUTPUT
+          
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: LevantACARS ${{ steps.version.outputs.tag }}
+          body: |
+            ## LevantACARS ${{ steps.version.outputs.tag }}
+            
+            ### Installation
+            1. Download `LevantACARS-${{ steps.version.outputs.tag }}.zip`
+            2. Extract to your desired location
+            3. Run `LevantACARS.exe`
+            
+            ### What's New
+            See commit history for detailed changes.
+            
+            ### Requirements
+            - Windows 10/11 (64-bit)
+            - .NET 8.0 Runtime (included)
+            - WebView2 Runtime (auto-installed if missing)
+            
+            ---
+            **Full Changelog**: https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}
+          files: |
+            LevantACARS-${{ steps.version.outputs.tag }}.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
