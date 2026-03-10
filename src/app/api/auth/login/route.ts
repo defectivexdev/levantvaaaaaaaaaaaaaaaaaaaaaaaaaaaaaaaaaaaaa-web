@@ -4,6 +4,7 @@ import { SignJWT } from 'jose';
 import connectDB from '@/lib/database';
 import Pilot from '@/models/Pilot';
 import SecurityConfig from '@/models/SecurityConfig';
+import CountryBlacklist from '@/models/CountryBlacklist';
 
 export async function POST(request: NextRequest) {
     try {
@@ -20,6 +21,18 @@ export async function POST(request: NextRequest) {
 
         const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
+
+        // Check IP against CountryBlacklist first
+        if (ipCountry) {
+            const ipBlacklisted = await CountryBlacklist.findOne({ country_code: ipCountry });
+            if (ipBlacklisted) {
+                console.log(`[Login] Blocked IP from blacklisted country: ${ipCountry}`);
+                return NextResponse.json(
+                    { error: 'Access from your location is currently not available.' },
+                    { status: 403 }
+                );
+            }
+        }
 
         // Defaults from environment
         let countryBlockEnabled = process.env.COUNTRY_BLOCK_ENABLED === 'true';

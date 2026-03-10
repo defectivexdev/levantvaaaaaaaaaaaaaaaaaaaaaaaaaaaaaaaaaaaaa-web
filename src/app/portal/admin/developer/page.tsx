@@ -417,7 +417,7 @@ export default function DeveloperManagementPage() {
                         <div className="flex-1">
                             <h3 className="text-sm font-bold text-white">Country Blacklist</h3>
                             <p className="text-xs text-gray-500 mt-1">
-                                Block registrations from specific countries
+                                Block registrations and access from specific countries (by code or name)
                             </p>
                         </div>
                     </div>

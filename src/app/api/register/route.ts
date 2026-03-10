@@ -10,6 +10,21 @@ export async function POST(request: NextRequest) {
     try {
         await connectDB();
         
+        // Check IP country first (before processing any data)
+        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
+        const ipCountry = ipCountryHeader.toUpperCase();
+        
+        if (ipCountry) {
+            const ipBlacklisted = await CountryBlacklist.findOne({ country_code: ipCountry });
+            if (ipBlacklisted) {
+                console.log(`[Registration] Blocked IP from blacklisted country: ${ipCountry}`);
+                return NextResponse.json(
+                    { error: 'Access from your location is currently not available.' },
+                    { status: 403 }
+                );
+            }
+        }
+        
         const body = await request.json();
         const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
