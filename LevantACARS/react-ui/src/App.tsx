@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Minus, Square, X, LayoutDashboard, Globe, MessageCircle, MessageSquare, LogOut, Radio, AlignLeft } from 'lucide-react';
+import { Minus, Square, X, LayoutDashboard, Globe, MessageCircle, MessageSquare, LogOut, Radio, AlignLeft, Plane } from 'lucide-react';
 import { useTelemetry } from './hooks/useTelemetry';
 import { SimBridge } from './bridge';
 import LinkScreen from './components/LinkScreen';
@@ -10,6 +10,7 @@ import LandingSummary from './components/LandingSummary';
 import LiveMap from './components/LiveMap';
 import ChatPanel from './components/ChatPanel';
 import HoppiePanel from './components/HoppiePanel';
+import DispatchPanel from './components/DispatchPanel';
 import AirportInfoPanel from './components/AirportInfoPanel';
 import ToastOverlay from './components/ToastOverlay';
 import { UpdateSplash } from './components/UpdateSplash';
@@ -21,7 +22,7 @@ import { AnimatedTooltip } from './components/ui/animated-tooltip';
 import type { TelemetryData, FlightState, ScoreResult, UILogEntry, ConnectionState, AuthState } from './types';
 import { fetchPilotStats, type PilotStats } from './api';
 
-export type View = 'dashboard' | 'livemap' | 'chat' | 'logs' | 'airport' | 'hoppie';
+export type View = 'dashboard' | 'livemap' | 'chat' | 'logs' | 'airport' | 'hoppie' | 'dispatch';
 
 export default function App() {
   const {
@@ -87,6 +88,7 @@ export default function App() {
             <SideNavItem active={activeView === 'dashboard'} onClick={() => setActiveView('dashboard')} icon={<LayoutDashboard size={16} />} label="Dashboard" />
             <SideNavItem active={activeView === 'livemap'} onClick={() => setActiveView('livemap')} icon={<Globe size={16} />} label="Live Map" />
             <SideNavItem active={activeView === 'airport'} onClick={() => setActiveView('airport')} icon={<Radio size={16} />} label="Airport Info" />
+            <SideNavItem active={activeView === 'dispatch'} onClick={() => setActiveView('dispatch')} icon={<Plane size={16} />} label="Dispatch" />
             <SideNavItem active={activeView === 'hoppie'} onClick={() => setActiveView('hoppie')} icon={<AlignLeft size={16} />} label="ATC / CPDLC" />
             <SideNavItem active={activeView === 'chat'} onClick={() => setActiveView('chat')} icon={<MessageCircle size={16} />} label="Pilot Chat" />
             <div className="h-px bg-gradient-to-r from-transparent via-[#1d3461] to-transparent mx-2 my-2" />
@@ -109,12 +111,14 @@ export default function App() {
               <div className="p-1.5 rounded-lg bg-accent-gold/10 border border-accent-gold/20">
                 {activeView === 'dashboard' && <LayoutDashboard size={13} className="text-accent-gold" />}
                 {activeView === 'livemap' && <Globe size={13} className="text-accent-gold" />}
+                {activeView === 'dispatch' && <Plane size={13} className="text-accent-gold" />}
                 {activeView === 'chat' && <MessageCircle size={13} className="text-accent-gold" />}
                 {activeView === 'logs' && <MessageSquare size={13} className="text-accent-gold" />}
               </div>
               <span className="uppercase tracking-wider text-[12px]">
                 {activeView === 'dashboard' && 'Flight Logbook'}
                 {activeView === 'livemap' && 'Live Map'}
+                {activeView === 'dispatch' && 'SimBrief Dispatch'}
                 {activeView === 'chat' && 'Pilot Chat'}
                 {activeView === 'logs' && 'Flight Logs'}
               </span>
@@ -167,6 +171,7 @@ export default function App() {
               </div>
             )}
             {activeView === 'hoppie' && <HoppiePanel messages={hoppieMessages} logs={hoppieLogs} callsign={bid?.callsign || ''} />}
+            {activeView === 'dispatch' && <DispatchPanel />}
             {activeView === 'chat' && <ChatPanel pilotId={auth.pilotId} pilotName={auth.pilotName} />}
             {activeView === 'logs' && <FlightHistoryPanel pilotId={auth.pilotId} />}
           </main>
