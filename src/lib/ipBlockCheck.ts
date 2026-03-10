@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import CountryBlacklist from '@/models/CountryBlacklist';
 import { sendBlockedAccessAlert } from './discordWebhook';
+import { getRequestGeolocation } from './ipGeolocation';
 
 /**
  * Check if the request IP is from a blacklisted country
@@ -25,11 +26,18 @@ export async function isIpBlacklisted(
         const blacklisted = await CountryBlacklist.findOne({ country_code: ipCountry });
         
         if (blacklisted) {
-            // Send Discord webhook notification
+            // Get full geolocation data for webhook
+            const geoData = await getRequestGeolocation(request);
             const userAgent = request.headers.get('user-agent') || undefined;
+            
+            // Send Discord webhook notification with full geolocation data
             sendBlockedAccessAlert({
                 endpoint: endpoint || 'Unknown',
+                ipAddress: geoData?.ip,
                 ipCountry,
+                countryName: geoData?.country_name,
+                city: geoData?.city,
+                isp: geoData?.isp,
                 pilotId: additionalData?.pilotId,
                 email: additionalData?.email,
                 timestamp: new Date().toISOString(),

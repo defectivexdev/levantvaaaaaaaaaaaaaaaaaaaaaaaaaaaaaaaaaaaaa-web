@@ -6,6 +6,7 @@ import CountryBlacklist from '@/models/CountryBlacklist';
 import CountryBlacklistBypass from '@/models/CountryBlacklistBypass';
 import { sendWelcomeEmail } from '@/lib/email';
 import { sendBlockedAccessAlert, sendVpnBypassWarning } from '@/lib/discordWebhook';
+import { getRequestGeolocation } from '@/lib/ipGeolocation';
 
 export async function POST(request: NextRequest) {
     try {
@@ -20,11 +21,18 @@ export async function POST(request: NextRequest) {
             if (ipBlacklisted) {
                 console.log(`[Registration] Blocked IP from blacklisted country: ${ipCountry}`);
                 
-                // Send Discord webhook notification
+                // Get full geolocation data
+                const geoData = await getRequestGeolocation(request);
                 const userAgent = request.headers.get('user-agent') || undefined;
+                
+                // Send Discord webhook notification with full geolocation data
                 sendBlockedAccessAlert({
                     endpoint: 'Registration',
+                    ipAddress: geoData?.ip,
                     ipCountry,
+                    countryName: geoData?.country_name,
+                    city: geoData?.city,
+                    isp: geoData?.isp,
                     timestamp: new Date().toISOString(),
                     userAgent,
                     suspectedVpn: false

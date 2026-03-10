@@ -7,7 +7,11 @@ const DISCORD_WEBHOOK_URL = 'https://discordapp.com/api/webhooks/148094286890978
 
 interface BlockedAccessAlert {
     endpoint: string;
+    ipAddress?: string;
     ipCountry: string;
+    countryName?: string;
+    city?: string;
+    isp?: string;
     pilotId?: string;
     email?: string;
     timestamp: string;
@@ -31,7 +35,7 @@ export async function sendBlockedAccessAlert(data: BlockedAccessAlert): Promise<
                 },
                 {
                     name: '🌍 Country',
-                    value: `\`${data.ipCountry}\``,
+                    value: data.countryName ? `${data.countryName} (\`${data.ipCountry}\`)` : `\`${data.ipCountry}\``,
                     inline: true
                 },
                 {
@@ -44,6 +48,33 @@ export async function sendBlockedAccessAlert(data: BlockedAccessAlert): Promise<
                 text: 'Levant VA Security System'
             }
         };
+
+        // Add IP address if available
+        if (data.ipAddress) {
+            embed.fields.push({
+                name: '🔍 IP Address',
+                value: `\`${data.ipAddress}\``,
+                inline: true
+            });
+        }
+
+        // Add city if available
+        if (data.city) {
+            embed.fields.push({
+                name: '🏙️ City',
+                value: `\`${data.city}\``,
+                inline: true
+            });
+        }
+
+        // Add ISP if available
+        if (data.isp) {
+            embed.fields.push({
+                name: '🌐 ISP',
+                value: `\`${data.isp}\``,
+                inline: true
+            });
+        }
 
         // Add pilot ID if available
         if (data.pilotId) {
