@@ -18,7 +18,7 @@ const CountryBlacklistBypassSchema = new Schema<ICountryBlacklistBypass>({
     },
     country_code: {
         type: String,
-        required: true,
+        required: false,
         uppercase: true,
         trim: true,
     },

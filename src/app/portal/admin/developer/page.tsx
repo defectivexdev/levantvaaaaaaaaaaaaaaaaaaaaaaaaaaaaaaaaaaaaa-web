@@ -206,8 +206,8 @@ export default function DeveloperManagementPage() {
     };
 
     const handleAddBypass = async () => {
-        if (!newBypass.pilotId || !newBypass.countryCode) {
-            toast.error('Pilot ID and country code are required');
+        if (!newBypass.pilotId) {
+            toast.error('Pilot ID is required');
             return;
         }
 
@@ -218,7 +218,7 @@ export default function DeveloperManagementPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     pilot_id: newBypass.pilotId.toUpperCase(),
-                    country_code: newBypass.countryCode.toUpperCase(),
+                    country_code: newBypass.countryCode,
                     reason: newBypass.reason,
                 }),
             });
@@ -552,14 +552,14 @@ export default function DeveloperManagementPage() {
                                 type="text"
                                 value={newBypass.pilotId}
                                 onChange={(e) => setNewBypass({ ...newBypass, pilotId: e.target.value.toUpperCase() })}
-                                placeholder="Pilot ID (e.g., LVT123)"
+                                placeholder="Pilot ID (e.g., LVT123) *Required"
                                 className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors uppercase"
                             />
                             <input
                                 type="text"
                                 value={newBypass.countryCode}
                                 onChange={(e) => setNewBypass({ ...newBypass, countryCode: e.target.value.toUpperCase() })}
-                                placeholder="Country Code (e.g., US)"
+                                placeholder="Country Code (optional)"
                                 maxLength={2}
                                 className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors uppercase"
                             />
@@ -606,8 +606,12 @@ export default function DeveloperManagementPage() {
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
                                         <span className="text-white font-bold text-sm">{entry.pilot_id}</span>
-                                        <span className="text-gray-400 text-xs">from</span>
-                                        <span className="text-emerald-400 text-sm font-bold">{entry.country_code}</span>
+                                        {entry.country_code && (
+                                            <>
+                                                <span className="text-gray-400 text-xs">from</span>
+                                                <span className="text-emerald-400 text-sm font-bold">{entry.country_code}</span>
+                                            </>
+                                        )}
                                     </div>
                                     {entry.reason && (
                                         <p className="text-xs text-gray-500 mt-1">Reason: {entry.reason}</p>

@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
 
         const { pilot_id, country_code, reason } = await request.json();
 
-        if (!pilot_id || !country_code) {
-            return NextResponse.json({ error: 'Pilot ID and country code are required' }, { status: 400 });
+        if (!pilot_id) {
+            return NextResponse.json({ error: 'Pilot ID is required' }, { status: 400 });
         }
 
         // Check if pilot exists
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
         const bypassEntry = await CountryBlacklistBypass.create({
             pilot_id: pilot_id.toUpperCase(),
-            country_code: country_code.toUpperCase(),
+            country_code: country_code ? country_code.toUpperCase() : '',
             reason: reason || '',
             added_by: session.pilotId || session.email || 'Admin',
         });
