@@ -11,7 +11,8 @@ export async function GET(request: NextRequest) {
     try {
         await connectDB();
 
-        const items = await StoreItem.find({ active: true }).sort({ price: 1 }).lean();
+        // Find items where active is not explicitly false (handles missing active flag gracefully)
+        const items = await StoreItem.find({ active: { $ne: false } }).sort({ price: 1 }).lean();
 
         return NextResponse.json({ success: true, items });
 
