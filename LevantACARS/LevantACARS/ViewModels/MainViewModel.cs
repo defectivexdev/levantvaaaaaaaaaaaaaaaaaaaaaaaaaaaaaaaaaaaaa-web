@@ -69,6 +69,11 @@ public partial class MainViewModel : ObservableObject
         {
             _ = AutoLoginAsync();
         }
+        else
+        {
+            // Start profile polling if already logged in
+            _authService.StartProfilePolling();
+        }
 
         // Initialize
         _ = _flightManager.InitializeAsync();

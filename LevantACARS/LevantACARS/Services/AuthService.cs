@@ -19,6 +19,7 @@ public sealed class AuthService
     private readonly ILogger<AuthService> _logger;
     private readonly HttpClient _http;
     private CancellationTokenSource? _pollCts;
+    private System.Timers.Timer? _profileRefreshTimer;
 
     public event Action<bool>? OnAuthStateChanged;
     public event Action<string>? OnDeviceCodeReady;
@@ -125,6 +126,10 @@ public sealed class AuthService
                     config.Save();
                     _logger.LogInformation("[Auth] Authorized as {Name} ({Rank})", config.PilotName, config.PilotRank);
                     OnAuthStateChanged?.Invoke(true);
+                    
+                    // Start polling for profile updates to catch rank changes
+                    StartProfilePolling();
+                    
                     return true;
                 }
 
@@ -205,9 +210,42 @@ public sealed class AuthService
         }
     }
 
+    /// <summary>Start polling for profile updates every 60 seconds to catch rank changes.</summary>
+    public void StartProfilePolling()
+    {
+        StopProfilePolling(); // Stop any existing timer
+        
+        _profileRefreshTimer = new System.Timers.Timer(60000); // 60 seconds
+        _profileRefreshTimer.Elapsed += async (sender, e) =>
+        {
+            if (IsAuthenticated)
+            {
+                _logger.LogDebug("[Auth] Auto-refreshing profile...");
+                await FetchProfileAsync();
+            }
+        };
+        _profileRefreshTimer.AutoReset = true;
+        _profileRefreshTimer.Start();
+        
+        _logger.LogInformation("[Auth] Profile polling started (60s interval)");
+    }
+
+    /// <summary>Stop profile polling.</summary>
+    public void StopProfilePolling()
+    {
+        if (_profileRefreshTimer != null)
+        {
+            _profileRefreshTimer.Stop();
+            _profileRefreshTimer.Dispose();
+            _profileRefreshTimer = null;
+            _logger.LogInformation("[Auth] Profile polling stopped");
+        }
+    }
+
     /// <summary>Logout — clear stored credentials.</summary>
     public void Logout()
     {
+        StopProfilePolling();
         AppConfig.Current.ClearAuth();
         OnAuthStateChanged?.Invoke(false);
         _logger.LogInformation("[Auth] Logged out");
