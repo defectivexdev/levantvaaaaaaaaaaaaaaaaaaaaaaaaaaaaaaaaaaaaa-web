@@ -1,30 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/database';
 import { PilotModel } from '@/models';
+import { corsHeaders } from '@/lib/acars/helpers';
+
+export const dynamic = 'force-dynamic';
+
+export async function OPTIONS() {
+    return new NextResponse(null, { status: 204, headers: corsHeaders() });
+}
 
 export async function POST(request: NextRequest) {
     try {
         const { pilotId } = await request.json();
         
+        console.log(`[SimBrief] Fetching for pilot:`, pilotId);
+        
         if (!pilotId) {
-            return NextResponse.json({ error: 'Pilot ID required' }, { status: 400 });
+            return NextResponse.json({ error: 'Pilot ID required' }, { status: 400, headers: corsHeaders() });
         }
 
         await connectDB();
         const pilot = await PilotModel.findOne({ pilot_id: pilotId }).lean();
 
         if (!pilot) {
-            return NextResponse.json({ error: 'Pilot not found' }, { status: 404 });
+            return NextResponse.json({ error: 'Pilot not found' }, { status: 404, headers: corsHeaders() });
         }
 
         const simbriefId = pilot.simbrief_id;
-        console.log(`[SimBrief] Pilot ${pilotId} has SimBrief ID:`, simbriefId);
+        console.log(`[SimBrief] Pilot ${pilotId} has SimBrief ID:`, simbriefId || 'NOT CONFIGURED');
         
         if (!simbriefId) {
+            console.log(`[SimBrief] SimBrief ID is empty/null for pilot ${pilotId}`);
             return NextResponse.json({ 
                 error: 'SimBrief ID not configured. Please add your SimBrief ID in Settings.',
                 simbriefId: null
-            }, { status: 400 });
+            }, { status: 400, headers: corsHeaders() });
         }
 
         // Fetch latest SimBrief OFP
@@ -45,7 +55,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ 
                 error: `SimBrief API returned error ${sbRes.status}. Check your SimBrief ID: ${simbriefId}`,
                 simbriefId
-            }, { status: 500 });
+            }, { status: 500, headers: corsHeaders() });
         }
 
         const sbData = await sbRes.json();
@@ -57,7 +67,7 @@ export async function POST(request: NextRequest) {
                 error: `No SimBrief flight plan found for SimBrief ID: ${simbriefId}. Create a flight plan on SimBrief.com first.`,
                 simbriefId,
                 details: sbData?.fetch?.status || 'Unknown status'
-            }, { status: 404 });
+            }, { status: 404, headers: corsHeaders() });
         }
         
         console.log(`[SimBrief] Successfully fetched flight plan: ${sbData.origin?.icao_code} → ${sbData.destination?.icao_code}`);
@@ -90,12 +100,12 @@ export async function POST(request: NextRequest) {
             expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
         };
 
-        return NextResponse.json({ flightPlan, simbriefId });
+        return NextResponse.json({ flightPlan, simbriefId }, { headers: corsHeaders() });
     } catch (error: any) {
         console.error('SimBrief fetch error:', error);
         return NextResponse.json({ 
             error: 'Failed to fetch SimBrief flight plan',
             details: error.message 
-        }, { status: 500 });
+        }, { status: 500, headers: corsHeaders() });
     }
 }
