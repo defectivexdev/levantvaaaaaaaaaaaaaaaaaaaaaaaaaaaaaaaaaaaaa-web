@@ -172,13 +172,15 @@ export default function AdminPirepsPage() {
                                 }`}
                             >
                                 {s}
-                                <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-black ${
-                                    statusFilter === s 
-                                        ? 'bg-accent-gold/20 text-accent-gold' 
-                                        : 'bg-white/[0.05] text-gray-600'
-                                }`}>
-                                    {count}
-                                </span>
+                                {!loading && (
+                                    <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-black ${
+                                        statusFilter === s 
+                                            ? 'bg-accent-gold/20 text-accent-gold' 
+                                            : 'bg-white/[0.05] text-gray-600'
+                                    }`}>
+                                        {count}
+                                    </span>
+                                )}
                             </button>
                         );
                     })}
