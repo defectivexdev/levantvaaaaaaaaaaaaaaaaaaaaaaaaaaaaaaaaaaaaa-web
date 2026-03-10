@@ -128,9 +128,19 @@ export function useTelemetry() {
   const [exceedanceLog, setExceedanceLog] = useState<UILogEntry[]>([]);
   const [hoppieMessages, setHoppieMessages] = useState<HoppieMessage[]>([]);
   const [hoppieLogs, setHoppieLogs] = useState<HoppieLog[]>([]);
+  const prevFlightActiveRef = useRef(false);
   const logIdRef = useRef(0);
   const authRef = useRef(auth);
   authRef.current = auth;
+
+  // Clear ATC/CPDLC message history when flight finishes (active -> inactive)
+  useEffect(() => {
+    if (prevFlightActiveRef.current && !flight.isActive) {
+      setHoppieMessages([]);
+      setHoppieLogs([]);
+    }
+    prevFlightActiveRef.current = flight.isActive;
+  }, [flight.isActive]);
 
   // ── Landing Black Box ──────────────────────────────────────────
   const blackBoxRef = useRef({
@@ -386,6 +396,8 @@ export function useTelemetry() {
     setTouchdownPoint(null);
     setActivityLog([]);
     setExceedanceLog([]);
+    setHoppieMessages([]);
+    setHoppieLogs([]);
     // Reset black box
     blackBoxRef.current = { armed: false, touchdownFPM: 0, maxGForce: 1.0, fired: false };
     pushToast('info', 'Flight cancelled — ACARS reset');
