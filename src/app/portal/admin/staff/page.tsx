@@ -40,10 +40,8 @@ export default function AdminStaffPage() {
     const [pilotIdInput, setPilotIdInput] = useState('');
     const [memberDetails, setMemberDetails] = useState({ 
         roleTitle: '', 
-        category: 'Board of Governor', 
         name: '', 
         email: '', 
-        picture: '', 
         discord: '' 
     });
     const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
@@ -106,10 +104,8 @@ export default function AdminStaffPage() {
         setPilotIdInput('');
         setMemberDetails({ 
             roleTitle: '', 
-            category: 'Board of Governor', 
             name: '', 
             email: '', 
-            picture: '', 
             discord: '' 
         });
         setEditingMemberId(null);
@@ -120,10 +116,8 @@ export default function AdminStaffPage() {
         setPilotIdInput(member.pilot_id?.pilot_id || '');
         setMemberDetails({
             roleTitle: member.role_id?.title || '',
-            category: member.role_id?.category || 'Board of Governor',
             name: member.name || '',
             email: member.email || '',
-            picture: member.picture || '',
             discord: member.discord || ''
         });
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -172,48 +166,6 @@ export default function AdminStaffPage() {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Role Title</label>
-                                <select 
-                                    value={memberDetails.roleTitle} onChange={e => setMemberDetails({...memberDetails, roleTitle: e.target.value})}
-                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm outline-none focus:border-accent-gold/50 transition-all font-medium appearance-none cursor-pointer"
-                                    required
-                                >
-                                    <option value="" className="text-black">Select Position...</option>
-                                    <optgroup label="Board of Governor" className="text-black">
-                                        <option value="Chief Executive Officer">Chief Executive Officer</option>
-                                        <option value="Chief Operations Officer">Chief Operations Officer</option>
-                                        <option value="Executive Vice President">Executive Vice President</option>
-                                    </optgroup>
-                                    <optgroup label="Director" className="text-black">
-                                        <option value="Operations Director">Operations Director</option>
-                                        <option value="Human Resources Director">Human Resources Director</option>
-                                        <option value="Marketing Director">Marketing Director</option>
-                                        <option value="IT Director">IT Director</option>
-                                        <option value="Events Director">Events Director</option>
-                                    </optgroup>
-                                    <optgroup label="Chief Pilot" className="text-black">
-                                        <option value="Chief Pilot Training">Chief Pilot Training</option>
-                                        <option value="Chief Pilot Recruitment">Chief Pilot Recruitment</option>
-                                        <option value="Senior Advisor">Senior Advisor</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Category</label>
-                                <select 
-                                    value={memberDetails.category} onChange={e => setMemberDetails({...memberDetails, category: e.target.value})}
-                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm outline-none transition-all appearance-none cursor-pointer"
-                                    required
-                                >
-                                    <option value="Board of Governor" className="text-black font-bold">Board of Governor</option>
-                                    <option value="Director" className="text-black font-bold">Director</option>
-                                    <option value="Chief Pilot" className="text-black font-bold">Chief Pilot</option>
-                                </select>
-                            </div>
-                            <div className="space-y-1.5">
                                 <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Display Name Override</label>
                                 <input 
                                     type="text" placeholder="Optional" 
@@ -221,6 +173,34 @@ export default function AdminStaffPage() {
                                     className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
                                 />
                             </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Role Title</label>
+                            <select 
+                                value={memberDetails.roleTitle} onChange={e => setMemberDetails({...memberDetails, roleTitle: e.target.value})}
+                                className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm outline-none focus:border-accent-gold/50 transition-all font-medium appearance-none cursor-pointer"
+                                required
+                            >
+                                <option value="" className="text-black">Select Position...</option>
+                                <optgroup label="Board of Governor" className="text-black">
+                                    <option value="Chief Executive Officer">Chief Executive Officer</option>
+                                    <option value="Chief Operations Officer">Chief Operations Officer</option>
+                                    <option value="Executive Vice President">Executive Vice President</option>
+                                </optgroup>
+                                <optgroup label="Director" className="text-black">
+                                    <option value="Operations Director">Operations Director</option>
+                                    <option value="Human Resources Director">Human Resources Director</option>
+                                    <option value="Marketing Director">Marketing Director</option>
+                                    <option value="IT Director">IT Director</option>
+                                    <option value="Events Director">Events Director</option>
+                                </optgroup>
+                                <optgroup label="Chief Pilot" className="text-black">
+                                    <option value="Chief Pilot Training">Chief Pilot Training</option>
+                                    <option value="Chief Pilot Recruitment">Chief Pilot Recruitment</option>
+                                    <option value="Senior Advisor">Senior Advisor</option>
+                                </optgroup>
+                            </select>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/[0.06]">
@@ -233,22 +213,11 @@ export default function AdminStaffPage() {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Discord Handle</label>
+                                <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Discord User ID</label>
                                 <input 
-                                    type="text" placeholder="@username" 
+                                    type="text" placeholder="Discord User ID (for avatar)" 
                                     value={memberDetails.discord} onChange={e => setMemberDetails({...memberDetails, discord: e.target.value})}
                                     className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-[#5865F2]/50 transition-all placeholder:text-gray-700"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Avatar URL</label>
-                                <input 
-                                    type="text" placeholder="https://..." 
-                                    value={memberDetails.picture} onChange={e => setMemberDetails({...memberDetails, picture: e.target.value})}
-                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm placeholder:text-gray-700"
                                 />
                             </div>
                         </div>
@@ -289,11 +258,20 @@ export default function AdminStaffPage() {
                                 <div className="flex items-center gap-4">
                                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-800 to-black p-0.5 flex items-center justify-center border border-white/[0.08]">
                                         <div className="w-full h-full rounded-[14px] overflow-hidden bg-zinc-900 flex items-center justify-center">
-                                            {member.picture ? (
-                                                <img src={member.picture} alt="" className="w-full h-full object-cover" />
-                                            ) : (
-                                                <span className="text-2xl font-bold text-gray-600 uppercase">{(member.name || member.pilot_id?.first_name)?.[0]}</span>
-                                            )}
+                                            {member.discord ? (
+                                                <img 
+                                                    src={`https://cdn.discordapp.com/avatars/${member.discord}/${member.discord}.png?size=128`} 
+                                                    alt="" 
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = 'none';
+                                                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                                    }}
+                                                />
+                                            ) : null}
+                                            <span className={`text-2xl font-bold text-gray-600 uppercase ${member.discord ? 'hidden' : ''}`}>
+                                                {(member.name || member.pilot_id?.first_name)?.[0]}
+                                            </span>
                                         </div>
                                     </div>
                                     <div>
@@ -302,7 +280,6 @@ export default function AdminStaffPage() {
                                         </h3>
                                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">
                                             <span className={`text-[10px] font-bold uppercase tracking-wider ${member.role_id?.color}`}>{member.role_id?.title}</span>
-                                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{member.role_id?.category}</span>
                                         </div>
                                     </div>
                                 </div>

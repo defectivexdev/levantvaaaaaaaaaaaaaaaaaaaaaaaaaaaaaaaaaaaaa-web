@@ -22,11 +22,26 @@ export async function GET() {
     }
 }
 
+// Role title to category mapping
+const roleTitleToCategoryMap: { [key: string]: { category: string; color: string; order: number } } = {
+    'Chief Executive Officer': { category: 'Board of Governor', color: 'text-accent-gold', order: 1 },
+    'Chief Operations Officer': { category: 'Board of Governor', color: 'text-accent-gold', order: 1 },
+    'Executive Vice President': { category: 'Board of Governor', color: 'text-accent-gold', order: 1 },
+    'Operations Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'Human Resources Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'Marketing Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'IT Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'Events Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'Chief Pilot Training': { category: 'Chief Pilot', color: 'text-emerald-400', order: 3 },
+    'Chief Pilot Recruitment': { category: 'Chief Pilot', color: 'text-emerald-400', order: 3 },
+    'Senior Advisor': { category: 'Chief Pilot', color: 'text-emerald-400', order: 3 },
+};
+
 // POST: Assign staff member
 export async function POST(req: Request) {
     await dbConnect();
     try {
-        const { pilotId, roleId, roleTitle, category, name, callsign, email, picture, discord } = await req.json();
+        const { pilotId, roleId, roleTitle, name, callsign, email, discord } = await req.json();
         
         let finalPilotId = pilotId;
 
@@ -41,34 +56,36 @@ export async function POST(req: Request) {
 
         let finalRoleId = roleId;
 
-        // If no roleId, but we have title and category, Find or Create
-        if (!finalRoleId && roleTitle && category) {
+        // If no roleId, but we have title, Find or Create based on title only
+        if (!finalRoleId && roleTitle) {
+            // Check if role exists by title only
             let role = await StaffRole.findOne({ 
                 $or: [
-                    { title: roleTitle, category },
-                    { name: roleTitle, category }
+                    { title: roleTitle },
+                    { name: roleTitle }
                 ]
             });
+            
             if (!role) {
-                // Determine a default color based on category
-                let color = 'text-white';
-                if (category === 'Board of Governor') color = 'text-accent-gold';
-                if (category === 'Director') color = 'text-rose-400';
-                if (category === 'Chief Pilot') color = 'text-emerald-400';
+                // Get category, color, and order from mapping
+                const roleConfig = roleTitleToCategoryMap[roleTitle];
+                if (!roleConfig) {
+                    return NextResponse.json({ success: false, error: 'Invalid role title' }, { status: 400 });
+                }
 
                 role = await StaffRole.create({
                     name: roleTitle,
                     title: roleTitle,
-                    category,
-                    color,
-                    order: category === 'Board of Governor' ? 1 : (category === 'Director' ? 2 : 3)
+                    category: roleConfig.category,
+                    color: roleConfig.color,
+                    order: roleConfig.order
                 });
             }
             finalRoleId = role.id;
         }
 
         if (!finalRoleId) {
-            return NextResponse.json({ success: false, error: 'Role ID or Title/Category required' }, { status: 400 });
+            return NextResponse.json({ success: false, error: 'Role ID or Title required' }, { status: 400 });
         }
         
         // Check if exists
@@ -83,7 +100,6 @@ export async function POST(req: Request) {
             name,
             callsign,
             email,
-            picture,
             discord
         });
         // Populate for immediate return

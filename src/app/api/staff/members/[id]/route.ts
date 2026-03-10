@@ -3,41 +3,52 @@ import dbConnect from '@/lib/database';
 import StaffMember from '@/models/StaffMember';
 import StaffRole from '@/models/StaffRole';
 
+// Role title to category mapping
+const roleTitleToCategoryMap: { [key: string]: { category: string; color: string; order: number } } = {
+    'Chief Executive Officer': { category: 'Board of Governor', color: 'text-accent-gold', order: 1 },
+    'Chief Operations Officer': { category: 'Board of Governor', color: 'text-accent-gold', order: 1 },
+    'Executive Vice President': { category: 'Board of Governor', color: 'text-accent-gold', order: 1 },
+    'Operations Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'Human Resources Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'Marketing Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'IT Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'Events Director': { category: 'Director', color: 'text-rose-400', order: 2 },
+    'Chief Pilot Training': { category: 'Chief Pilot', color: 'text-emerald-400', order: 3 },
+    'Chief Pilot Recruitment': { category: 'Chief Pilot', color: 'text-emerald-400', order: 3 },
+    'Senior Advisor': { category: 'Chief Pilot', color: 'text-emerald-400', order: 3 },
+};
+
 // PUT: Update staff member
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     await dbConnect();
     try {
-        const { roleTitle, category, name, email, picture, discord } = await req.json();
+        const { roleTitle, name, email, discord } = await req.json();
 
         let finalRoleId;
 
-        // Find or Create Role
-        if (roleTitle && category) {
+        // Find or Create Role based on title only
+        if (roleTitle) {
             let role = await StaffRole.findOne({ 
                 $or: [
-                    { title: roleTitle, category },
-                    { name: roleTitle, category }
+                    { title: roleTitle },
+                    { name: roleTitle }
                 ]
             });
+            
             if (!role) {
-                const categoryColorMap: { [key: string]: string } = {
-                    'Board of Governor': 'text-accent-gold',
-                    'Director': 'text-blue-400',
-                    'Chief Pilot': 'text-emerald-400'
-                };
-                const categoryOrderMap: { [key: string]: number } = {
-                    'Board of Governor': 1,
-                    'Director': 2,
-                    'Chief Pilot': 3
-                };
+                // Get category, color, and order from mapping
+                const roleConfig = roleTitleToCategoryMap[roleTitle];
+                if (!roleConfig) {
+                    return NextResponse.json({ success: false, error: 'Invalid role title' }, { status: 400 });
+                }
 
                 role = await StaffRole.create({
                     name: roleTitle,
                     title: roleTitle,
-                    category,
-                    color: categoryColorMap[category] || 'text-gray-400',
-                    order: categoryOrderMap[category] || 99
+                    category: roleConfig.category,
+                    color: roleConfig.color,
+                    order: roleConfig.order
                 });
             }
             finalRoleId = role.id;
@@ -47,7 +58,6 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
             role_id: finalRoleId,
             name,
             email,
-            picture,
             discord
         }, { new: true }).populate(['pilot_id', 'role_id']);
 
