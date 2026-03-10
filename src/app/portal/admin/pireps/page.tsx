@@ -29,7 +29,7 @@ function isA380(aircraft: string): boolean {
 }
 
 export default function AdminPirepsPage() {
-    const [pireps, setPireps] = useState<PIREP[]>([]);
+    const [allPireps, setAllPireps] = useState<PIREP[]>([]);
     const [loading, setLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState('pending');
     const [searchTerm, setSearchTerm] = useState('');
@@ -40,15 +40,15 @@ export default function AdminPirepsPage() {
 
     useEffect(() => {
         fetchPireps();
-    }, [statusFilter]);
+    }, []);
 
     const fetchPireps = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/admin/pireps?status=${statusFilter}`);
+            const res = await fetch(`/api/admin/pireps?status=all`);
             const data = await res.json();
             if (data.pireps) {
-                setPireps(data.pireps);
+                setAllPireps(data.pireps);
             }
         } catch (error) {
             console.error('Error fetching PIREPs:', error);
@@ -114,12 +114,29 @@ export default function AdminPirepsPage() {
     };
 
     const filteredPireps = useMemo(() => {
-        return pireps.filter(p => {
-            const matchesSearch = p.callsign.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                p.pilot_name.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesSearch;
-        });
-    }, [pireps, searchTerm]);
+        let filtered = allPireps;
+        
+        // Filter by status
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(p => {
+                if (statusFilter === 'pending') return p.approved_status === 0;
+                if (statusFilter === 'approved') return p.approved_status === 1;
+                if (statusFilter === 'rejected') return p.approved_status === 2;
+                return true;
+            });
+        }
+        
+        // Filter by search
+        if (searchTerm) {
+            filtered = filtered.filter(p => {
+                const matchesSearch = p.callsign.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    p.pilot_name.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesSearch;
+            });
+        }
+        
+        return filtered;
+    }, [allPireps, statusFilter, searchTerm]);
 
     return (
         <div className="space-y-6">
@@ -138,7 +155,7 @@ export default function AdminPirepsPage() {
             <div className="flex flex-col lg:flex-row gap-4">
                 <div className="flex gap-2 bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] p-1.5 rounded-2xl border border-white/[0.08] overflow-x-auto flex-shrink-0 shadow-lg shadow-black/20">
                     {['pending', 'approved', 'rejected', 'all'].map(s => {
-                        const count = s === 'all' ? pireps.length : pireps.filter(p => {
+                        const count = s === 'all' ? allPireps.length : allPireps.filter(p => {
                             if (s === 'pending') return p.approved_status === 0;
                             if (s === 'approved') return p.approved_status === 1;
                             if (s === 'rejected') return p.approved_status === 2;
@@ -234,7 +251,7 @@ export default function AdminPirepsPage() {
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-1.5 text-sm font-mono text-cyan-400">
                                         <Clock size={14} className="text-cyan-500" />
-                                        {Math.floor(p.flight_time / 60).toString().padStart(2, '0')}:{(p.flight_time % 60).toString().padStart(2, '0')}
+                                        {Math.floor(p.flight_time).toString().padStart(2, '0')}:{Math.floor((p.flight_time % 1) * 60).toString().padStart(2, '0')}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
@@ -296,7 +313,7 @@ export default function AdminPirepsPage() {
                         <div className="grid grid-cols-4 gap-3 mb-6">
                             <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
                                 <Clock size={16} className="mx-auto mb-2 text-cyan-400" />
-                                <p className="text-sm font-bold font-mono text-cyan-400">{Math.floor(selectedPirep.flight_time / 60).toString().padStart(2, '0')}:{(selectedPirep.flight_time % 60).toString().padStart(2, '0')}</p>
+                                <p className="text-sm font-bold font-mono text-cyan-400">{Math.floor(selectedPirep.flight_time).toString().padStart(2, '0')}:{Math.floor((selectedPirep.flight_time % 1) * 60).toString().padStart(2, '0')}</p>
                                 <p className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-1">Flight Time</p>
                             </div>
                             <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
