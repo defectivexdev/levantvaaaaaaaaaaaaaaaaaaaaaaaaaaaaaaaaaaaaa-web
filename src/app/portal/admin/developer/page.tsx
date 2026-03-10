@@ -1,12 +1,24 @@
 'use client';
 
-import { useState } from 'react';
-import { Wrench, Trash2, Database, Loader2, Mail } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Wrench, Trash2, Database, Loader2, Mail, Globe, Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
+
+interface BlacklistEntry {
+    _id: string;
+    country_code: string;
+    country_name: string;
+    reason?: string;
+    added_by: string;
+    created_at: string;
+}
 
 export default function DeveloperManagementPage() {
     const [loading, setLoading] = useState<string | null>(null);
     const [testEmail, setTestEmail] = useState('');
+    const [blacklist, setBlacklist] = useState<BlacklistEntry[]>([]);
+    const [newCountry, setNewCountry] = useState({ code: '', name: '', reason: '' });
+    const [showAddForm, setShowAddForm] = useState(false);
 
     const handleClearDownloadLogs = async () => {
         if (!confirm('Are you sure you want to clear all download logs? This action cannot be undone.')) {
@@ -83,6 +95,86 @@ export default function DeveloperManagementPage() {
         } catch (error) {
             console.error('Error testing email:', error);
             toast.error('Failed to test email');
+        } finally {
+            setLoading(null);
+        }
+    };
+
+    // Fetch blacklist on mount
+    useEffect(() => {
+        fetchBlacklist();
+    }, []);
+
+    const fetchBlacklist = async () => {
+        try {
+            const res = await fetch('/api/admin/developer/country-blacklist');
+            const data = await res.json();
+            if (res.ok) {
+                setBlacklist(data.blacklist);
+            }
+        } catch (error) {
+            console.error('Error fetching blacklist:', error);
+        }
+    };
+
+    const handleAddCountry = async () => {
+        if (!newCountry.code || !newCountry.name) {
+            toast.error('Country code and name are required');
+            return;
+        }
+
+        setLoading('addCountry');
+        try {
+            const res = await fetch('/api/admin/developer/country-blacklist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    country_code: newCountry.code.toUpperCase(),
+                    country_name: newCountry.name,
+                    reason: newCountry.reason,
+                }),
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success(`${newCountry.name} added to blacklist`);
+                setNewCountry({ code: '', name: '', reason: '' });
+                setShowAddForm(false);
+                fetchBlacklist();
+            } else {
+                toast.error(data.error || 'Failed to add country');
+            }
+        } catch (error) {
+            console.error('Error adding country:', error);
+            toast.error('Failed to add country');
+        } finally {
+            setLoading(null);
+        }
+    };
+
+    const handleRemoveCountry = async (countryCode: string, countryName: string) => {
+        if (!confirm(`Remove ${countryName} from blacklist?`)) {
+            return;
+        }
+
+        setLoading(`remove-${countryCode}`);
+        try {
+            const res = await fetch('/api/admin/developer/country-blacklist', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ country_code: countryCode }),
+            });
+
+            if (res.ok) {
+                toast.success(`${countryName} removed from blacklist`);
+                fetchBlacklist();
+            } else {
+                const data = await res.json();
+                toast.error(data.error || 'Failed to remove country');
+            }
+        } catch (error) {
+            console.error('Error removing country:', error);
+            toast.error('Failed to remove country');
         } finally {
             setLoading(null);
         }
@@ -224,6 +316,118 @@ export default function DeveloperManagementPage() {
                             </>
                         )}
                     </button>
+                </div>
+            </div>
+
+            {/* Country Blacklist Section */}
+            <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6">
+                <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-red-500/10">
+                            <Globe className="w-5 h-5 text-red-400" />
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="text-sm font-bold text-white">Country Blacklist</h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Block registrations from specific countries
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => setShowAddForm(!showAddForm)}
+                        className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 text-red-400 hover:border-red-500/50 hover:from-red-500/30 hover:to-orange-500/30 transition-all font-medium text-xs flex items-center gap-2"
+                    >
+                        {showAddForm ? <X className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                        {showAddForm ? 'Cancel' : 'Add Country'}
+                    </button>
+                </div>
+
+                {/* Add Country Form */}
+                {showAddForm && (
+                    <div className="mb-4 p-4 bg-[#0a0a0a] border border-white/10 rounded-lg space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                            <input
+                                type="text"
+                                value={newCountry.code}
+                                onChange={(e) => setNewCountry({ ...newCountry, code: e.target.value.toUpperCase() })}
+                                placeholder="Country Code (e.g., US)"
+                                maxLength={2}
+                                className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors uppercase"
+                            />
+                            <input
+                                type="text"
+                                value={newCountry.name}
+                                onChange={(e) => setNewCountry({ ...newCountry, name: e.target.value })}
+                                placeholder="Country Name (e.g., United States)"
+                                className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
+                            />
+                        </div>
+                        <input
+                            type="text"
+                            value={newCountry.reason}
+                            onChange={(e) => setNewCountry({ ...newCountry, reason: e.target.value })}
+                            placeholder="Reason (optional)"
+                            className="w-full px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
+                        />
+                        <button
+                            onClick={handleAddCountry}
+                            disabled={loading === 'addCountry'}
+                            className="w-full px-4 py-2.5 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 text-red-400 hover:border-red-500/50 hover:from-red-500/30 hover:to-orange-500/30 transition-all font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                            {loading === 'addCountry' ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Adding...
+                                </>
+                            ) : (
+                                <>
+                                    <Plus className="w-4 h-4" />
+                                    Add to Blacklist
+                                </>
+                            )}
+                        </button>
+                    </div>
+                )}
+
+                {/* Blacklist Table */}
+                <div className="space-y-2">
+                    {blacklist.length === 0 ? (
+                        <div className="text-center py-8 text-gray-500 text-sm">
+                            No countries blacklisted
+                        </div>
+                    ) : (
+                        blacklist.map((entry) => (
+                            <div
+                                key={entry._id}
+                                className="flex items-center justify-between p-3 bg-[#0a0a0a] border border-white/10 rounded-lg hover:border-red-500/30 transition-all"
+                            >
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-white font-bold text-sm">{entry.country_code}</span>
+                                        <span className="text-gray-400 text-sm">{entry.country_name}</span>
+                                    </div>
+                                    {entry.reason && (
+                                        <p className="text-xs text-gray-500 mt-1">Reason: {entry.reason}</p>
+                                    )}
+                                    <p className="text-[10px] text-gray-600 mt-1">
+                                        Added by {entry.added_by} on {new Date(entry.created_at).toLocaleDateString()}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => handleRemoveCountry(entry.country_code, entry.country_name)}
+                                    disabled={loading === `remove-${entry.country_code}`}
+                                    className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50 transition-all text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                                >
+                                    {loading === `remove-${entry.country_code}` ? (
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                        <Trash2 className="w-3 h-3" />
+                                    )}
+                                    Remove
+                                </button>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </div>

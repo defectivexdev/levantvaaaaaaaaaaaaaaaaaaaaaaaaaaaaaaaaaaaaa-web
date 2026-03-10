@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/database';
 import Pilot from '@/models/Pilot';
+import CountryBlacklist from '@/models/CountryBlacklist';
 import { sendWelcomeEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
@@ -29,6 +30,16 @@ export async function POST(request: NextRequest) {
             return NextResponse.json(
                 { error: 'Missing required fields' },
                 { status: 400 }
+            );
+        }
+
+        // Check if country is blacklisted
+        const blacklistedCountry = await CountryBlacklist.findOne({ country_code: country.toUpperCase() });
+        if (blacklistedCountry) {
+            console.log(`[Registration] Blocked registration from blacklisted country: ${country}`);
+            return NextResponse.json(
+                { error: 'Registration from your country is currently not available.' },
+                { status: 403 }
             );
         }
 
