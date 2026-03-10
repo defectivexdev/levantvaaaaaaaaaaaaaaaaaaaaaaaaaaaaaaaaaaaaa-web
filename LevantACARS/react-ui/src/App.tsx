@@ -168,7 +168,7 @@ export default function App() {
               </div>
             )}
             {activeView === 'hoppie' && <HoppiePanel messages={hoppieMessages} logs={hoppieLogs} callsign={bid?.callsign || ''} />}
-            {activeView === 'dispatch' && <DispatchPanel auth={auth} />}
+            {activeView === 'dispatch' && <DispatchPanel auth={auth} bid={bid} />}
             {activeView === 'chat' && <ChatPanel pilotId={auth.pilotId} pilotName={auth.pilotName} />}
             {activeView === 'logs' && <FlightHistoryPanel pilotId={auth.pilotId} />}
           </main>

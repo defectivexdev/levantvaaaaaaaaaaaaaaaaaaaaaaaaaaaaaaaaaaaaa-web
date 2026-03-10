@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Plane, RefreshCw, Download, MapPin, Clock, Fuel, Weight, Route as RouteIcon } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plane, RefreshCw, Download, MapPin, Clock, Fuel, Weight, Route as RouteIcon, AlertCircle } from 'lucide-react';
 import { pushToast } from './ToastOverlay';
-import type { AuthState } from '../types';
+import type { AuthState, BidData } from '../types';
 
 interface SimBriefFlightPlan {
   origin: { icao: string; name: string };
@@ -20,11 +20,24 @@ interface SimBriefFlightPlan {
 
 interface DispatchPanelProps {
   auth: AuthState;
+  bid: BidData | null;
 }
 
-export default function DispatchPanel({ auth }: DispatchPanelProps) {
+export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
   const [loading, setLoading] = useState(false);
   const [flightPlan, setFlightPlan] = useState<SimBriefFlightPlan | null>(null);
+  const [autoFetched, setAutoFetched] = useState(false);
+
+  // Auto-fetch SimBrief when bid becomes active
+  useEffect(() => {
+    if (bid && auth.simbriefId && !autoFetched) {
+      fetchFlightPlan();
+      setAutoFetched(true);
+    }
+    if (!bid) {
+      setAutoFetched(false);
+    }
+  }, [bid, auth.simbriefId]);
 
   const fetchFlightPlan = async () => {
     if (!auth.simbriefId) {
@@ -104,7 +117,7 @@ export default function DispatchPanel({ auth }: DispatchPanelProps) {
     <div className="flex flex-col h-full bg-[#0a0a0a] rounded-xl border border-white/[0.04] overflow-hidden">
       {/* Header */}
       <div className="shrink-0 bg-white/[0.02] border-b border-white/[0.04] px-4 py-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2 text-cyan-400 font-bold">
             <Plane size={16} />
             <h3>SIMBRIEF DISPATCH</h3>
@@ -118,15 +131,39 @@ export default function DispatchPanel({ auth }: DispatchPanelProps) {
             {loading ? 'Loading...' : 'Fetch Plan'}
           </button>
         </div>
+        {/* Active Bid Info */}
+        {bid && (
+          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Active Bid</span>
+              </div>
+              <div className="flex items-center gap-3 text-xs font-mono">
+                <span className="text-white font-bold">{bid.callsign || bid.flightNumber}</span>
+                <span className="text-gray-400">{bid.departureIcao}</span>
+                <span className="text-gray-600">→</span>
+                <span className="text-gray-400">{bid.arrivalIcao}</span>
+                <span className="text-gray-500">{bid.aircraftType}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
         {!auth.simbriefId ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <Plane size={48} className="text-gray-600 mb-4" />
+            <AlertCircle size={48} className="text-amber-500 mb-4" />
             <p className="text-gray-400 text-sm mb-2">SimBrief username not configured</p>
-            <p className="text-gray-600 text-xs">Please set your SimBrief username in settings</p>
+            <p className="text-gray-600 text-xs">Please set your SimBrief username in website settings</p>
+          </div>
+        ) : !bid ? (
+          <div className="flex flex-col items-center justify-center h-full text-center">
+            <Plane size={48} className="text-gray-600 mb-4" />
+            <p className="text-gray-400 text-sm mb-2">No active bid</p>
+            <p className="text-gray-600 text-xs">Book a flight to use SimBrief Dispatch</p>
           </div>
         ) : !flightPlan ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
