@@ -13,12 +13,24 @@ interface BlacklistEntry {
     created_at: string;
 }
 
+interface BypassEntry {
+    _id: string;
+    pilot_id: string;
+    country_code: string;
+    reason?: string;
+    added_by: string;
+    created_at: string;
+}
+
 export default function DeveloperManagementPage() {
     const [loading, setLoading] = useState<string | null>(null);
     const [testEmail, setTestEmail] = useState('');
     const [blacklist, setBlacklist] = useState<BlacklistEntry[]>([]);
     const [newCountry, setNewCountry] = useState({ code: '', name: '', reason: '' });
     const [showAddForm, setShowAddForm] = useState(false);
+    const [bypasses, setBypasses] = useState<BypassEntry[]>([]);
+    const [newBypass, setNewBypass] = useState({ pilotId: '', countryCode: '', reason: '' });
+    const [showBypassForm, setShowBypassForm] = useState(false);
 
     const handleClearDownloadLogs = async () => {
         if (!confirm('Are you sure you want to clear all download logs? This action cannot be undone.')) {
@@ -100,9 +112,10 @@ export default function DeveloperManagementPage() {
         }
     };
 
-    // Fetch blacklist on mount
+    // Fetch blacklist and bypasses on mount
     useEffect(() => {
         fetchBlacklist();
+        fetchBypasses();
     }, []);
 
     const fetchBlacklist = async () => {
@@ -114,6 +127,18 @@ export default function DeveloperManagementPage() {
             }
         } catch (error) {
             console.error('Error fetching blacklist:', error);
+        }
+    };
+
+    const fetchBypasses = async () => {
+        try {
+            const res = await fetch('/api/admin/developer/country-bypass');
+            const data = await res.json();
+            if (res.ok) {
+                setBypasses(data.bypasses);
+            }
+        } catch (error) {
+            console.error('Error fetching bypasses:', error);
         }
     };
 
@@ -175,6 +200,69 @@ export default function DeveloperManagementPage() {
         } catch (error) {
             console.error('Error removing country:', error);
             toast.error('Failed to remove country');
+        } finally {
+            setLoading(null);
+        }
+    };
+
+    const handleAddBypass = async () => {
+        if (!newBypass.pilotId || !newBypass.countryCode) {
+            toast.error('Pilot ID and country code are required');
+            return;
+        }
+
+        setLoading('addBypass');
+        try {
+            const res = await fetch('/api/admin/developer/country-bypass', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    pilot_id: newBypass.pilotId.toUpperCase(),
+                    country_code: newBypass.countryCode.toUpperCase(),
+                    reason: newBypass.reason,
+                }),
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success(`${newBypass.pilotId} added to bypass list`);
+                setNewBypass({ pilotId: '', countryCode: '', reason: '' });
+                setShowBypassForm(false);
+                fetchBypasses();
+            } else {
+                toast.error(data.error || 'Failed to add bypass');
+            }
+        } catch (error) {
+            console.error('Error adding bypass:', error);
+            toast.error('Failed to add bypass');
+        } finally {
+            setLoading(null);
+        }
+    };
+
+    const handleRemoveBypass = async (pilotId: string) => {
+        if (!confirm(`Remove ${pilotId} from bypass list?`)) {
+            return;
+        }
+
+        setLoading(`remove-bypass-${pilotId}`);
+        try {
+            const res = await fetch('/api/admin/developer/country-bypass', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pilot_id: pilotId }),
+            });
+
+            if (res.ok) {
+                toast.success(`${pilotId} removed from bypass list`);
+                fetchBypasses();
+            } else {
+                const data = await res.json();
+                toast.error(data.error || 'Failed to remove bypass');
+            }
+        } catch (error) {
+            console.error('Error removing bypass:', error);
+            toast.error('Failed to remove bypass');
         } finally {
             setLoading(null);
         }
@@ -419,6 +507,119 @@ export default function DeveloperManagementPage() {
                                     className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50 transition-all text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                                 >
                                     {loading === `remove-${entry.country_code}` ? (
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                        <Trash2 className="w-3 h-3" />
+                                    )}
+                                    Remove
+                                </button>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
+
+            {/* Country Bypass Section */}
+            <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6">
+                <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-emerald-500/10">
+                            <Globe className="w-5 h-5 text-emerald-400" />
+                        </div>
+                        <div className="flex-1">
+                            <h3 className="text-sm font-bold text-white">Bypass Blacklist</h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Allow specific pilots from blacklisted countries to register
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => setShowBypassForm(!showBypassForm)}
+                        className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400 hover:border-emerald-500/50 hover:from-emerald-500/30 hover:to-green-500/30 transition-all font-medium text-xs flex items-center gap-2"
+                    >
+                        {showBypassForm ? <X className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                        {showBypassForm ? 'Cancel' : 'Add Bypass'}
+                    </button>
+                </div>
+
+                {/* Add Bypass Form */}
+                {showBypassForm && (
+                    <div className="mb-4 p-4 bg-[#0a0a0a] border border-white/10 rounded-lg space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                            <input
+                                type="text"
+                                value={newBypass.pilotId}
+                                onChange={(e) => setNewBypass({ ...newBypass, pilotId: e.target.value.toUpperCase() })}
+                                placeholder="Pilot ID (e.g., LVT123)"
+                                className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors uppercase"
+                            />
+                            <input
+                                type="text"
+                                value={newBypass.countryCode}
+                                onChange={(e) => setNewBypass({ ...newBypass, countryCode: e.target.value.toUpperCase() })}
+                                placeholder="Country Code (e.g., US)"
+                                maxLength={2}
+                                className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors uppercase"
+                            />
+                        </div>
+                        <input
+                            type="text"
+                            value={newBypass.reason}
+                            onChange={(e) => setNewBypass({ ...newBypass, reason: e.target.value })}
+                            placeholder="Reason (optional)"
+                            className="w-full px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
+                        />
+                        <button
+                            onClick={handleAddBypass}
+                            disabled={loading === 'addBypass'}
+                            className="w-full px-4 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-500/30 text-emerald-400 hover:border-emerald-500/50 hover:from-emerald-500/30 hover:to-green-500/30 transition-all font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                            {loading === 'addBypass' ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Adding...
+                                </>
+                            ) : (
+                                <>
+                                    <Plus className="w-4 h-4" />
+                                    Add to Bypass List
+                                </>
+                            )}
+                        </button>
+                    </div>
+                )}
+
+                {/* Bypass Table */}
+                <div className="space-y-2">
+                    {bypasses.length === 0 ? (
+                        <div className="text-center py-8 text-gray-500 text-sm">
+                            No bypasses configured
+                        </div>
+                    ) : (
+                        bypasses.map((entry) => (
+                            <div
+                                key={entry._id}
+                                className="flex items-center justify-between p-3 bg-[#0a0a0a] border border-white/10 rounded-lg hover:border-emerald-500/30 transition-all"
+                            >
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-white font-bold text-sm">{entry.pilot_id}</span>
+                                        <span className="text-gray-400 text-xs">from</span>
+                                        <span className="text-emerald-400 text-sm font-bold">{entry.country_code}</span>
+                                    </div>
+                                    {entry.reason && (
+                                        <p className="text-xs text-gray-500 mt-1">Reason: {entry.reason}</p>
+                                    )}
+                                    <p className="text-[10px] text-gray-600 mt-1">
+                                        Added by {entry.added_by} on {new Date(entry.created_at).toLocaleDateString()}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => handleRemoveBypass(entry.pilot_id)}
+                                    disabled={loading === `remove-bypass-${entry.pilot_id}`}
+                                    className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50 transition-all text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                                >
+                                    {loading === `remove-bypass-${entry.pilot_id}` ? (
                                         <Loader2 className="w-3 h-3 animate-spin" />
                                     ) : (
                                         <Trash2 className="w-3 h-3" />

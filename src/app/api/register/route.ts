@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/database';
 import Pilot from '@/models/Pilot';
 import CountryBlacklist from '@/models/CountryBlacklist';
+import CountryBlacklistBypass from '@/models/CountryBlacklistBypass';
 import { sendWelcomeEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
@@ -33,14 +34,36 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Validate callsign format first to get pilot_id
+        const callsign = desiredCallsign?.trim().toUpperCase();
+        if (!callsign) {
+            return NextResponse.json(
+                { error: 'Callsign is required' },
+                { status: 400 }
+            );
+        }
+
+        if (!/^LVT[A-Z0-9]{1,3}$/.test(callsign)) {
+            return NextResponse.json(
+                { error: 'Callsign must start with LVT followed by 1-3 characters' },
+                { status: 400 }
+            );
+        }
+
         // Check if country is blacklisted
         const blacklistedCountry = await CountryBlacklist.findOne({ country_code: country.toUpperCase() });
         if (blacklistedCountry) {
-            console.log(`[Registration] Blocked registration from blacklisted country: ${country}`);
-            return NextResponse.json(
-                { error: 'Registration from your country is currently not available.' },
-                { status: 403 }
-            );
+            // Check if this pilot ID is in the bypass list
+            const isBypassed = await CountryBlacklistBypass.findOne({ pilot_id: callsign });
+            if (!isBypassed) {
+                console.log(`[Registration] Blocked registration from blacklisted country: ${country} (Pilot: ${callsign})`);
+                return NextResponse.json(
+                    { error: 'Registration from your country is currently not available.' },
+                    { status: 403 }
+                );
+            } else {
+                console.log(`[Registration] Allowing bypassed pilot ${callsign} from blacklisted country: ${country}`);
+            }
         }
 
         // Only allow @gmail.com email addresses
@@ -60,22 +83,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Validate callsign format: must be LVT + 1-3 alphanumeric chars (e.g. LVT6AT, LVT11, LVT9A)
-        const callsign = desiredCallsign?.trim().toUpperCase();
-        if (!callsign) {
-            return NextResponse.json(
-                { error: 'Callsign is required' },
-                { status: 400 }
-            );
-        }
-
-        if (!/^LVT[A-Z0-9]{1,3}$/.test(callsign)) {
-            return NextResponse.json(
-                { error: 'Callsign must start with LVT followed by 1-3 characters' },
-                { status: 400 }
-            );
-        }
-
+        // Check if callsign already exists
         const existingCallsign = await Pilot.findOne({ pilot_id: callsign });
         if (existingCallsign) {
             return NextResponse.json(
