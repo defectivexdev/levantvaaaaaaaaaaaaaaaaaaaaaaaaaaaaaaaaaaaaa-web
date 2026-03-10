@@ -3,6 +3,7 @@ import connectDB from '@/lib/database';
 import { findPilot, corsHeaders } from '@/lib/acars/helpers';
 import ActiveFlight from '@/models/ActiveFlight';
 import Bid from '@/models/Bid';
+import Fleet from '@/models/Fleet';
 import { isIpBlacklisted, getIpCountry } from '@/lib/ipBlockCheck';
 
 export const dynamic = 'force-dynamic';
