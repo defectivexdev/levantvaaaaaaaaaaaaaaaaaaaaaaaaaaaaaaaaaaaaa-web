@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { Users, Search, UserX, AlertTriangle, X, Clock, Plane, MapPin, CreditCard, ChevronDown, Shield, Mail, Globe, Hash, ArrowUpDown, KeyRound, Trash2 } from 'lucide-react';
+import { Users, Search, UserX, AlertTriangle, X, Clock, Plane, MapPin, CreditCard, ChevronDown, Shield, Mail, Globe, Hash, ArrowUpDown, KeyRound, Trash2, Lock } from 'lucide-react';
 
 interface User {
     id: string;
@@ -207,10 +207,10 @@ export default function AdminUsersPage() {
     };
 
     const formatHours = (decimalHours: number) => {
-        if (!decimalHours) return '0h 0m';
+        if (!decimalHours) return '00:00';
         const h = Math.floor(decimalHours);
         const m = Math.round((decimalHours - h) * 60);
-        return `${h}h ${m}m`;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
     };
 
     const statusTabs: { label: string; value: StatusFilter; count: number }[] = [
@@ -235,49 +235,58 @@ export default function AdminUsersPage() {
     }
 
     return (
-        <div className="space-y-5">
+        <div className="space-y-6">
             {/* Header */}
-            <div>
-                <h1 className="text-2xl font-bold text-white">User Management</h1>
-                <p className="text-gray-500 text-xs mt-0.5">Manage {stats.total} registered pilots</p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-black text-white bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">User Management</h1>
+                    <p className="text-gray-500 text-sm mt-1 flex items-center gap-2">
+                        <Users size={14} className="text-accent-gold" />
+                        Manage {stats.total} registered pilots
+                    </p>
+                </div>
             </div>
 
             {/* Status Tabs + Search */}
-            <div className="flex flex-col md:flex-row gap-3">
-                <div className="flex gap-1 bg-[#0a0a0a] p-1 rounded-xl border border-white/[0.06] overflow-x-auto flex-shrink-0">
+            <div className="flex flex-col lg:flex-row gap-4">
+                <div className="flex gap-2 bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] p-1.5 rounded-2xl border border-white/[0.08] overflow-x-auto flex-shrink-0 shadow-lg shadow-black/20">
                     {statusTabs.map(tab => (
                         <button
                             key={tab.value}
                             onClick={() => setStatusFilter(tab.value)}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
                                 statusFilter === tab.value
-                                    ? 'bg-white/[0.08] text-white'
-                                    : 'text-gray-500 hover:text-gray-300'
+                                    ? 'bg-gradient-to-r from-accent-gold/20 to-accent-gold/10 text-accent-gold border border-accent-gold/30 shadow-lg shadow-accent-gold/10'
+                                    : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.03]'
                             }`}
                         >
                             {tab.label}
-                            <span className={`text-[10px] font-mono ${statusFilter === tab.value ? 'text-accent-gold' : 'text-gray-600'}`}>
+                            <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-black ${
+                                statusFilter === tab.value 
+                                    ? 'bg-accent-gold/20 text-accent-gold' 
+                                    : 'bg-white/[0.05] text-gray-600'
+                            }`}>
                                 {tab.count}
                             </span>
                         </button>
                     ))}
                 </div>
                 <div className="relative flex-1">
-                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" />
+                    <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" />
                     <input
                         type="text"
                         placeholder="Search by ID, name, or email..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="w-full bg-[#0a0a0a] border border-white/[0.06] rounded-xl py-2 pl-9 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/30 transition-all"
+                        className="w-full bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
                     />
                 </div>
             </div>
 
             {/* Table */}
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl shadow-black/30">
                 {/* Table Header */}
-                <div className="grid grid-cols-[2fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 px-5 py-3 border-b border-white/[0.04] text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                <div className="grid grid-cols-[2fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-3 px-6 py-4 border-b border-white/[0.06] bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] text-[10px] font-black text-gray-500 uppercase tracking-widest">
                     <button onClick={() => toggleSort('name')} className="flex items-center gap-1 hover:text-white transition-colors text-left">
                         Pilot {sortKey === 'name' && <ArrowUpDown size={10} className="text-accent-gold" />}
                     </button>
@@ -298,7 +307,7 @@ export default function AdminUsersPage() {
                 </div>
 
                 {/* Table Body */}
-                <div className="divide-y divide-white/[0.03]">
+                <div className="divide-y divide-white/[0.04]">
                     {filteredUsers.map(user => {
                         const sc = statusConfig[user.status] || statusConfig['Active'];
                         const rc = roleColors[user.role] || roleColors['Pilot'];
@@ -306,20 +315,20 @@ export default function AdminUsersPage() {
                             <div
                                 key={user.id}
                                 onClick={() => openEditModal(user)}
-                                className="grid grid-cols-[2fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 px-5 py-3 items-center cursor-pointer hover:bg-white/[0.02] transition-colors group"
+                                className="grid grid-cols-[2fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-3 px-6 py-4 items-center cursor-pointer hover:bg-gradient-to-r hover:from-accent-gold/5 hover:to-transparent transition-all group border-l-2 border-transparent hover:border-accent-gold/30"
                             >
                                 {/* Pilot */}
                                 <div className="flex items-center gap-3 min-w-0">
-                                    <div className="w-9 h-9 rounded-xl bg-[#161616] border border-white/[0.06] flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0 group-hover:border-accent-gold/20 transition-colors">
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#161616] to-[#0a0a0a] border border-white/[0.08] flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0 group-hover:border-accent-gold/40 group-hover:shadow-lg group-hover:shadow-accent-gold/10 transition-all">
                                         {getInitials(user.firstName, user.lastName)}
                                     </div>
                                     <div className="min-w-0">
                                         <div className="text-sm font-bold text-white truncate group-hover:text-accent-gold transition-colors">
                                             {user.firstName} {user.lastName}
                                         </div>
-                                        <div className="flex items-center gap-1.5 text-[10px] text-gray-500 font-mono">
-                                            <span className="text-accent-gold/70">{user.pilotId}</span>
-                                            <span className="text-gray-700">|</span>
+                                        <div className="flex items-center gap-2 text-[10px] text-gray-500 font-mono">
+                                            <span className="text-accent-gold font-bold">{user.pilotId}</span>
+                                            <span className="text-gray-700">•</span>
                                             <span className="truncate">{user.email}</span>
                                         </div>
                                     </div>
@@ -327,25 +336,25 @@ export default function AdminUsersPage() {
 
                                 {/* Status */}
                                 <div>
-                                    <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold border ${sc.bg} ${sc.text}`}>
-                                        <span className={`w-1.5 h-1.5 rounded-full ${sc.dot}`} />
+                                    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg text-[10px] font-bold border ${sc.bg} ${sc.text} shadow-sm`}>
+                                        <span className={`w-2 h-2 rounded-full ${sc.dot} animate-pulse`} />
                                         {user.status === 'On leave (LOA)' ? 'LOA' : user.status}
                                     </span>
                                 </div>
 
                                 {/* Role / Rank */}
-                                <div className="flex flex-col gap-1">
-                                    <span className={`inline-flex items-center self-start px-2 py-0.5 rounded-md text-[10px] font-bold border ${rc}`}>
+                                <div className="flex flex-col gap-1.5">
+                                    <span className={`inline-flex items-center self-start px-3 py-1 rounded-lg text-[10px] font-bold border ${rc} shadow-sm`}>
                                         {user.role}
                                     </span>
-                                    <span className="text-[10px] text-gray-500 truncate">{user.rank}</span>
+                                    <span className="text-[10px] text-gray-500 font-medium truncate">{user.rank}</span>
                                 </div>
 
                                 {/* Hours */}
-                                <div className="text-sm font-mono font-bold text-white">{formatHours(user.totalHours)}</div>
+                                <div className="text-sm font-mono font-bold text-cyan-400">{formatHours(user.totalHours)}</div>
 
                                 {/* Flights */}
-                                <div className="text-sm font-mono font-bold text-white">{user.totalFlights}</div>
+                                <div className="text-sm font-mono font-bold text-blue-400">{user.totalFlights}</div>
 
                                 {/* Balance */}
                                 <div className="text-sm font-mono font-bold text-emerald-400">{user.balance?.toLocaleString()}</div>
@@ -358,15 +367,15 @@ export default function AdminUsersPage() {
                 </div>
 
                 {filteredUsers.length === 0 && (
-                    <div className="text-center py-16">
-                        <UserX className="w-10 h-10 mx-auto mb-3 text-gray-700" />
-                        <p className="text-sm text-gray-500">No pilots found{searchTerm && ` matching "${searchTerm}"`}</p>
+                    <div className="text-center py-20">
+                        <UserX className="w-12 h-12 mx-auto mb-4 text-gray-700" />
+                        <p className="text-sm font-medium text-gray-500">No pilots found{searchTerm && ` matching "${searchTerm}"`}</p>
                     </div>
                 )}
             </div>
 
-            <div className="text-[10px] text-gray-600 text-right font-mono">
-                Showing {filteredUsers.length} of {stats.total} pilots
+            <div className="text-xs text-gray-600 text-right font-mono bg-[#0a0a0a] px-4 py-2 rounded-xl border border-white/[0.06] inline-block ml-auto">
+                Showing <span className="text-accent-gold font-bold">{filteredUsers.length}</span> of <span className="text-white font-bold">{stats.total}</span> pilots
             </div>
 
             {/* ── Slide-over Edit Modal ── */}
@@ -394,9 +403,9 @@ export default function AdminUsersPage() {
                         onClick={e => e.stopPropagation()}
                     >
                         {/* Modal Header: User Profile Card */}
-                        <div className="relative px-6 pt-6 pb-5 border-b border-white/[0.06] bg-gradient-to-br from-[#0c0c0c] to-[#111]">
+                        <div className="relative px-6 pt-6 pb-5 border-b border-white/[0.08] bg-gradient-to-br from-[#0c0c0c] to-[#111]">
                             {/* Top accent glow line */}
-                            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent" />
+                            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent" />
                             <button
                                 onClick={() => setSelectedUser(null)}
                                 className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/[0.06] text-gray-500 hover:text-white transition-colors"
@@ -428,16 +437,17 @@ export default function AdminUsersPage() {
                             </div>
 
                             {/* Quick Stats */}
-                            <div className="modal-stats grid grid-cols-4 gap-2 mt-4">
+                            <div className="modal-stats grid grid-cols-4 gap-3 mt-5">
                                 {[
-                                    { label: 'Hours', value: formatHours(selectedUser.totalHours), color: 'text-white' },
-                                    { label: 'Flights', value: selectedUser.totalFlights, color: 'text-white' },
-                                    { label: 'Total CR', value: selectedUser.totalCredits?.toLocaleString(), color: 'text-amber-400' },
-                                    { label: 'Balance', value: selectedUser.balance?.toLocaleString(), color: 'text-emerald-400' },
+                                    { label: 'Hours', value: formatHours(selectedUser.totalHours), color: 'text-cyan-400', icon: Clock },
+                                    { label: 'Flights', value: selectedUser.totalFlights, color: 'text-blue-400', icon: Plane },
+                                    { label: 'Total CR', value: selectedUser.totalCredits?.toLocaleString(), color: 'text-amber-400', icon: CreditCard },
+                                    { label: 'Balance', value: selectedUser.balance?.toLocaleString(), color: 'text-emerald-400', icon: CreditCard },
                                 ].map(s => (
-                                    <div key={s.label} className="bg-[#0a0a0a] rounded-xl border border-white/[0.05] p-2.5 text-center">
+                                    <div key={s.label} className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-3 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
+                                        <s.icon size={14} className={`mx-auto mb-1.5 ${s.color}`} />
                                         <div className={`text-sm font-bold font-mono ${s.color}`}>{s.value}</div>
-                                        <div className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-0.5">{s.label}</div>
+                                        <div className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-1">{s.label}</div>
                                     </div>
                                 ))}
                             </div>
@@ -549,20 +559,60 @@ export default function AdminUsersPage() {
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label className={labelClass}>Total Hours (ACARS)</label>
-                                        <input type="number" step="0.1" value={editForm.totalHours != null ? Number(editForm.totalHours.toFixed(1)) : 0} onChange={e => setEditForm({ ...editForm, totalHours: parseFloat(e.target.value) || 0 })} className={inputClass} />
+                                        <label className={`${labelClass} flex items-center gap-1.5`}>
+                                            <Lock size={10} className="text-gray-600" />
+                                            Total Hours (ACARS)
+                                        </label>
+                                        <div className="relative">
+                                            <input 
+                                                type="text" 
+                                                value={formatHours(editForm.totalHours ?? 0)} 
+                                                readOnly 
+                                                disabled
+                                                className={`${inputClass} bg-[#050505] text-cyan-400 cursor-not-allowed opacity-60`} 
+                                            />
+                                            <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700" />
+                                        </div>
                                     </div>
                                     <div>
                                         <label className={labelClass}>Transfer Hours</label>
                                         <input type="number" step="0.1" value={editForm.transferHours != null ? Number(editForm.transferHours.toFixed(1)) : 0} onChange={e => setEditForm({ ...editForm, transferHours: parseFloat(e.target.value) || 0 })} className={inputClass} />
                                     </div>
                                     <div>
-                                        <label className={labelClass}>Total Flights</label>
-                                        <input type="number" value={editForm.totalFlights ?? 0} onChange={e => setEditForm({ ...editForm, totalFlights: parseInt(e.target.value) || 0 })} className={inputClass} />
+                                        <label className={`${labelClass} flex items-center gap-1.5`}>
+                                            <Lock size={10} className="text-gray-600" />
+                                            Total Flights (ACARS)
+                                        </label>
+                                        <div className="relative">
+                                            <input 
+                                                type="text" 
+                                                value={editForm.totalFlights ?? 0} 
+                                                readOnly 
+                                                disabled
+                                                className={`${inputClass} bg-[#050505] text-blue-400 cursor-not-allowed opacity-60`} 
+                                            />
+                                            <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700" />
+                                        </div>
                                     </div>
                                     <div>
                                         <label className={labelClass}>Balance (Credits)</label>
                                         <input type="number" value={editForm.balance ?? 0} onChange={e => setEditForm({ ...editForm, balance: parseInt(e.target.value) || 0 })} className={`${inputClass} font-bold text-emerald-400`} />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <label className={`${labelClass} flex items-center gap-1.5`}>
+                                            <Lock size={10} className="text-gray-600" />
+                                            Total Credits Earned (ACARS)
+                                        </label>
+                                        <div className="relative">
+                                            <input 
+                                                type="text" 
+                                                value={editForm.totalCredits?.toLocaleString() ?? 0} 
+                                                readOnly 
+                                                disabled
+                                                className={`${inputClass} bg-[#050505] text-amber-400 cursor-not-allowed opacity-60`} 
+                                            />
+                                            <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
