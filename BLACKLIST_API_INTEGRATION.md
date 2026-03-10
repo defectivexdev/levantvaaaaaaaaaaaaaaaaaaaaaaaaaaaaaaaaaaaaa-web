@@ -10,7 +10,7 @@ This API allows you to sync the Levant VA country blacklist across multiple webs
 
 ### Base URL
 ```
-https://your-levant-va-domain.com/api/public/blacklist
+https://levant-va.com/api/public/blacklist
 ```
 
 ### 1. Check IP/Country
@@ -30,7 +30,7 @@ GET /api/public/blacklist/check?ip=123.45.67.89
 GET /api/public/blacklist/check?country=US
 
 # Check with API key
-GET /api/public/blacklist/check?ip=123.45.67.89&api_key=levant-va-blacklist-2026
+GET /api/public/blacklist/check?ip=123.45.67.89&api_key=BLACKLIST_KEY_NOSHA@RE
 ```
 
 **Response:**
@@ -52,7 +52,7 @@ GET /api/public/blacklist/check?ip=123.45.67.89&api_key=levant-va-blacklist-2026
 
 **Example:**
 ```bash
-GET /api/public/blacklist/list?api_key=levant-va-blacklist-2026
+GET /api/public/blacklist/list?api_key=BLACKLIST_KEY_NOSHA@RE
 ```
 
 **Response:**
@@ -106,7 +106,7 @@ BLACKLIST_API_KEY=your-secret-key-here
  */
 
 class LevantBlacklistChecker {
-    private $apiUrl = 'https://your-levant-va-domain.com/api/public/blacklist';
+    private $apiUrl = 'https://levant-va.com/api/public/blacklist';
     private $apiKey = 'levant-va-blacklist-2026';
     
     /**
@@ -232,7 +232,7 @@ $blacklist = $checker->getBlacklist();
  */
 
 class LevantBlacklistChecker {
-    constructor(apiUrl = 'https://your-levant-va-domain.com/api/public/blacklist', apiKey = 'levant-va-blacklist-2026') {
+    constructor(apiUrl = 'https://levant-va.com/api/public/blacklist', apiKey = 'levant-va-blacklist-2026') {
         this.apiUrl = apiUrl;
         this.apiKey = apiKey;
     }
@@ -362,7 +362,7 @@ import requests
 from typing import Optional, List, Dict
 
 class LevantBlacklistChecker:
-    def __init__(self, api_url: str = 'https://your-levant-va-domain.com/api/public/blacklist', 
+    def __init__(self, api_url: str = 'https://levant-va.com/api/public/blacklist', 
                  api_key: str = 'levant-va-blacklist-2026'):
         self.api_url = api_url
         self.api_key = api_key
