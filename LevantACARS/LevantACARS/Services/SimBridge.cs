@@ -25,7 +25,6 @@ public class SimBridge : IDisposable
     private readonly DashboardViewModel _dashboardVm;
     private readonly FlightViewModel _flightVm;
     private readonly MainViewModel _mainVm;
-    private readonly HoppieService _hoppieService;
     private readonly ILogger<SimBridge> _logger;
 
     private CoreWebView2? _webView;
@@ -46,7 +45,6 @@ public class SimBridge : IDisposable
         ViewModels.DashboardViewModel dashboardVm,
         ViewModels.FlightViewModel flightVm,
         ViewModels.MainViewModel mainVm,
-        HoppieService hoppieService,
         ILogger<SimBridge> logger)
     {
         _flightManager = flightManager;
@@ -55,7 +53,6 @@ public class SimBridge : IDisposable
         _dashboardVm = dashboardVm;
         _flightVm = flightVm;
         _mainVm = mainVm;
-        _hoppieService = hoppieService;
         _logger = logger;
     }
 
@@ -111,26 +108,6 @@ public class SimBridge : IDisposable
             longitude = lon,
             landingRate = Math.Round(fpm, 0),
             groundSpeed = gs,
-        });
-
-        // Hoppie Events
-        _hoppieService.OnMessageReceived += info => PostMessage(new
-        {
-            type = "hoppieMessage",
-            messageId = info.Id,
-            timestamp = info.Timestamp.ToString("o"),
-            from = info.From,
-            to = info.To,
-            messageType = info.Type,
-            content = info.Content,
-            isInbound = info.IsInbound
-        });
-
-        _hoppieService.OnLogEvent += info => PostMessage(new
-        {
-            type = "hoppieLog",
-            timestamp = info.Timestamp.ToString("o"),
-            content = info.Content
         });
 
         _logger.LogInformation("[SimBridge] Attached to WebView2 — streaming at 500ms");
@@ -542,36 +519,17 @@ public class SimBridge : IDisposable
                     case "logout": Logout(); break;
                     case "endFlight": 
                         EndFlight(); 
-                        _hoppieService.Stop();
                         break;
                     case "cancelFlight": 
                         CancelFlight(); 
-                        _hoppieService.Stop();
                         break;
                     case "startFlight": 
                         StartFlight(json); 
-                        var hoppieCode = AppConfig.Current.HoppieCode;
-                        if (!string.IsNullOrEmpty(hoppieCode))
-                        {
-                            var callsign = SafeGetString(doc.RootElement, "callsign");
-                            _hoppieService.Start(callsign, hoppieCode);
-                        }
                         break;
                     case "fetchBid":
                         var bidPilotId = _mainVm.PilotId;
                         if (string.IsNullOrEmpty(bidPilotId)) bidPilotId = AppConfig.Current.PilotId ?? "";
                         if (!string.IsNullOrEmpty(bidPilotId)) _ = FetchAndPushBidAsync(bidPilotId);
-                        break;
-                    case "initializeHoppie":
-                        InitializeHoppie();
-                        break;
-                    case "getHoppieAtc":
-                        EnsureHoppieInitialized();
-                        _ = GetHoppieAtcAsync();
-                        break;
-                    case "getHoppieCallsigns":
-                        EnsureHoppieInitialized();
-                        _ = GetHoppieCallsignsAsync();
                         break;
                     case "cancelBid": _ = CancelBidAsync(_mainVm.PilotId); break;
                     case "checkForUpdate": CheckForUpdate(); break;
@@ -593,20 +551,6 @@ public class SimBridge : IDisposable
                         if (icao.Length >= 3) _ = FetchAndPushAirportDetailsAsync(icao);
                         break;
                     }
-                    case "sendTelex":
-                    {
-                        var recipient = SafeGetString(doc.RootElement, "recipient");
-                        var msgText = SafeGetString(doc.RootElement, "message");
-                        _ = _hoppieService.SendTelexAsync(recipient, msgText);
-                        break;
-                    }
-                    case "sendCpdlc":
-                    {
-                        var recipient = SafeGetString(doc.RootElement, "recipient");
-                        var msgText = SafeGetString(doc.RootElement, "message");
-                        _ = _hoppieService.SendCpdlcAsync(recipient, msgText);
-                        break;
-                    }
                 }
             }
             finally
@@ -614,20 +558,6 @@ public class SimBridge : IDisposable
                 doc?.Dispose();
             }
         }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "[SimBridge] WebMessage parse error");
-        }
-    }
-
-    // ── Weather proxy (avoids CORS in WebView2) ──────────────────────
-
-    private static readonly HttpClient _weatherHttp = new() { Timeout = TimeSpan.FromSeconds(10) };
-    private static string? _ivaoToken;
-    private static DateTime _ivaoTokenExpiry = DateTime.MinValue;
-
-    private async Task<string?> GetIvaoTokenAsync()
-    {
         var config = AppConfig.Current;
         if (string.IsNullOrEmpty(config.IvaoClientId) || string.IsNullOrEmpty(config.IvaoClientSecret))
             return null;
@@ -767,55 +697,6 @@ public class SimBridge : IDisposable
         }
     }
 
-    private async Task GetHoppieCallsignsAsync()
-    {
-        var callsigns = await _hoppieService.GetOnlineCallsignsAsync();
-        PostMessage(new
-        {
-            type = "hoppieCallsignsResult",
-            callsigns = callsigns
-        });
-    }
-
-    private async Task GetHoppieAtcAsync()
-    {
-        var atc = await _hoppieService.GetOnlineAtcAsync();
-        PostMessage(new
-        {
-            type = "hoppieAtcResult",
-            atc = atc
-        });
-    }
-
-    private void InitializeHoppie()
-    {
-        var config = AppConfig.Current;
-        var hoppieCode = config.HoppieCode;
-        var pilotId = config.PilotId;
-
-        if (string.IsNullOrEmpty(hoppieCode))
-        {
-            _logger.LogWarning("[Hoppie] No Hoppie code configured");
-            PostMessage(new { type = "hoppieError", message = "Hoppie code not configured. Please set it in your profile settings." });
-            return;
-        }
-
-        if (string.IsNullOrEmpty(pilotId))
-        {
-            _logger.LogWarning("[Hoppie] No pilot ID available");
-            return;
-        }
-
-        _logger.LogInformation("[Hoppie] Initializing with pilot ID: {PilotId}", pilotId);
-        _hoppieService.Initialize(pilotId, hoppieCode);
-    }
-
-    private void EnsureHoppieInitialized()
-    {
-        // Try to initialize if not already done
-        InitializeHoppie();
-    }
-
     public void Dispose()
     {
         if (_disposed) return;
@@ -823,8 +704,4 @@ public class SimBridge : IDisposable
         _telemetryTimer?.Stop();
         _telemetryTimer?.Dispose();
         if (_webView != null)
-        {
-            _webView.WebMessageReceived -= OnWebMessage;
-        }
-    }
-}
+     

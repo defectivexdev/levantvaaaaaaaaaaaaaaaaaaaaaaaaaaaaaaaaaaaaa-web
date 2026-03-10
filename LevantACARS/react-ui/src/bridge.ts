@@ -90,17 +90,4 @@ export const SimBridge = {
   maximizeWindow: () => callHost('MaximizeWindow'),
   closeWindow: () => callHost('CloseWindow'),
   checkForUpdate: () => sendAction('checkForUpdate'),
-  sendTelex: (recipient: string, message: string) => {
-    if (isWebView2()) {
-      window.chrome!.webview!.postMessage(JSON.stringify({ action: 'sendTelex', recipient, message }));
-    }
-  },
-  sendCpdlc: (recipient: string, message: string) => {
-    if (isWebView2()) {
-      window.chrome!.webview!.postMessage(JSON.stringify({ action: 'sendCpdlc', recipient, message }));
-    }
-  },
-  initializeHoppie: () => sendAction('initializeHoppie'),
-  getHoppieAtc: () => sendAction('getHoppieAtc'),
-  getHoppieCallsigns: () => sendAction('getHoppieCallsigns')
 } as const;

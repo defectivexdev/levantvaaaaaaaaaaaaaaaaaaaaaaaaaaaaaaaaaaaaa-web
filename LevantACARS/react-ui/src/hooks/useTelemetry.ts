@@ -9,17 +9,15 @@ import {
 import { pushToast } from '../components/ToastOverlay';
 import type {
   TelemetryData,
-  AuthState,
-  ConnectionState,
   FlightState,
   ScoreResult,
-  BridgeMessage,
   UILogEntry,
+  ConnectionState,
+  AuthState,
   WeatherData,
   BidData,
   TouchdownPoint,
-  HoppieMessage,
-  HoppieLog
+  BridgeMessage
 } from '../types';
 
 // ── Default state factories ───────────────────────────────────────
@@ -126,21 +124,9 @@ export function useTelemetry() {
   const [touchdownPoint, setTouchdownPoint] = useState<TouchdownPoint | null>(null);
   const [activityLog, setActivityLog] = useState<UILogEntry[]>([]);
   const [exceedanceLog, setExceedanceLog] = useState<UILogEntry[]>([]);
-  const [hoppieMessages, setHoppieMessages] = useState<HoppieMessage[]>([]);
-  const [hoppieLogs, setHoppieLogs] = useState<HoppieLog[]>([]);
-  const prevFlightActiveRef = useRef(false);
   const logIdRef = useRef(0);
   const authRef = useRef(auth);
   authRef.current = auth;
-
-  // Clear ATC/CPDLC message history when flight finishes (active -> inactive)
-  useEffect(() => {
-    if (prevFlightActiveRef.current && !flight.isActive) {
-      setHoppieMessages([]);
-      setHoppieLogs([]);
-    }
-    prevFlightActiveRef.current = flight.isActive;
-  }, [flight.isActive]);
 
   // ── Landing Black Box ──────────────────────────────────────────
   const blackBoxRef = useRef({
@@ -333,20 +319,6 @@ export function useTelemetry() {
         }
         break;
       }
-      case 'hoppieMessage': {
-        const hMsg = msg as HoppieMessage;
-        setHoppieMessages(prev => [hMsg, ...prev].slice(0, 50));
-        // Add a toast for inbound messages
-        if (hMsg.isInbound) {
-          pushToast('info', `ATC Message from ${hMsg.from}`);
-        }
-        break;
-      }
-      case 'hoppieLog': {
-        const hLog = msg as HoppieLog;
-        setHoppieLogs(prev => [hLog, ...prev].slice(0, 100));
-        break;
-      }
     }
   }, []);
 
@@ -396,8 +368,6 @@ export function useTelemetry() {
     setTouchdownPoint(null);
     setActivityLog([]);
     setExceedanceLog([]);
-    setHoppieMessages([]);
-    setHoppieLogs([]);
     // Reset black box
     blackBoxRef.current = { armed: false, touchdownFPM: 0, maxGForce: 1.0, fired: false };
     pushToast('info', 'Flight cancelled — ACARS reset');
@@ -450,8 +420,6 @@ export function useTelemetry() {
     touchdownPoint,
     activityLog,
     exceedanceLog,
-    hoppieMessages,
-    hoppieLogs,
     qnhAltitude,
     injectBid,
     addLogEntry,

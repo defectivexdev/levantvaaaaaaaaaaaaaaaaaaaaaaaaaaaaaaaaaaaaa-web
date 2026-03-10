@@ -210,23 +210,6 @@ export interface LegReport {
   reviewedAt: string;
 }
 
-export interface HoppieMessage {
-  type: 'hoppieMessage';
-  messageId: string;
-  timestamp: string;
-  from: string;
-  to: string;
-  messageType: string;
-  content: string;
-  isInbound: boolean;
-}
-
-export interface HoppieLog {
-  type: 'hoppieLog';
-  timestamp: string;
-  content: string;
-}
-
 /** Union of all bridge messages from C# → React */
 export type BridgeMessage =
   | TelemetryData
@@ -237,7 +220,5 @@ export type BridgeMessage =
   | LogEntry
   | WeatherData
   | BidData
-  | HoppieMessage
-  | HoppieLog
   | { type: 'updateStatus'; status: string; message: string; version?: string; progress?: number }
   | (TouchdownPoint & { type: 'touchdown' });

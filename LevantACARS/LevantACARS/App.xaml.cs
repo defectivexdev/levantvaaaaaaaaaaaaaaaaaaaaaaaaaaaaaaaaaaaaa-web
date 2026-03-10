@@ -121,7 +121,6 @@ public partial class App : Application
         services.AddSingleton<DiscordService>();
         services.AddSingleton<DiscordWebhookService>();
         services.AddSingleton<AuthService>();
-        services.AddSingleton<HoppieService>();
 
         // ViewModels (singletons — shared across bridge + services)
         services.AddSingleton<MainViewModel>();
