@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/database';
+import { findPilot, getConfig, corsHeaders } from '@/lib/acars/helpers';
 import Bid from '@/models/Bid';
+import { PilotModel } from '@/models';
+import { isIpBlacklisted, getIpCountry } from '@/lib/ipBlockCheck';
 import Fleet from '@/models/Fleet';
 import ActiveFlight from '@/models/ActiveFlight';
 import Airport from '@/models/Airport';
-import { findPilot, getConfig, corsHeaders } from '@/lib/acars/helpers';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +17,18 @@ export async function OPTIONS() {
 export async function POST(request: NextRequest) {
     try {
         await connectDB();
+        
+        // Check IP country blocking
+        const isBlocked = await isIpBlacklisted(request);
+        if (isBlocked) {
+            const ipCountry = getIpCountry(request);
+            console.log(`[ACARS Bid] Blocked IP from blacklisted country: ${ipCountry}`);
+            return NextResponse.json(
+                { error: 'Access from your location is currently not available.' },
+                { status: 403, headers: corsHeaders() }
+            );
+        }
+        
         const body = await request.json();
         const { action, pilotId } = body;
 

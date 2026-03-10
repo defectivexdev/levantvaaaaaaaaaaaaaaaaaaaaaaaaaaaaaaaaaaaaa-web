@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/database';
 import bcrypt from 'bcryptjs';
 import { findPilot, corsHeaders } from '@/lib/acars/helpers';
+import { isIpBlacklisted, getIpCountry } from '@/lib/ipBlockCheck';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,18 @@ export async function OPTIONS() {
 export async function POST(request: NextRequest) {
     try {
         await connectDB();
+        
+        // Check IP country blocking
+        const isBlocked = await isIpBlacklisted(request);
+        if (isBlocked) {
+            const ipCountry = getIpCountry(request);
+            console.log(`[ACARS Auth] Blocked IP from blacklisted country: ${ipCountry}`);
+            return NextResponse.json(
+                { error: 'Access from your location is currently not available.' },
+                { status: 403, headers: corsHeaders() }
+            );
+        }
+        
         const { pilotId, password } = await request.json();
 
         if (!pilotId || !password) {
