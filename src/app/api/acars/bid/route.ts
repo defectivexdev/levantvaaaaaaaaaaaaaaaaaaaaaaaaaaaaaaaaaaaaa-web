@@ -80,6 +80,8 @@ async function handleGetBid(pilotId: string) {
                 xp: pilot.total_credits || 0,
                 weightUnit: pilot.weight_unit || 'lbs',
                 hoppieCode: pilot.hoppie_code || '',
+                simbriefId: pilot.simbrief_id || '',
+                simbriefUsername: pilot.simbrief_id || '',
             },
             bid: null, 
             error: `No active bid found for ${pilot.pilot_id} (${allBids.length} recent bids found in DB)` 
@@ -153,6 +155,8 @@ async function handleGetBid(pilotId: string) {
             xp: pilot.total_credits || 0,
             weightUnit: pilot.weight_unit || 'lbs',
             hoppieCode: pilot.hoppie_code || '',
+            simbriefId: pilot.simbrief_id || '',
+            simbriefUsername: pilot.simbrief_id || '',
         },
         bid: {
             id: bid.id,
