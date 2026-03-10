@@ -5,6 +5,7 @@ import Pilot from '@/models/Pilot';
 import CountryBlacklist from '@/models/CountryBlacklist';
 import CountryBlacklistBypass from '@/models/CountryBlacklistBypass';
 import { sendWelcomeEmail } from '@/lib/email';
+import { sendBlockedAccessAlert, sendVpnBypassWarning } from '@/lib/discordWebhook';
 
 export async function POST(request: NextRequest) {
     try {
@@ -18,6 +19,17 @@ export async function POST(request: NextRequest) {
             const ipBlacklisted = await CountryBlacklist.findOne({ country_code: ipCountry });
             if (ipBlacklisted) {
                 console.log(`[Registration] Blocked IP from blacklisted country: ${ipCountry}`);
+                
+                // Send Discord webhook notification
+                const userAgent = request.headers.get('user-agent') || undefined;
+                sendBlockedAccessAlert({
+                    endpoint: 'Registration',
+                    ipCountry,
+                    timestamp: new Date().toISOString(),
+                    userAgent,
+                    suspectedVpn: false
+                }).catch(err => console.error('[Webhook] Failed to send:', err));
+                
                 return NextResponse.json(
                     { error: 'Access from your location is currently not available.' },
                     { status: 403 }
@@ -72,6 +84,17 @@ export async function POST(request: NextRequest) {
             const isBypassed = await CountryBlacklistBypass.findOne({ pilot_id: callsign });
             if (!isBypassed) {
                 console.log(`[Registration] Blocked registration from blacklisted country: ${country} (Pilot: ${callsign})`);
+                
+                // Send webhook notification
+                sendBlockedAccessAlert({
+                    endpoint: 'Registration (Form Country)',
+                    ipCountry: country.toUpperCase(),
+                    pilotId: callsign,
+                    email,
+                    timestamp: new Date().toISOString(),
+                    suspectedVpn: !!(ipCountry && ipCountry !== country.toUpperCase())
+                }).catch(err => console.error('[Webhook] Failed to send:', err));
+                
                 return NextResponse.json(
                     { error: 'Registration from your country is currently not available.' },
                     { status: 403 }
@@ -79,6 +102,18 @@ export async function POST(request: NextRequest) {
             } else {
                 console.log(`[Registration] Allowing bypassed pilot ${callsign} from blacklisted country: ${country}`);
             }
+        }
+        
+        // VPN Detection: Check if IP country differs from form country
+        if (ipCountry && country && ipCountry !== country.toUpperCase()) {
+            console.log(`[Registration] VPN suspected - IP: ${ipCountry}, Form: ${country} (Pilot: ${callsign})`);
+            sendVpnBypassWarning({
+                endpoint: 'Registration',
+                ipCountry,
+                formCountry: country.toUpperCase(),
+                pilotId: callsign,
+                email
+            }).catch(err => console.error('[Webhook] Failed to send VPN warning:', err));
         }
 
         // Only allow @gmail.com email addresses

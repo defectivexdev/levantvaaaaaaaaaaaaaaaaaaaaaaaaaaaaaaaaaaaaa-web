@@ -1,12 +1,19 @@
 import { NextRequest } from 'next/server';
 import CountryBlacklist from '@/models/CountryBlacklist';
+import { sendBlockedAccessAlert } from './discordWebhook';
 
 /**
  * Check if the request IP is from a blacklisted country
  * @param request - NextRequest object
+ * @param endpoint - Name of the endpoint being accessed
+ * @param additionalData - Optional additional data for webhook notification
  * @returns true if IP is blacklisted, false otherwise
  */
-export async function isIpBlacklisted(request: NextRequest): Promise<boolean> {
+export async function isIpBlacklisted(
+    request: NextRequest, 
+    endpoint?: string,
+    additionalData?: { pilotId?: string; email?: string }
+): Promise<boolean> {
     try {
         const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
@@ -16,6 +23,21 @@ export async function isIpBlacklisted(request: NextRequest): Promise<boolean> {
         }
         
         const blacklisted = await CountryBlacklist.findOne({ country_code: ipCountry });
+        
+        if (blacklisted) {
+            // Send Discord webhook notification
+            const userAgent = request.headers.get('user-agent') || undefined;
+            sendBlockedAccessAlert({
+                endpoint: endpoint || 'Unknown',
+                ipCountry,
+                pilotId: additionalData?.pilotId,
+                email: additionalData?.email,
+                timestamp: new Date().toISOString(),
+                userAgent,
+                suspectedVpn: false
+            }).catch(err => console.error('[Webhook] Failed to send:', err));
+        }
+        
         return !!blacklisted;
     } catch (error) {
         console.error('[IP Block Check] Error:', error);

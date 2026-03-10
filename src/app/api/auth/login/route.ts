@@ -5,6 +5,7 @@ import connectDB from '@/lib/database';
 import Pilot from '@/models/Pilot';
 import SecurityConfig from '@/models/SecurityConfig';
 import CountryBlacklist from '@/models/CountryBlacklist';
+import { sendBlockedAccessAlert } from '@/lib/discordWebhook';
 
 export async function POST(request: NextRequest) {
     try {
@@ -27,6 +28,18 @@ export async function POST(request: NextRequest) {
             const ipBlacklisted = await CountryBlacklist.findOne({ country_code: ipCountry });
             if (ipBlacklisted) {
                 console.log(`[Login] Blocked IP from blacklisted country: ${ipCountry}`);
+                
+                // Send Discord webhook notification
+                const userAgent = request.headers.get('user-agent') || undefined;
+                sendBlockedAccessAlert({
+                    endpoint: 'Login',
+                    ipCountry,
+                    email,
+                    timestamp: new Date().toISOString(),
+                    userAgent,
+                    suspectedVpn: false
+                }).catch(err => console.error('[Webhook] Failed to send:', err));
+                
                 return NextResponse.json(
                     { error: 'Access from your location is currently not available.' },
                     { status: 403 }

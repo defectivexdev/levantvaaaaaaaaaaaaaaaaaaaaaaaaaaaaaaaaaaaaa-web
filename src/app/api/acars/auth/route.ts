@@ -14,8 +14,10 @@ export async function POST(request: NextRequest) {
     try {
         await connectDB();
         
+        const { pilotId, password } = await request.json();
+        
         // Check IP country blocking
-        const isBlocked = await isIpBlacklisted(request);
+        const isBlocked = await isIpBlacklisted(request, 'ACARS Auth', { pilotId });
         if (isBlocked) {
             const ipCountry = getIpCountry(request);
             console.log(`[ACARS Auth] Blocked IP from blacklisted country: ${ipCountry}`);
@@ -24,8 +26,6 @@ export async function POST(request: NextRequest) {
                 { status: 403, headers: corsHeaders() }
             );
         }
-        
-        const { pilotId, password } = await request.json();
 
         if (!pilotId || !password) {
             return NextResponse.json({ error: 'Missing credentials' }, { status: 400, headers: corsHeaders() });
