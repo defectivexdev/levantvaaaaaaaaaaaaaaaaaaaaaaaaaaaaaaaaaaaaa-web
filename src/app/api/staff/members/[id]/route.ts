@@ -28,6 +28,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
                 };
 
                 role = await StaffRole.create({
+                    name: roleTitle,
                     title: roleTitle,
                     category,
                     color: categoryColorMap[category] || 'text-gray-400',

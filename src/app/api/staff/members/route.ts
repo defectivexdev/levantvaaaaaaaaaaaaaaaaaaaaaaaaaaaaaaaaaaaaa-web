@@ -52,6 +52,7 @@ export async function POST(req: Request) {
                 if (category === 'Chief Pilot') color = 'text-emerald-400';
 
                 role = await StaffRole.create({
+                    name: roleTitle,
                     title: roleTitle,
                     category,
                     color,
