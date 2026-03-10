@@ -19,10 +19,16 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
         const apiKey = searchParams.get('api_key') || request.headers.get('x-api-key');
 
-        // Simple API key validation (optional)
-        const validApiKey = process.env.BLACKLIST_API_KEY || 'levant-va-blacklist-2026';
-        if (apiKey && apiKey !== validApiKey) {
-            return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
+        const configuredApiKey = (process.env.BLACKLIST_API_KEY || '').trim();
+        const authEnabled = configuredApiKey.length > 0;
+
+        if (authEnabled) {
+            if (!apiKey) {
+                return NextResponse.json({ error: 'API key required' }, { status: 401 });
+            }
+            if (apiKey !== configuredApiKey) {
+                return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
+            }
         }
 
         // Get all blacklisted countries

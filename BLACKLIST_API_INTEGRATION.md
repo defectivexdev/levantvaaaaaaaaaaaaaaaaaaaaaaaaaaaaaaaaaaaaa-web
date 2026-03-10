@@ -30,7 +30,7 @@ GET /api/public/blacklist/check?ip=123.45.67.89
 GET /api/public/blacklist/check?country=US
 
 # Check with API key
-GET /api/public/blacklist/check?ip=123.45.67.89&api_key=BLACKLIST_KEY_NOSHA@RE
+GET /api/public/blacklist/check?ip=123.45.67.89&api_key=YOUR_BLACKLIST_API_KEY
 ```
 
 **Response:**
@@ -48,11 +48,11 @@ GET /api/public/blacklist/check?ip=123.45.67.89&api_key=BLACKLIST_KEY_NOSHA@RE
 **Endpoint:** `GET /api/public/blacklist/list`
 
 **Parameters:**
-- `api_key` (optional) - API key for authentication
+- `api_key` (optional) - API key for authentication (required only when `BLACKLIST_API_KEY` is set)
 
 **Example:**
 ```bash
-GET /api/public/blacklist/list?api_key=BLACKLIST_KEY_NOSHA@RE
+GET /api/public/blacklist/list?api_key=YOUR_BLACKLIST_API_KEY
 ```
 
 **Response:**
@@ -87,7 +87,9 @@ GET /api/public/blacklist/list?api_key=BLACKLIST_KEY_NOSHA@RE
 BLACKLIST_API_KEY=your-secret-key-here
 ```
 
-**Default Key:** `BLACKLIST_KEY_NOSHA@RE`
+**How auth works:**
+- **If `BLACKLIST_API_KEY` is set** on the server, the public endpoints will **require** an API key.
+- **If `BLACKLIST_API_KEY` is not set**, the endpoints will allow requests **without** a key.
 
 **Usage:**
 - Query parameter: `?api_key=your-key`
@@ -107,7 +109,7 @@ BLACKLIST_API_KEY=your-secret-key-here
 
 class LevantBlacklistChecker {
     private $apiUrl = 'https://levant-va.com/api/public/blacklist';
-    private $apiKey = 'BLACKLIST_KEY_NOSHA@RE';
+    private $apiKey = 'YOUR_BLACKLIST_API_KEY';
     
     /**
      * Check if IP is blacklisted
@@ -232,7 +234,7 @@ $blacklist = $checker->getBlacklist();
  */
 
 class LevantBlacklistChecker {
-    constructor(apiUrl = 'https://levant-va.com/api/public/blacklist', apiKey = 'BLACKLIST_KEY_NOSHA@RE') {
+    constructor(apiUrl = 'https://levant-va.com/api/public/blacklist', apiKey = 'YOUR_BLACKLIST_API_KEY') {
         this.apiUrl = apiUrl;
         this.apiKey = apiKey;
     }
@@ -363,7 +365,7 @@ from typing import Optional, List, Dict
 
 class LevantBlacklistChecker:
     def __init__(self, api_url: str = 'https://levant-va.com/api/public/blacklist', 
-                 api_key: str = 'BLACKLIST_KEY_NOSHA@RE'):
+                 api_key: str = 'YOUR_BLACKLIST_API_KEY'):
         self.api_url = api_url
         self.api_key = api_key
     
@@ -540,7 +542,7 @@ app.use('/api/public/blacklist', limiter);
 ## 📝 Notes
 
 - API is designed to fail open (allow access on errors)
-- Default API key: `BLACKLIST_KEY_NOSHA@RE`
+- API key is required only when `BLACKLIST_API_KEY` is set on the server
 - Rate limit: Recommended 60 req/min per IP
 - Cache blacklist for better performance
 - IP geolocation uses ip-api.com (45 req/min limit)

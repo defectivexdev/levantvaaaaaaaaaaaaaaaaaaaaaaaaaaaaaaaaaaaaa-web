@@ -22,10 +22,16 @@ export async function GET(request: NextRequest) {
         const country = searchParams.get('country');
         const apiKey = searchParams.get('api_key') || request.headers.get('x-api-key');
 
-        // Simple API key validation (optional - you can make this required)
-        const validApiKey = process.env.BLACKLIST_API_KEY || '';
-        if (apiKey && apiKey !== validApiKey) {
-            return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
+        const configuredApiKey = (process.env.BLACKLIST_API_KEY || '').trim();
+        const authEnabled = configuredApiKey.length > 0;
+
+        if (authEnabled) {
+            if (!apiKey) {
+                return NextResponse.json({ error: 'API key required' }, { status: 401 });
+            }
+            if (apiKey !== configuredApiKey) {
+                return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
+            }
         }
 
         if (!ip && !country) {
@@ -39,7 +45,7 @@ export async function GET(request: NextRequest) {
         // If IP is provided, try to get country from geolocation
         if (ip && !countryCode) {
             try {
-                const geoResponse = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode`, {
+                const geoResponse = await fetch(`https://ip-api.com/json/${ip}?fields=countryCode`, {
                     signal: AbortSignal.timeout(3000)
                 });
                 if (geoResponse.ok) {
