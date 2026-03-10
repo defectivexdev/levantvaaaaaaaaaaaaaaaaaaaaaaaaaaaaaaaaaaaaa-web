@@ -80,6 +80,11 @@
     </None>
   </ItemGroup>
 
+  <!-- Copy React dist to wwwroot before build -->
+  <Target Name="CopyReactDist" BeforeTargets="Build">
+    <Exec Command="robocopy &quot;$(ProjectDir)..\react-ui\dist&quot; &quot;$(ProjectDir)wwwroot&quot; /E /NFL /NDL /NJH /NJS /NP" IgnoreExitCode="true" />
+  </Target>
+  
   <!-- React dist (wwwroot) copied to output via post-build robocopy -->
   <Target Name="CopyWwwroot" AfterTargets="Build">
     <Exec Command="robocopy &quot;$(ProjectDir)wwwroot&quot; &quot;$(OutputPath)wwwroot&quot; /E /NFL /NDL /NJH /NJS /NP" IgnoreExitCode="true" />
