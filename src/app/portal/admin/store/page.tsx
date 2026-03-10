@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { Plus, Edit, Trash2, ShoppingBag, X, Check, AlertCircle, Upload, FileText, Image as ImageIcon, Loader2, Package } from 'lucide-react';
+import { Plus, Edit, Trash2, ShoppingBag, X, Check, AlertCircle, Upload, FileText, Image as ImageIcon, Loader2, Package, Search } from 'lucide-react';
 
 interface StoreItem {
     _id: string;
@@ -20,6 +20,7 @@ export default function AdminStorePage() {
     const [editing, setEditing] = useState<StoreItem | null>(null);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     // Form state
     const [name, setName] = useState('');
@@ -75,7 +76,8 @@ export default function AdminStorePage() {
             setDescription(item.description);
             setPrice(item.price.toString());
             setCategory(item.category);
-            setActive(item.active);
+            // Default to true if active is undefined (older records)
+            setActive(item.active !== false);
             setDownloadUrl(item.download_url || '');
             setImageUrl(item.image || '');
         } else {
@@ -180,93 +182,135 @@ export default function AdminStorePage() {
         }
     };
 
+    const getCategoryStyles = (cat: string) => {
+        switch (cat) {
+            case 'Badge': return 'from-purple-500/20 to-pink-500/20 text-purple-400 border-purple-500/30';
+            case 'Perk': return 'from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/30';
+            case 'Skin': return 'from-blue-500/20 to-cyan-500/20 text-blue-400 border-blue-500/30';
+            default: return 'from-gray-500/20 to-slate-500/20 text-gray-400 border-gray-500/30';
+        }
+    };
+
+    const filteredItems = items.filter(item => 
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.category.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                    <ShoppingBag className="w-8 h-8 text-accent-gold" />
-                    <h1 className="text-2xl font-bold text-white">Store Management</h1>
+        <div className="space-y-6 animate-in fade-in duration-500">
+            {/* Header Section */}
+            <div className="relative overflow-hidden rounded-3xl bg-[#0a0a0a] border border-white/[0.06] p-8 shadow-2xl">
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent-gold/5 rounded-full blur-[100px] pointer-events-none" />
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-accent-gold/10 border border-accent-gold/20 flex items-center justify-center">
+                            <ShoppingBag className="w-7 h-7 text-accent-gold" />
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-black text-white tracking-tight">Store Management</h1>
+                            <p className="text-gray-400 text-sm mt-1">Manage items available in the Pilot Store</p>
+                        </div>
+                    </div>
+                    
+                    <div className="flex flex-col sm:flex-row w-full md:w-auto gap-4">
+                        <div className="relative w-full sm:w-64">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                            <input
+                                type="text"
+                                placeholder="Search items..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-accent-gold/50 transition-all placeholder:text-gray-600"
+                            />
+                        </div>
+                        <button
+                            onClick={() => handleOpenModal()}
+                            className="flex items-center justify-center gap-2 px-6 py-2.5 bg-accent-gold text-dark-950 rounded-xl font-bold text-sm hover:bg-white transition-all shadow-lg shadow-accent-gold/10 flex-shrink-0"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Add Item
+                        </button>
+                    </div>
                 </div>
-                <button
-                    onClick={() => handleOpenModal()}
-                    className="btn-primary flex items-center gap-2"
-                >
-                    <Plus className="w-5 h-5" />
-                    Add Item
-                </button>
             </div>
 
+            {/* Content Section */}
             {loading ? (
-                <div className="glass-card p-12 text-center text-gray-400">Loading store items...</div>
+                <div className="flex flex-col gap-4">
+                    {[1, 2, 3].map(i => (
+                        <div key={i} className="h-24 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] animate-pulse" />
+                    ))}
+                </div>
+            ) : filteredItems.length === 0 ? (
+                <div className="h-64 rounded-3xl border border-dashed border-white/10 flex flex-col items-center justify-center gap-4 text-gray-500 bg-[#0a0a0a]">
+                    <Package className="w-12 h-12 opacity-20" />
+                    <p className="font-medium">No items found.</p>
+                </div>
             ) : (
-                <div className="glass-card overflow-hidden border border-white/[0.06] shadow-2xl">
-                    <table className="w-full">
-                        <thead className="bg-[#111]">
-                            <tr className="text-left text-gray-500 text-sm uppercase tracking-wider">
-                                <th className="p-4">Item</th>
-                                <th className="p-4">Category</th>
-                                <th className="p-4">Price</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {items.map((item) => (
-                                <tr key={item._id} className="hover:bg-white/5 transition-colors">
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            {item.image ? (
-                                                <img src={item.image} alt={item.name} className="w-10 h-10 rounded object-cover border border-white/[0.08]" />
-                                            ) : (
-                                                <div className="w-10 h-10 rounded bg-[#111] flex items-center justify-center text-gray-500">
-                                                    <Package className="w-5 h-5" />
-                                                </div>
-                                            )}
-                                            <div>
-                                                <p className="text-white font-medium">{item.name}</p>
-                                                <p className="text-gray-500 text-xs truncate max-w-xs">{item.description}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="p-4">
-                                        <span className="bg-[#111] px-2 py-1 rounded text-xs text-gray-300 border border-white/[0.06]">
-                                            {item.category}
+                <div className="flex flex-col gap-4">
+                    {filteredItems.map((item) => (
+                        <div key={item._id} className="group flex flex-col sm:flex-row items-start sm:items-center p-5 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/10 transition-all duration-300 shadow-lg gap-6">
+                            
+                            {/* Left: Icon/Image */}
+                            <div className="flex-shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-dark-700/50 to-dark-900/50 flex items-center justify-center relative border border-white/5 overflow-hidden">
+                                {item.image ? (
+                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                ) : (
+                                    <span className="text-3xl group-hover:scale-110 transition-transform duration-500">
+                                        {item.category === 'Badge' ? '🎖️' : item.category === 'Perk' ? '⚡' : item.category === 'Skin' ? '🎨' : '📦'}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Middle: Details */}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-3 mb-1">
+                                    <h3 className="text-lg font-bold text-white truncate">{item.name}</h3>
+                                    <span className={`px-2 py-0.5 rounded text-[9px] uppercase font-black tracking-widest border bg-gradient-to-r ${getCategoryStyles(item.category)}`}>
+                                        {item.category}
+                                    </span>
+                                    {item.active !== false ? (
+                                        <span className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                                            <Check className="w-3 h-3" /> Active
                                         </span>
-                                    </td>
-                                    <td className="p-4 text-accent-gold font-mono font-bold">
-                                        {item.price.toLocaleString()}
-                                    </td>
-                                    <td className="p-4">
-                                        {item.active ? (
-                                            <span className="text-emerald-500 flex items-center gap-1 text-xs">
-                                                <Check className="w-3 h-3" /> Active
-                                            </span>
-                                        ) : (
-                                            <span className="text-rose-500 flex items-center gap-1 text-xs">
-                                                <X className="w-3 h-3" /> Inactive
-                                            </span>
-                                        )}
-                                    </td>
-                                    <td className="p-4 text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                onClick={() => handleOpenModal(item)}
-                                                className="p-2 text-gray-400 hover:text-accent-gold transition-colors"
-                                            >
-                                                <Edit className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(item._id)}
-                                                className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                    ) : (
+                                        <span className="flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
+                                            <X className="w-3 h-3" /> Hidden
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-gray-400 text-sm truncate max-w-2xl">{item.description}</p>
+                            </div>
+
+                            {/* Right: Price & Actions */}
+                            <div className="flex items-center gap-6 sm:gap-8 w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-white/[0.06]">
+                                <div className="flex flex-col flex-shrink-0">
+                                    <span className="text-gray-500 text-[9px] uppercase font-bold tracking-[0.2em] mb-1">Price</span>
+                                    <div className="text-lg font-display font-bold text-accent-gold font-mono">
+                                        {item.price.toLocaleString()} Cr
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 ml-auto sm:ml-0">
+                                    <button
+                                        onClick={() => handleOpenModal(item)}
+                                        className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-accent-gold hover:bg-accent-gold/10 hover:border-accent-gold/30 transition-all"
+                                        title="Edit Item"
+                                    >
+                                        <Edit className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(item._id)}
+                                        className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/30 transition-all"
+                                        title="Delete Item"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    ))}
                 </div>
             )}
 
@@ -329,7 +373,7 @@ export default function AdminStorePage() {
                                             <select
                                                 value={category}
                                                 onChange={e => setCategory(e.target.value as any)}
-                                                className="w-full bg-black border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 transition-all appearance-none cursor-pointer [&>option]:bg-black [&>option]:text-white"
+                                                className="w-full bg-[#111] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 transition-all appearance-none cursor-pointer"
                                             >
                                                 <option value="Badge">Badge</option>
                                                 <option value="Perk">Perk</option>
@@ -353,8 +397,8 @@ export default function AdminStorePage() {
                                     {/* Active Toggle */}
                                     <div className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.06]">
                                         <div className="flex items-center gap-3">
-                                            <div className={`w-2 h-2 rounded-full ${active ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'bg-gray-600'}`} />
-                                            <label htmlFor="active" className="text-gray-300 text-sm font-bold cursor-pointer">{active ? 'Published' : 'Draft'}</label>
+                                            <div className={`w-2 h-2 rounded-full ${active ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'bg-rose-500'}`} />
+                                            <label htmlFor="active" className="text-gray-300 text-sm font-bold cursor-pointer">{active ? 'Published (Visible)' : 'Hidden (Draft)'}</label>
                                         </div>
                                         <div className="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" id="active" checked={active} onChange={e => setActive(e.target.checked)} className="sr-only peer" />
