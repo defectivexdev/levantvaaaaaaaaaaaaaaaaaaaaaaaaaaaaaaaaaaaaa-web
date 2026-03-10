@@ -29,7 +29,6 @@ public class SimBridge : IDisposable
 
     private CoreWebView2? _webView;
     private Timer? _telemetryTimer;
-    private bool _disposed;
 
     // JSON options — camelCase for JS consumption
     private static readonly JsonSerializerOptions _jsonOpts = new()
@@ -558,6 +557,20 @@ public class SimBridge : IDisposable
                 doc?.Dispose();
             }
         }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "[SimBridge] WebMessage parse error");
+        }
+    }
+
+    // ── Weather proxy (avoids CORS in WebView2) ──────────────────────
+
+    private static readonly HttpClient _weatherHttp = new() { Timeout = TimeSpan.FromSeconds(10) };
+    private static string? _ivaoToken;
+    private static DateTime _ivaoTokenExpiry = DateTime.MinValue;
+
+    private async Task<string?> GetIvaoTokenAsync()
+    {
         var config = AppConfig.Current;
         if (string.IsNullOrEmpty(config.IvaoClientId) || string.IsNullOrEmpty(config.IvaoClientSecret))
             return null;
@@ -699,9 +712,12 @@ public class SimBridge : IDisposable
 
     public void Dispose()
     {
-        if (_disposed) return;
-        _disposed = true;
         _telemetryTimer?.Stop();
         _telemetryTimer?.Dispose();
         if (_webView != null)
-     
+        {
+            _webView.WebMessageReceived -= OnWebMessage;
+            _webView = null;
+        }
+    }
+}
