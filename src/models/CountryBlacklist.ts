@@ -18,7 +18,7 @@ const CountryBlacklistSchema = new Schema<ICountryBlacklist>({
     },
     country_name: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     reason: {

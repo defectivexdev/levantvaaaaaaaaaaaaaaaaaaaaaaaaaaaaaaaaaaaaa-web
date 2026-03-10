@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
 
         const { country_code, country_name, reason } = await request.json();
 
-        if (!country_code || !country_name) {
-            return NextResponse.json({ error: 'Country code and name are required' }, { status: 400 });
+        if (!country_code) {
+            return NextResponse.json({ error: 'Country code is required' }, { status: 400 });
         }
 
         // Check if already blacklisted
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
         const blacklistEntry = await CountryBlacklist.create({
             country_code: country_code.toUpperCase(),
-            country_name,
+            country_name: country_name || '',
             reason: reason || '',
             added_by: session.pilotId || session.email || 'Admin',
         });

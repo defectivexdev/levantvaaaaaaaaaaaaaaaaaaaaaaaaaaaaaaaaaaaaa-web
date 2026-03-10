@@ -143,8 +143,8 @@ export default function DeveloperManagementPage() {
     };
 
     const handleAddCountry = async () => {
-        if (!newCountry.code || !newCountry.name) {
-            toast.error('Country code and name are required');
+        if (!newCountry.code) {
+            toast.error('Country code is required');
             return;
         }
 
@@ -162,7 +162,7 @@ export default function DeveloperManagementPage() {
             const data = await res.json();
 
             if (res.ok) {
-                toast.success(`${newCountry.name} added to blacklist`);
+                toast.success(`${newCountry.code.toUpperCase()} added to blacklist`);
                 setNewCountry({ code: '', name: '', reason: '' });
                 setShowAddForm(false);
                 fetchBlacklist();
@@ -438,7 +438,7 @@ export default function DeveloperManagementPage() {
                                 type="text"
                                 value={newCountry.code}
                                 onChange={(e) => setNewCountry({ ...newCountry, code: e.target.value.toUpperCase() })}
-                                placeholder="Country Code (e.g., US)"
+                                placeholder="Country Code (e.g., US) *Required"
                                 maxLength={2}
                                 className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors uppercase"
                             />
@@ -446,7 +446,7 @@ export default function DeveloperManagementPage() {
                                 type="text"
                                 value={newCountry.name}
                                 onChange={(e) => setNewCountry({ ...newCountry, name: e.target.value })}
-                                placeholder="Country Name (e.g., United States)"
+                                placeholder="Country Name (optional)"
                                 className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
                             />
                         </div>
@@ -492,7 +492,9 @@ export default function DeveloperManagementPage() {
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
                                         <span className="text-white font-bold text-sm">{entry.country_code}</span>
-                                        <span className="text-gray-400 text-sm">{entry.country_name}</span>
+                                        {entry.country_name && (
+                                            <span className="text-gray-400 text-sm">{entry.country_name}</span>
+                                        )}
                                     </div>
                                     {entry.reason && (
                                         <p className="text-xs text-gray-500 mt-1">Reason: {entry.reason}</p>
