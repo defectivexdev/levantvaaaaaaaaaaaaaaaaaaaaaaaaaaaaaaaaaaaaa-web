@@ -63,6 +63,13 @@ export default function AdminPilotsPage() {
 
     useEffect(() => {
         fetchPilots();
+        
+        // Poll for updates every 60 seconds to catch rank changes
+        const pollInterval = setInterval(() => {
+            fetchPilots();
+        }, 60000);
+        
+        return () => clearInterval(pollInterval);
     }, []);
 
     const handleUpdate = async (userId: string, updates: any) => {

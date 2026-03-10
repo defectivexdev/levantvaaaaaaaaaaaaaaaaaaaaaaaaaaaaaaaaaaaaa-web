@@ -119,6 +119,13 @@ export default function ProfilePage() {
 
     useEffect(() => {
         fetchPilotData();
+        
+        // Poll for updates every 30 seconds to catch rank changes
+        const pollInterval = setInterval(() => {
+            fetchPilotData();
+        }, 30000);
+        
+        return () => clearInterval(pollInterval);
     }, []);
 
     const fetchPilotData = useCallback(async () => {

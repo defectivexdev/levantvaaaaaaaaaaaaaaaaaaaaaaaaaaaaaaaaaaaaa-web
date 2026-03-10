@@ -44,12 +44,21 @@ function LeaderboardContent() {
 
     useEffect(() => {
         if (activeTab === 'leaderboard') {
-            setLoading(true);
-            fetch(`/api/leaderboard?type=${filter}`)
-                .then(res => res.json())
-                .then(data => setLeaderboard(data.pilots || []))
-                .catch(() => {})
-                .finally(() => setLoading(false));
+            const fetchLeaderboard = () => {
+                setLoading(true);
+                fetch(`/api/leaderboard?type=${filter}`)
+                    .then(res => res.json())
+                    .then(data => setLeaderboard(data.pilots || []))
+                    .catch(() => {})
+                    .finally(() => setLoading(false));
+            };
+            
+            fetchLeaderboard();
+            
+            // Poll for updates every 60 seconds to catch rank changes
+            const pollInterval = setInterval(fetchLeaderboard, 60000);
+            
+            return () => clearInterval(pollInterval);
         }
     }, [activeTab, filter]);
 
