@@ -253,7 +253,7 @@ export default function AdminPirepsPage() {
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-1.5 text-sm font-mono text-cyan-400">
                                         <Clock size={14} className="text-cyan-500" />
-                                        {Math.floor(p.flight_time).toString().padStart(2, '0')}:{Math.floor((p.flight_time % 1) * 60).toString().padStart(2, '0')}
+                                        {Math.floor(p.flight_time).toString().padStart(2, '0')}h {Math.floor((p.flight_time % 1) * 60).toString().padStart(2, '0')}m
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
@@ -271,8 +271,8 @@ export default function AdminPirepsPage() {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <p className="text-xs text-gray-500 font-mono">{new Date(p.submitted_at).toLocaleDateString()}</p>
-                                    <p className="text-[10px] text-gray-600 font-mono">{new Date(p.submitted_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                                    <p className="text-xs text-gray-500 font-mono">{new Date(p.submitted_at).toLocaleDateString('en-GB', {timeZone: 'UTC'})}</p>
+                                    <p className="text-[10px] text-gray-600 font-mono">{new Date(p.submitted_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit', timeZone: 'UTC', hour12: false})}Z</p>
                                 </td>
                                 <td className="px-6 py-4 text-right">
                                     <button 
