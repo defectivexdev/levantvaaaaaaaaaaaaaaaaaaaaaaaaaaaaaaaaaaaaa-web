@@ -123,8 +123,8 @@ export default function App() {
                 {activeView === 'logs' && 'Flight Logs'}
               </span>
             </h2>
-            <div className="flex items-center gap-3">
-              <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-[0.15em] border ${
+            <div className="flex items-center gap-3 shrink-0">
+              <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-[0.15em] border shrink-0 ${
                 connection.simConnected && connection.apiConnected && discordVerified
                   ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
                   : connection.simConnected
@@ -135,9 +135,9 @@ export default function App() {
                 <div className={`h-1.5 w-1.5 rounded-full ${connection.simConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}`} />
                 {connection.simConnected && connection.apiConnected ? 'ONLINE' : connection.simConnected ? 'SIM ONLY' : 'OFFLINE'}
               </div>
-              <div className="text-right">
-                <p className="text-xs font-bold leading-none">{auth.pilotName}</p>
-                <div className="flex items-center gap-1.5 mt-0.5">
+              <div className="text-right max-w-[180px] shrink-0">
+                <p className="text-xs font-bold leading-none truncate">{auth.pilotName}</p>
+                <div className="flex items-center gap-1.5 mt-0.5 justify-end">
                   <span className="text-xs text-accent-gold font-mono bg-accent-gold/5 px-1.5 py-0.5 rounded border border-accent-gold/10 font-bold tracking-widest uppercase">{auth.pilotId}</span>
                   <span className="text-xs text-gray-400 font-mono tracking-widest uppercase">{auth.pilotRank}</span>
                 </div>
