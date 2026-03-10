@@ -61,12 +61,16 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
   }, [bid, auth.simbriefId, lastBidId]);
 
   const fetchFlightPlan = async () => {
-    if (!auth.simbriefId) {
-      pushToast('warning', 'Please set your SimBrief username in settings');
+    console.log('[DispatchPanel] fetchFlightPlan called, simbriefId:', auth.simbriefId);
+    
+    if (!auth.simbriefId || auth.simbriefId.trim() === '') {
+      console.error('[DispatchPanel] SimBrief ID is empty or undefined');
+      pushToast('danger', 'SimBrief API errors. Please check your SimBrief ID.');
       return;
     }
 
     setLoading(true);
+    console.log('[DispatchPanel] Fetching from SimBrief API with username:', auth.simbriefId);
     try {
       const response = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?username=${auth.simbriefId}&json=1`, {
         signal: AbortSignal.timeout(10000) // 10 second timeout
