@@ -81,64 +81,87 @@ export default function App() {
 
       {/* ── Main Layout ──────────────────────────────────────── */}
       <div className="flex-1 flex overflow-hidden p-3 pb-0 gap-3">
-        {/* ── Sidebar (Levant Navy) ───────────────────── */}
-        <div className="w-[170px] flex flex-col rounded-xl relative shrink-0 transition-all sidebar-glow" style={{ background: 'rgba(10, 25, 47, 0.95)' }}>
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/20 to-transparent" />
-          <nav className="flex-1 flex flex-col gap-0.5 w-full px-2.5 py-3">
+        {/* ── Sidebar - Redesigned ───────────────────── */}
+        <div className="w-[180px] flex flex-col rounded-xl relative shrink-0 transition-all border border-white/[0.05]" style={{ background: 'linear-gradient(180deg, rgba(10, 25, 47, 0.98) 0%, rgba(13, 31, 56, 0.95) 100%)' }}>
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/10 to-transparent" />
+          <nav className="flex-1 flex flex-col gap-1 w-full px-3 py-4">
             <SideNavItem active={activeView === 'dashboard'} onClick={() => setActiveView('dashboard')} icon={<LayoutDashboard size={16} />} label="Dashboard" />
             <SideNavItem active={activeView === 'livemap'} onClick={() => setActiveView('livemap')} icon={<Globe size={16} />} label="Live Map" />
             <SideNavItem active={activeView === 'airport'} onClick={() => setActiveView('airport')} icon={<Radio size={16} />} label="Airport Info" />
             <SideNavItem active={activeView === 'dispatch'} onClick={() => setActiveView('dispatch')} icon={<Plane size={16} />} label="Dispatch" />
             <SideNavItem active={activeView === 'hoppie'} onClick={() => setActiveView('hoppie')} icon={<AlignLeft size={16} />} label="ATC / CPDLC" />
             <SideNavItem active={activeView === 'chat'} onClick={() => setActiveView('chat')} icon={<MessageCircle size={16} />} label="Pilot Chat" />
-            <div className="h-px bg-gradient-to-r from-transparent via-[#1d3461] to-transparent mx-2 my-2" />
+            <div className="h-px bg-gradient-to-r from-transparent via-accent-gold/20 to-transparent my-2" />
             <SideNavItem active={activeView === 'logs'} onClick={() => setActiveView('logs')} icon={<MessageSquare size={16} />} label="Flight Logs" />
           </nav>
-          <div className="border-t border-[#1d3461] flex flex-col gap-0.5 px-2.5 py-2">
-            <button onClick={() => SimBridge.logout()} className="flex items-center gap-2 w-full px-2 py-1.5 rounded-lg text-[#555] hover:text-rose-400 hover:bg-rose-500/[0.06] transition-all bg-transparent border-none cursor-pointer text-xs font-mono tracking-wider">
-              <LogOut size={13} />
-              Sign Out
+          <div className="border-t border-white/[0.05] flex flex-col gap-1 px-3 py-3 bg-white/[0.01]">
+            <button onClick={() => SimBridge.logout()} className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-gray-500 hover:text-rose-400 hover:bg-rose-500/10 transition-all bg-transparent border-none cursor-pointer text-xs font-medium tracking-wider border border-transparent hover:border-rose-500/20">
+              <LogOut size={14} />
+              <span className="uppercase">Sign Out</span>
             </button>
           </div>
-          <div className="px-2.5 pb-2 text-[9px] font-mono text-[#333d55] tracking-wider select-none">Levant VA · v3.0</div>
+          <div className="px-3 pb-3 text-[9px] font-mono text-gray-600 tracking-wider select-none flex items-center justify-between">
+            <span>Levant VA</span>
+            <span className="text-accent-gold/50">v3.1</span>
+          </div>
         </div>
 
         {/* ── Content Area ─────────────────────────────── */}
         <div className="flex-1 flex flex-col min-w-0 bg-dark-900 rounded-xl relative overflow-hidden" style={{ background: '#0d1f38' }}>
-          {/* Header */}
-          <header className="h-12 flex justify-between items-center px-5 border-b border-white/[0.03] shrink-0">
-            <h2 className="text-sm font-bold tracking-tight flex items-center gap-3">
-              <div className="p-1.5 rounded-lg bg-accent-gold/10 border border-accent-gold/20">
-                {activeView === 'dashboard' && <LayoutDashboard size={13} className="text-accent-gold" />}
-                {activeView === 'livemap' && <Globe size={13} className="text-accent-gold" />}
-                {activeView === 'dispatch' && <Plane size={13} className="text-accent-gold" />}
-                {activeView === 'chat' && <MessageCircle size={13} className="text-accent-gold" />}
-                {activeView === 'logs' && <MessageSquare size={13} className="text-accent-gold" />}
+          {/* Header - Redesigned */}
+          <header className="h-14 flex justify-between items-center px-6 border-b border-white/[0.05] shrink-0 bg-gradient-to-r from-white/[0.01] to-transparent">
+            {/* Left: View Title */}
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-accent-gold/20 to-accent-gold/5 border border-accent-gold/30 shadow-lg shadow-accent-gold/10">
+                {activeView === 'dashboard' && <LayoutDashboard size={16} className="text-accent-gold" />}
+                {activeView === 'livemap' && <Globe size={16} className="text-accent-gold" />}
+                {activeView === 'dispatch' && <Plane size={16} className="text-accent-gold" />}
+                {activeView === 'chat' && <MessageCircle size={16} className="text-accent-gold" />}
+                {activeView === 'logs' && <MessageSquare size={16} className="text-accent-gold" />}
+                {activeView === 'airport' && <Radio size={16} className="text-accent-gold" />}
+                {activeView === 'hoppie' && <AlignLeft size={16} className="text-accent-gold" />}
               </div>
-              <span className="uppercase tracking-wider text-[12px]">
-                {activeView === 'dashboard' && 'Flight Logbook'}
-                {activeView === 'livemap' && 'Live Map'}
-                {activeView === 'dispatch' && 'SimBrief Dispatch'}
-                {activeView === 'chat' && 'Pilot Chat'}
-                {activeView === 'logs' && 'Flight Logs'}
-              </span>
-            </h2>
-            <div className="flex items-center gap-3 shrink-0">
-              <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-[0.15em] border shrink-0 ${
+              <div>
+                <h2 className="text-sm font-bold tracking-tight text-white">
+                  {activeView === 'dashboard' && 'Flight Logbook'}
+                  {activeView === 'livemap' && 'Live Map'}
+                  {activeView === 'dispatch' && 'SimBrief Dispatch'}
+                  {activeView === 'chat' && 'Pilot Chat'}
+                  {activeView === 'logs' && 'Flight Logs'}
+                  {activeView === 'airport' && 'Airport Information'}
+                  {activeView === 'hoppie' && 'ATC / CPDLC'}
+                </h2>
+                <p className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">Levant Virtual Airlines</p>
+              </div>
+            </div>
+            
+            {/* Right: Status & Pilot Info */}
+            <div className="flex items-center gap-4">
+              {/* Connection Status */}
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border backdrop-blur-sm ${
                 connection.simConnected && connection.apiConnected && discordVerified
-                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                   : connection.simConnected
-                    ? 'bg-amber-500/10 border-amber-500/20 text-amber-400'
-                    : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+                    : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
               }`}>
-                <Radio size={10} />
-                <div className={`h-1.5 w-1.5 rounded-full ${connection.simConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}`} />
-                {connection.simConnected && connection.apiConnected ? 'ONLINE' : connection.simConnected ? 'SIM ONLY' : 'OFFLINE'}
+                <div className={`h-2 w-2 rounded-full ${
+                  connection.simConnected ? 'bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/50' : 'bg-rose-400 animate-pulse shadow-lg shadow-rose-400/50'
+                }`} />
+                <span className="text-[10px] font-bold tracking-[0.15em]">
+                  {connection.simConnected && connection.apiConnected ? 'ONLINE' : connection.simConnected ? 'SIM ONLY' : 'OFFLINE'}
+                </span>
               </div>
-              <div className="flex items-center gap-1.5 shrink-0">
-                <span className="text-xs text-accent-gold font-mono bg-accent-gold/5 px-1.5 py-0.5 rounded border border-accent-gold/10 font-bold tracking-widest uppercase">{auth.pilotId}</span>
-                <span className="text-xs text-gray-400 font-mono tracking-widest uppercase">{auth.pilotRank}</span>
+              
+              {/* Pilot Info */}
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                <span className="text-xs text-accent-gold font-mono font-bold tracking-wider">{auth.pilotId}</span>
+                <div className="h-3 w-px bg-white/10" />
+                <span className="text-xs text-gray-400 font-mono tracking-wider">{auth.pilotRank}</span>
               </div>
+              
+              {/* Avatar */}
               <AnimatedTooltip items={[{ id: 1, name: auth.pilotName || 'Pilot', designation: `${auth.pilotRank || 'Cadet'} | ${auth.pilotId || '—'}`, image: auth.pilotAvatar || 'img/icon.jpg' }]} />
             </div>
           </header>
@@ -185,62 +208,68 @@ export default function App() {
 
 function TelemetryFooter({ telemetry, flight, connection, qnhAltitude }: { telemetry: TelemetryData; flight: FlightState; connection: ConnectionState; qnhAltitude: number }) {
   const alt = qnhAltitude ?? Math.round(telemetry.altitude);
-  const phaseColor = flight.currentPhase === 'Cruise' ? 'pill-info'
-    : flight.currentPhase === 'Climbing' || flight.currentPhase === 'Takeoff' ? 'pill-active'
-    : flight.currentPhase === 'Descending' || flight.currentPhase === 'Approach' ? 'pill-warning'
-    : flight.currentPhase === 'Landed' ? 'pill-active'
-    : 'pill-neutral';
 
   return (
-    <div className="telemetry-bar shrink-0 h-10 flex items-center justify-between px-5 gap-6 mx-3 mb-2 rounded-lg flight-bar-glow">
+    <div className="shrink-0 h-12 flex items-center justify-between px-6 gap-6 mx-3 mb-3 rounded-xl border border-white/[0.08] backdrop-blur-sm" style={{ background: 'linear-gradient(90deg, rgba(10, 25, 47, 0.95) 0%, rgba(13, 31, 56, 0.9) 100%)' }}>
       {/* Connection status */}
       <div className="flex items-center gap-2">
-        <div className={`h-1.5 w-1.5 rounded-full ${connection.simConnected ? 'bg-[#2DCE89] status-breathe text-[#2DCE89]' : 'bg-red-500 status-breathe text-red-500'}`} />
-        <span className="telemetry-bar-label">{connection.simConnected ? 'FSUIPC' : 'NO SIM'}</span>
+        <div className={`h-2 w-2 rounded-full shadow-lg ${connection.simConnected ? 'bg-emerald-400 shadow-emerald-400/50 animate-pulse' : 'bg-rose-500 shadow-rose-500/50 animate-pulse'}`} />
+        <span className="text-[10px] font-bold tracking-wider text-gray-400 uppercase">{connection.simConnected ? 'FSUIPC' : 'NO SIM'}</span>
       </div>
 
       {/* Telemetry readouts */}
-      <div className="flex items-center gap-5 flex-1 justify-center">
-        <div className="telemetry-bar-item">
-          <span className="telemetry-bar-label">IAS</span>
-          <span className="telemetry-bar-value" style={{ color: '#22D3EE' }}>{telemetry.ias}<span className="text-[8px] text-[#333d55] ml-0.5">KT</span></span>
+      <div className="flex items-center gap-6 flex-1 justify-center">
+        <div className="flex flex-col items-center">
+          <span className="text-[9px] font-bold tracking-wider text-gray-500 uppercase mb-0.5">IAS</span>
+          <span className="text-sm font-mono font-bold text-cyan-400">{telemetry.ias}<span className="text-[9px] text-gray-600 ml-0.5">KT</span></span>
         </div>
-        <div className="telemetry-bar-item">
-          <span className="telemetry-bar-label">ALT</span>
-          <span className="telemetry-bar-value" style={{ color: '#22D3EE' }}>{alt.toLocaleString()}<span className="text-[8px] text-[#333d55] ml-0.5">FT</span></span>
+        <div className="h-6 w-px bg-white/10" />
+        <div className="flex flex-col items-center">
+          <span className="text-[9px] font-bold tracking-wider text-gray-500 uppercase mb-0.5">ALT</span>
+          <span className="text-sm font-mono font-bold text-cyan-400">{alt.toLocaleString()}<span className="text-[9px] text-gray-600 ml-0.5">FT</span></span>
         </div>
-        <div className="telemetry-bar-item">
-          <span className="telemetry-bar-label">VS</span>
-          <span className="telemetry-bar-value" style={{ color: telemetry.verticalSpeed < -500 ? '#FFB000' : '#2DCE89' }}>
-            {telemetry.verticalSpeed > 0 ? '+' : ''}{Math.round(telemetry.verticalSpeed)}<span className="text-[8px] text-[#333d55] ml-0.5">FPM</span>
+        <div className="h-6 w-px bg-white/10" />
+        <div className="flex flex-col items-center">
+          <span className="text-[9px] font-bold tracking-wider text-gray-500 uppercase mb-0.5">VS</span>
+          <span className={`text-sm font-mono font-bold ${telemetry.verticalSpeed < -500 ? 'text-amber-400' : 'text-emerald-400'}`}>
+            {telemetry.verticalSpeed > 0 ? '+' : ''}{Math.round(telemetry.verticalSpeed)}<span className="text-[9px] text-gray-600 ml-0.5">FPM</span>
           </span>
         </div>
-        <div className="telemetry-bar-item">
-          <span className="telemetry-bar-label">HDG</span>
-          <span className="telemetry-bar-value">{String(Math.round(telemetry.heading)).padStart(3, '0')}°</span>
+        <div className="h-6 w-px bg-white/10" />
+        <div className="flex flex-col items-center">
+          <span className="text-[9px] font-bold tracking-wider text-gray-500 uppercase mb-0.5">HDG</span>
+          <span className="text-sm font-mono font-bold text-white">{String(Math.round(telemetry.heading)).padStart(3, '0')}°</span>
         </div>
-        <div className="telemetry-bar-item">
-          <span className="telemetry-bar-label">GS</span>
-          <span className="telemetry-bar-value">{telemetry.groundSpeed}<span className="text-[8px] text-[#333d55] ml-0.5">KT</span></span>
+        <div className="h-6 w-px bg-white/10" />
+        <div className="flex flex-col items-center">
+          <span className="text-[9px] font-bold tracking-wider text-gray-500 uppercase mb-0.5">GS</span>
+          <span className="text-sm font-mono font-bold text-white">{telemetry.groundSpeed}<span className="text-[9px] text-gray-600 ml-0.5">KT</span></span>
         </div>
-        <div className="telemetry-bar-item">
-          <span className="telemetry-bar-label">G</span>
-          <span className="telemetry-bar-value" style={{ color: telemetry.gForce > 1.5 ? '#ef4444' : telemetry.gForce > 1.2 ? '#FFB000' : '#2DCE89' }}>
+        <div className="h-6 w-px bg-white/10" />
+        <div className="flex flex-col items-center">
+          <span className="text-[9px] font-bold tracking-wider text-gray-500 uppercase mb-0.5">G</span>
+          <span className={`text-sm font-mono font-bold ${telemetry.gForce > 1.5 ? 'text-red-400' : telemetry.gForce > 1.2 ? 'text-amber-400' : 'text-emerald-400'}`}>
             {telemetry.gForce.toFixed(2)}
           </span>
         </div>
       </div>
 
       {/* Phase pill */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         {flight.isActive && flight.currentPhase && (
-          <span className={`status-pill ${phaseColor}`}>
-            <span className="h-1 w-1 rounded-full bg-current animate-pulse" />
+          <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[10px] font-bold tracking-wider uppercase ${
+            flight.currentPhase === 'Cruise' ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
+            : flight.currentPhase === 'Climbing' || flight.currentPhase === 'Takeoff' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+            : flight.currentPhase === 'Descending' || flight.currentPhase === 'Approach' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+            : flight.currentPhase === 'Landed' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+            : 'bg-gray-500/10 border-gray-500/30 text-gray-400'
+          }`}>
+            <span className="h-1.5 w-1.5 rounded-full bg-current animate-pulse" />
             {flight.currentPhase}
           </span>
         )}
         {flight.isActive && flight.flightTime && (
-          <span className="telemetry-bar-label" style={{ color: '#C5A059' }}>{flight.flightTime}</span>
+          <span className="text-xs font-mono font-bold text-accent-gold tracking-wider">{flight.flightTime}</span>
         )}
       </div>
     </div>
@@ -253,15 +282,16 @@ function SideNavItem({ active, onClick, icon, label }: { active: boolean; onClic
   return (
     <button
       onClick={onClick}
-      className={`w-full h-9 rounded-lg flex items-center gap-3 px-3 transition-all relative bg-transparent border-none cursor-pointer text-xs font-medium tracking-wider ${
+      className={`w-full h-10 rounded-lg flex items-center gap-3 px-3 transition-all duration-200 relative bg-transparent border-none cursor-pointer text-xs font-semibold tracking-wider group ${
         active
-          ? 'text-accent-gold'
-          : 'text-[#8892b0] hover:text-[#CCD6F6] hover:bg-[rgba(197,160,89,0.06)]'
+          ? 'text-accent-gold bg-gradient-to-r from-accent-gold/10 to-accent-gold/5 border border-accent-gold/20'
+          : 'text-gray-400 hover:text-white hover:bg-white/[0.03] border border-transparent hover:border-white/[0.05]'
       }`}
     >
-      {active && <div className="absolute inset-0 bg-accent-gold/[0.06] border border-accent-gold/15 rounded-lg" />}
-      {active && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] bg-accent-gold rounded-r-full" />}
-      <span className={`relative z-10 transition-all ${active ? 'drop-shadow-[0_0_6px_rgba(197,160,89,0.4)]' : ''}`}>{icon}</span>
+      {active && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-accent-gold rounded-r-full shadow-lg shadow-accent-gold/50" />}
+      <span className={`relative z-10 transition-all duration-200 ${
+        active ? 'drop-shadow-[0_0_8px_rgba(197,160,89,0.5)]' : 'group-hover:scale-110'
+      }`}>{icon}</span>
       <span className="relative z-10 uppercase">{label}</span>
     </button>
   );
