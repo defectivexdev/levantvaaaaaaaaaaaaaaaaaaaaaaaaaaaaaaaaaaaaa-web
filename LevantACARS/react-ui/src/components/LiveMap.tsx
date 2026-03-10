@@ -105,6 +105,7 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
   const [followAircraft] = useState(true);
   const [trail, setTrail] = useState<TrailPoint[]>([]);
   const [showTrail] = useState(true);
+  const showStatusBoxes = false;
   const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
   // ── 15-second buffered position update ────────────────────────
@@ -308,7 +309,7 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
           </MapContainer>
 
           {/* Flight Status Info Boxes */}
-          {displayPos.lat !== 0 && (
+          {showStatusBoxes && displayPos.lat !== 0 && (
             <div className="absolute top-2 left-2 z-[1000] grid grid-cols-3 gap-2">
               {/* Altitude */}
               <div className="bg-blue-600/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-blue-400/30 min-w-[90px]">

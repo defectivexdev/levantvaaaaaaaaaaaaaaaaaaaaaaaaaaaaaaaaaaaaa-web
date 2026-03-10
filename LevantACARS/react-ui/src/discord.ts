@@ -171,7 +171,7 @@ export async function notifyFlightStarted(event: FlightEvent): Promise<void> {
         ...(event.route ? [{ name: 'Planned Route', value: safe(event.route), inline: false }] : []),
       ],
       timestamp: new Date().toISOString(),
-      footer: { text: 'Levant ACARS v3.1.4' },
+      footer: { text: 'Levant ACARS v3.1.7' },
     }],
   });
 }
@@ -202,7 +202,7 @@ export async function notifyFlightEnded(
         ...(event.flightTime ? [{ name: 'Flight Time', value: event.flightTime, inline: true }] : []),
       ],
       timestamp: new Date().toISOString(),
-      footer: { text: 'Levant ACARS v3.1.4' },
+      footer: { text: 'Levant ACARS v3.1.7' },
     }],
   });
 }
@@ -226,7 +226,7 @@ export async function notifyTouchdown(
         { name: 'Arrival', value: safe(event.arrivalIcao), inline: true },
       ],
       timestamp: new Date().toISOString(),
-      footer: { text: 'Levant ACARS v3.1.4 — Black Box' },
+      footer: { text: 'Levant ACARS v3.1.7 — Black Box' },
     }],
   });
 }
