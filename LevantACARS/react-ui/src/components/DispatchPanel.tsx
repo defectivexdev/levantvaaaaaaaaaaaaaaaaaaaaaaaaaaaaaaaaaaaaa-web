@@ -70,9 +70,9 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
     }
 
     setLoading(true);
-    console.log('[DispatchPanel] Fetching from SimBrief API with username:', auth.simbriefId);
+    console.log('[DispatchPanel] Fetching from SimBrief API with userid:', auth.simbriefId);
     try {
-      const response = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?username=${auth.simbriefId}&json=1`, {
+      const response = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?userid=${auth.simbriefId}&json=1`, {
         signal: AbortSignal.timeout(10000) // 10 second timeout
       });
       
@@ -199,8 +199,8 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
         {!auth.simbriefId ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <AlertCircle size={48} className="text-amber-500 mb-4" />
-            <p className="text-gray-400 text-sm mb-2">SimBrief username not configured</p>
-            <p className="text-gray-600 text-xs">Please set your SimBrief username in website settings</p>
+            <p className="text-gray-400 text-sm mb-2">SimBrief ID not configured</p>
+            <p className="text-gray-600 text-xs">Please set your SimBrief ID in website settings</p>
           </div>
         ) : !bid ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
