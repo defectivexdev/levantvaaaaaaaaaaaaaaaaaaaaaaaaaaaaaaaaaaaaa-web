@@ -425,6 +425,7 @@ public class SimBridge : IDisposable
             pilotHours = _mainVm.PilotHours,
             pilotXp = _mainVm.PilotXp,
             weightUnit = _mainVm.WeightUnit,
+            simbriefId = AppConfig.Current.SimBriefUsername ?? "",
             deviceCode = _mainVm.DeviceCode,
             isLoggingIn = _mainVm.IsLoggingIn,
         });

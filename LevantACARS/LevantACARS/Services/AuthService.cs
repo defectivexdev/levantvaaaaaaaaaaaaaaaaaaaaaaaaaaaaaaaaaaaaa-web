@@ -121,6 +121,7 @@ public sealed class AuthService
                         config.PilotXp = GetInt(pilot, "xp") ?? 0;
                         config.WeightUnit = GetString(pilot, "weightUnit") ?? "lbs";
                         config.HoppieCode = GetString(pilot, "hoppieCode") ?? "";
+                        config.SimBriefUsername = GetString(pilot, "simbriefId") ?? "";
                     }
 
                     config.Save();
@@ -188,6 +189,7 @@ public sealed class AuthService
                     config.PilotXp = GetInt(pilot, "xp") ?? 0;
                     config.WeightUnit = GetString(pilot, "weightUnit") ?? "lbs";
                     config.HoppieCode = GetString(pilot, "hoppieCode") ?? "";
+                    config.SimBriefUsername = GetString(pilot, "simbriefId") ?? "";
                     
                     config.Save();
                     _logger.LogInformation("[Auth] Profile refresh successful for {PilotId}", config.PilotId);

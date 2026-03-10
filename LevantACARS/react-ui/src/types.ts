@@ -53,6 +53,7 @@ export interface AuthState {
   pilotHours: number;
   pilotXp: number;
   weightUnit?: 'lbs' | 'kgs';
+  simbriefId?: string;
   deviceCode: string;
   isLoggingIn: boolean;
 }

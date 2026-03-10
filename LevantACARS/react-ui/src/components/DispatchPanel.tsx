@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Plane, RefreshCw, Download, MapPin, Clock, Fuel, Weight, Route as RouteIcon } from 'lucide-react';
 import { pushToast } from './ToastOverlay';
+import type { AuthState } from '../types';
 
 interface SimBriefFlightPlan {
   origin: { icao: string; name: string };
@@ -17,37 +18,23 @@ interface SimBriefFlightPlan {
   alternate: string;
 }
 
-export default function DispatchPanel() {
+interface DispatchPanelProps {
+  auth: AuthState;
+}
+
+export default function DispatchPanel({ auth }: DispatchPanelProps) {
   const [loading, setLoading] = useState(false);
   const [flightPlan, setFlightPlan] = useState<SimBriefFlightPlan | null>(null);
-  const [simbriefUsername, setSimbriefUsername] = useState('');
-
-  useEffect(() => {
-    // Fetch SimBrief username from config
-    fetchSimbriefUsername();
-  }, []);
-
-  const fetchSimbriefUsername = async () => {
-    try {
-      const res = await fetch('/api/auth/me');
-      const data = await res.json();
-      if (data.user?.simbriefId) {
-        setSimbriefUsername(data.user.simbriefId);
-      }
-    } catch (error) {
-      console.error('Failed to fetch SimBrief username:', error);
-    }
-  };
 
   const fetchFlightPlan = async () => {
-    if (!simbriefUsername) {
+    if (!auth.simbriefId) {
       pushToast('warning', 'Please set your SimBrief username in settings');
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?username=${simbriefUsername}&json=1`);
+      const response = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?username=${auth.simbriefId}&json=1`);
       const data = await response.json();
 
       if (!data || !data.origin) {
@@ -124,7 +111,7 @@ export default function DispatchPanel() {
           </div>
           <button
             onClick={fetchFlightPlan}
-            disabled={loading || !simbriefUsername}
+            disabled={loading || !auth.simbriefId}
             className="flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 rounded text-cyan-400 text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
@@ -135,7 +122,7 @@ export default function DispatchPanel() {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
-        {!simbriefUsername ? (
+        {!auth.simbriefId ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <Plane size={48} className="text-gray-600 mb-4" />
             <p className="text-gray-400 text-sm mb-2">SimBrief username not configured</p>
