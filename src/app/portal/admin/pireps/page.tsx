@@ -253,7 +253,7 @@ export default function AdminPirepsPage() {
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-1.5 text-sm font-mono text-cyan-400">
                                         <Clock size={14} className="text-cyan-500" />
-                                        {Math.floor(p.flight_time).toString().padStart(2, '0')}h {Math.floor((p.flight_time % 1) * 60).toString().padStart(2, '0')}m
+                                        {Math.floor(p.flight_time / 3600).toString().padStart(2, '0')}h {Math.floor((p.flight_time % 3600) / 60).toString().padStart(2, '0')}m
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
@@ -315,7 +315,7 @@ export default function AdminPirepsPage() {
                         <div className="grid grid-cols-4 gap-3 mb-6">
                             <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
                                 <Clock size={16} className="mx-auto mb-2 text-cyan-400" />
-                                <p className="text-sm font-bold font-mono text-cyan-400">{Math.floor(selectedPirep.flight_time).toString().padStart(2, '0')}:{Math.floor((selectedPirep.flight_time % 1) * 60).toString().padStart(2, '0')}</p>
+                                <p className="text-sm font-bold font-mono text-cyan-400">{Math.floor(selectedPirep.flight_time / 3600).toString().padStart(2, '0')}h {Math.floor((selectedPirep.flight_time % 3600) / 60).toString().padStart(2, '0')}m</p>
                                 <p className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-1">Flight Time</p>
                             </div>
                             <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
