@@ -26,18 +26,39 @@ interface DispatchPanelProps {
 export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
   const [loading, setLoading] = useState(false);
   const [flightPlan, setFlightPlan] = useState<SimBriefFlightPlan | null>(null);
-  const [autoFetched, setAutoFetched] = useState(false);
+  const [lastBidId, setLastBidId] = useState<string | null>(null);
 
-  // Auto-fetch SimBrief when bid becomes active
+  // Auto-fetch SimBrief when bid becomes active or changes
   useEffect(() => {
-    if (bid && auth.simbriefId && !autoFetched) {
-      fetchFlightPlan();
-      setAutoFetched(true);
+    // Create unique identifier for bid using flightNumber + route
+    const currentBidId = bid ? `${bid.flightNumber}-${bid.departureIcao}-${bid.arrivalIcao}` : null;
+    
+    console.log('[DispatchPanel] useEffect triggered:', {
+      hasBid: !!bid,
+      hasSimBriefId: !!auth.simbriefId,
+      currentBidId,
+      lastBidId,
+      willFetch: bid && auth.simbriefId && currentBidId !== lastBidId
+    });
+    
+    // Only auto-fetch if:
+    // 1. We have a bid
+    // 2. We have SimBrief ID
+    // 3. This is a new/different bid (not already fetched)
+    if (bid && auth.simbriefId && currentBidId !== lastBidId) {
+      console.log('[DispatchPanel] Auto-fetching SimBrief for bid:', bid.flightNumber);
+      setLastBidId(currentBidId);
+      // Small delay to ensure state is stable
+      setTimeout(() => fetchFlightPlan(), 100);
     }
-    if (!bid) {
-      setAutoFetched(false);
+    
+    // Reset when bid is removed
+    if (!bid && lastBidId !== null) {
+      console.log('[DispatchPanel] Bid removed, resetting state');
+      setLastBidId(null);
+      setFlightPlan(null);
     }
-  }, [bid, auth.simbriefId]);
+  }, [bid, auth.simbriefId, lastBidId]);
 
   const fetchFlightPlan = async () => {
     if (!auth.simbriefId) {
@@ -47,7 +68,14 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
 
     setLoading(true);
     try {
-      const response = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?username=${auth.simbriefId}&json=1`);
+      const response = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?username=${auth.simbriefId}&json=1`, {
+        signal: AbortSignal.timeout(10000) // 10 second timeout
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
 
       if (!data || !data.origin) {
@@ -91,10 +119,21 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
       };
 
       setFlightPlan(plan);
+      console.log('[DispatchPanel] Flight plan loaded successfully:', plan.callsign);
       pushToast('success', 'Flight plan loaded successfully');
-    } catch (error) {
-      console.error('Failed to fetch flight plan:', error);
-      pushToast('danger', 'Failed to fetch flight plan from SimBrief');
+    } catch (error: any) {
+      console.error('[DispatchPanel] Failed to fetch flight plan:', error);
+      
+      // Better error messages based on error type
+      if (error.name === 'TimeoutError' || error.message?.includes('timeout')) {
+        pushToast('danger', 'SimBrief request timed out. Please try again.');
+      } else if (error.message?.includes('HTTP error')) {
+        pushToast('danger', 'SimBrief API error. Please check your SimBrief ID.');
+      } else if (error.message?.includes('NetworkError') || error.message?.includes('Failed to fetch')) {
+        pushToast('danger', 'Network error. Please check your internet connection.');
+      } else {
+        pushToast('danger', 'Failed to fetch flight plan from SimBrief');
+      }
     } finally {
       setLoading(false);
     }
