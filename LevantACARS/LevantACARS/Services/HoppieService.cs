@@ -34,6 +34,28 @@ public sealed class HoppieService : IDisposable
         _logger = logger;
     }
 
+    /// <summary>
+    /// Initialize Hoppie client without starting message polling (for network queries only)
+    /// </summary>
+    public void Initialize(string callsign, string logonCode)
+    {
+        if (string.IsNullOrWhiteSpace(callsign) || string.IsNullOrWhiteSpace(logonCode))
+        {
+            _logger.LogWarning("[Hoppie] Callsign or Logon Code is missing. Cannot initialize Hoppie service.");
+            return;
+        }
+
+        // Only create client if it doesn't exist yet
+        if (_client == null)
+        {
+            _logger.LogInformation("[Hoppie] Initializing Hoppie client for callsign: {Callsign}", callsign);
+            _client = new AcarsClient(callsign, logonCode, false);
+        }
+    }
+
+    /// <summary>
+    /// Start Hoppie service with message polling (called when flight starts)
+    /// </summary>
     public void Start(string callsign, string logonCode)
     {
         Stop();

@@ -561,10 +561,15 @@ public class SimBridge : IDisposable
                         if (string.IsNullOrEmpty(bidPilotId)) bidPilotId = AppConfig.Current.PilotId ?? "";
                         if (!string.IsNullOrEmpty(bidPilotId)) _ = FetchAndPushBidAsync(bidPilotId);
                         break;
+                    case "initializeHoppie":
+                        InitializeHoppie();
+                        break;
                     case "getHoppieAtc":
+                        EnsureHoppieInitialized();
                         _ = GetHoppieAtcAsync();
                         break;
                     case "getHoppieCallsigns":
+                        EnsureHoppieInitialized();
                         _ = GetHoppieCallsignsAsync();
                         break;
                     case "cancelBid": _ = CancelBidAsync(_mainVm.PilotId); break;
@@ -779,6 +784,35 @@ public class SimBridge : IDisposable
             type = "hoppieAtcResult",
             atc = atc
         });
+    }
+
+    private void InitializeHoppie()
+    {
+        var config = AppConfig.Current;
+        var hoppieCode = config.HoppieCode;
+        var pilotId = config.PilotId;
+
+        if (string.IsNullOrEmpty(hoppieCode))
+        {
+            _logger.LogWarning("[Hoppie] No Hoppie code configured");
+            PostMessage(new { type = "hoppieError", message = "Hoppie code not configured. Please set it in your profile settings." });
+            return;
+        }
+
+        if (string.IsNullOrEmpty(pilotId))
+        {
+            _logger.LogWarning("[Hoppie] No pilot ID available");
+            return;
+        }
+
+        _logger.LogInformation("[Hoppie] Initializing with pilot ID: {PilotId}", pilotId);
+        _hoppieService.Initialize(pilotId, hoppieCode);
+    }
+
+    private void EnsureHoppieInitialized()
+    {
+        // Try to initialize if not already done
+        InitializeHoppie();
     }
 
     public void Dispose()

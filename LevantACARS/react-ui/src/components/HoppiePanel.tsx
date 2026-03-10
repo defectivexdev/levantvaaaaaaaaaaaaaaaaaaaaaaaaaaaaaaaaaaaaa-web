@@ -38,6 +38,11 @@ export default function HoppiePanel({ messages, logs, callsign }: Props) {
     logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [logs]);
 
+  // Initialize Hoppie on mount
+  useEffect(() => {
+    SimBridge.initializeHoppie();
+  }, []);
+
   // Listen for station results
   useEffect(() => {
     const removeListener = window.chrome?.webview?.addEventListener('message', (e) => {
@@ -49,6 +54,9 @@ export default function HoppiePanel({ messages, logs, callsign }: Props) {
         } else if (data.type === 'hoppieCallsignsResult') {
           setOnlineCallsigns(data.callsigns || []);
           setRefreshingStations(false);
+        } else if (data.type === 'hoppieError') {
+          pushToast('danger', data.message || 'Hoppie initialization failed');
+          setRefreshingStations(false);
         }
       } catch { }
     });
@@ -57,6 +65,13 @@ export default function HoppiePanel({ messages, logs, callsign }: Props) {
       if (removeListener) window.chrome?.webview?.removeEventListener('message', removeListener as any);
     };
   }, []);
+
+  // Auto-refresh stations when stations tab is opened
+  useEffect(() => {
+    if (activeTab === 'stations') {
+      handleRefreshStations();
+    }
+  }, [activeTab]);
 
   const handleRefreshStations = () => {
     setRefreshingStations(true);

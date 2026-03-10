@@ -100,6 +100,7 @@ export const SimBridge = {
       window.chrome!.webview!.postMessage(JSON.stringify({ action: 'sendCpdlc', recipient, message }));
     }
   },
+  initializeHoppie: () => sendAction('initializeHoppie'),
   getHoppieAtc: () => sendAction('getHoppieAtc'),
   getHoppieCallsigns: () => sendAction('getHoppieCallsigns')
 } as const;
