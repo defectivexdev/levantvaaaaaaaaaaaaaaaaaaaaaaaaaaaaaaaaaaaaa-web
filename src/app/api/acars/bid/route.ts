@@ -56,6 +56,17 @@ async function handleGetBid(pilotId: string) {
         }).select('pilot_id status callsign created_at expires_at').sort({ created_at: -1 }).limit(5).lean();
         console.warn(`[ACARS getBid] No active bid for ${pilot.pilot_id}. Recent bids:`, JSON.stringify(allBids, null, 2));
         return NextResponse.json({ 
+            pilot: {
+                pilotId: pilot.pilot_id,
+                id: pilot.pilot_id,
+                name: `${pilot.first_name} ${pilot.last_name}`,
+                rank: pilot.rank,
+                avatarUrl: pilot.avatar_url || '',
+                totalHours: (pilot.total_hours || 0) + (pilot.transfer_hours || 0),
+                xp: pilot.total_credits || 0,
+                weightUnit: pilot.weight_unit || 'lbs',
+                hoppieCode: pilot.hoppie_code || '',
+            },
             bid: null, 
             error: `No active bid found for ${pilot.pilot_id} (${allBids.length} recent bids found in DB)` 
         }, { headers: corsHeaders() });
@@ -118,6 +129,17 @@ async function handleGetBid(pilotId: string) {
 
     return NextResponse.json({
         success: true,
+        pilot: {
+            pilotId: pilot.pilot_id,
+            id: pilot.pilot_id,
+            name: `${pilot.first_name} ${pilot.last_name}`,
+            rank: pilot.rank,
+            avatarUrl: pilot.avatar_url || '',
+            totalHours: (pilot.total_hours || 0) + (pilot.transfer_hours || 0),
+            xp: pilot.total_credits || 0,
+            weightUnit: pilot.weight_unit || 'lbs',
+            hoppieCode: pilot.hoppie_code || '',
+        },
         bid: {
             id: bid.id,
             flight_number: bid.callsign,
