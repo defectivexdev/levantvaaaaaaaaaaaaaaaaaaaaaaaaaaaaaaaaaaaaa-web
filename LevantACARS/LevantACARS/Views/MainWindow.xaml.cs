@@ -117,6 +117,12 @@ public partial class MainWindow : Window
 
             var coreWv = WebView.CoreWebView2;
 
+            // Clear cache to force reload of new UI
+            await coreWv.Profile.ClearBrowsingDataAsync(
+                CoreWebView2BrowsingDataKinds.AllDomStorage | 
+                CoreWebView2BrowsingDataKinds.CacheStorage |
+                CoreWebView2BrowsingDataKinds.DiskCache);
+
             // Enable native CSS -webkit-app-region: drag for custom title bar dragging
             var settings = coreWv.Settings;
             settings.IsNonClientRegionSupportEnabled = true;
