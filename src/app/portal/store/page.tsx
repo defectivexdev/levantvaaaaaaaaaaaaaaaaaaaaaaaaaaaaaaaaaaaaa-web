@@ -83,11 +83,7 @@ export default function StorePage() {
         }
     };
 
-    const filteredItems = items.filter(item => {
-        if ((item.category as string) === 'Skin') return false;
-        if ((item.category as string) === 'Type Rating') return false;
-        return true;
-    });
+    const filteredItems = items;
 
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
