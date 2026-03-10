@@ -1,13 +1,12 @@
 import { memo } from 'react';
-import type { BidData, TelemetryData, AuthState } from '../types';
+import type { BidData, TelemetryData } from '../types';
 
 interface Props {
   bid: BidData | null;
   telemetry: TelemetryData;
-  auth: AuthState;
 }
 
-function CompactFlightCard({ bid, telemetry, auth }: Props) {
+function CompactFlightCard({ bid, telemetry }: Props) {
   if (!bid) return null;
 
   return (
@@ -16,7 +15,6 @@ function CompactFlightCard({ bid, telemetry, auth }: Props) {
       <div className="flex items-center justify-between mb-2">
         <div className="flex flex-col">
           <span className="text-lg font-display font-bold text-white tracking-tight">{bid.callsign}</span>
-          <span className="text-xs text-gray-400">{auth.pilotName}</span>
         </div>
         <div className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-bold tracking-[0.15em] border bg-amber-500/10 border-amber-500/20 text-amber-400">
           <div className="h-1 w-1 rounded-full bg-amber-400 animate-pulse" />

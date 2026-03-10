@@ -313,7 +313,7 @@ function DashboardView({
       )}
 
       {/* Compact Flight Card - Synced with Real Telemetry */}
-      {bid && <CompactFlightCard bid={bid} telemetry={telemetry} auth={auth} />}
+      {bid && <CompactFlightCard bid={bid} telemetry={telemetry} />}
 
       {/* Hero Flight Card */}
       <FlightPlan flight={flight} telemetry={telemetry} bid={bid} pilotId={auth.pilotId} injectBid={injectBid} addLogEntry={addLogEntry} cancelFlight={cancelFlight} submitFlight={submitFlight} />
