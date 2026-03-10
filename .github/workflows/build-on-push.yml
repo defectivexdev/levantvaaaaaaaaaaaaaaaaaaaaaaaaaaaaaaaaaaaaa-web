@@ -33,7 +33,7 @@ jobs:
           
       - name: Install React dependencies
         working-directory: LevantACARS/react-ui
-        run: npm ci
+        run: npm install --legacy-peer-deps
         
       - name: Build React UI
         working-directory: LevantACARS/react-ui
