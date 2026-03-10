@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Minus, Square, X, LayoutDashboard, Globe, MessageCircle, MessageSquare, LogOut, Radio, AlignLeft, Plane } from 'lucide-react';
+import { Minus, Square, X, LayoutDashboard, Globe, MessageCircle, MessageSquare, LogOut, AlignLeft, Plane } from 'lucide-react';
 import { useTelemetry } from './hooks/useTelemetry';
 import { SimBridge } from './bridge';
 import LinkScreen from './components/LinkScreen';
@@ -11,7 +11,6 @@ import LiveMap from './components/LiveMap';
 import ChatPanel from './components/ChatPanel';
 import HoppiePanel from './components/HoppiePanel';
 import DispatchPanel from './components/DispatchPanel';
-import AirportInfoPanel from './components/AirportInfoPanel';
 import ToastOverlay from './components/ToastOverlay';
 import { UpdateSplash } from './components/UpdateSplash';
 import UpdateOverlay from './components/UpdateOverlay';
@@ -22,7 +21,7 @@ import { AnimatedTooltip } from './components/ui/animated-tooltip';
 import type { TelemetryData, FlightState, ScoreResult, UILogEntry, ConnectionState, AuthState } from './types';
 import { fetchPilotStats, type PilotStats } from './api';
 
-export type View = 'dashboard' | 'livemap' | 'chat' | 'logs' | 'airport' | 'hoppie' | 'dispatch';
+export type View = 'dashboard' | 'livemap' | 'chat' | 'logs' | 'hoppie' | 'dispatch';
 
 export default function App() {
   const {
@@ -81,14 +80,14 @@ export default function App() {
 
       {/* ── Main Layout ──────────────────────────────────────── */}
       <div className="flex-1 flex overflow-hidden p-3 pb-0 gap-3">
-        {/* ── Sidebar - Redesigned ───────────────────── */}
-        <div className="w-[180px] flex flex-col rounded-xl relative shrink-0 transition-all border border-white/[0.05]" style={{ background: 'linear-gradient(180deg, rgba(10, 25, 47, 0.98) 0%, rgba(13, 31, 56, 0.95) 100%)' }}>
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/30 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/10 to-transparent" />
+        {/* ── Sidebar - Enhanced Beautiful Design ───────────────────── */}
+        <div className="w-[190px] flex flex-col rounded-2xl relative shrink-0 transition-all border border-accent-gold/10 shadow-2xl shadow-black/50" style={{ background: 'linear-gradient(180deg, rgba(10, 25, 47, 0.98) 0%, rgba(13, 31, 56, 0.95) 50%, rgba(8, 20, 40, 0.98) 100%)' }}>
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/20 to-transparent" />
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent-gold/5 via-transparent to-transparent pointer-events-none" />
           <nav className="flex-1 flex flex-col gap-1 w-full px-3 py-4">
             <SideNavItem active={activeView === 'dashboard'} onClick={() => setActiveView('dashboard')} icon={<LayoutDashboard size={16} />} label="Dashboard" />
             <SideNavItem active={activeView === 'livemap'} onClick={() => setActiveView('livemap')} icon={<Globe size={16} />} label="Live Map" />
-            <SideNavItem active={activeView === 'airport'} onClick={() => setActiveView('airport')} icon={<Radio size={16} />} label="Airport Info" />
             <SideNavItem active={activeView === 'dispatch'} onClick={() => setActiveView('dispatch')} icon={<Plane size={16} />} label="Dispatch" />
             <SideNavItem active={activeView === 'hoppie'} onClick={() => setActiveView('hoppie')} icon={<AlignLeft size={16} />} label="ATC / CPDLC" />
             <SideNavItem active={activeView === 'chat'} onClick={() => setActiveView('chat')} icon={<MessageCircle size={16} />} label="Pilot Chat" />
@@ -103,23 +102,23 @@ export default function App() {
           </div>
           <div className="px-3 pb-3 text-[9px] font-mono text-gray-600 tracking-wider select-none flex items-center justify-between">
             <span>Levant VA</span>
-            <span className="text-accent-gold/50">v3.1</span>
+            <span className="text-accent-gold/50">v3.1.3</span>
           </div>
         </div>
 
-        {/* ── Content Area ─────────────────────────────── */}
-        <div className="flex-1 flex flex-col min-w-0 bg-dark-900 rounded-xl relative overflow-hidden" style={{ background: '#0d1f38' }}>
-          {/* Header - Redesigned */}
-          <header className="h-14 flex justify-between items-center px-6 border-b border-white/[0.05] shrink-0 bg-gradient-to-r from-white/[0.01] to-transparent">
+        {/* ── Content Area - Enhanced Beautiful Design ─────────────────────────────── */}
+        <div className="flex-1 flex flex-col min-w-0 bg-dark-900 rounded-2xl relative overflow-hidden border border-white/[0.08] shadow-2xl shadow-black/50" style={{ background: 'linear-gradient(135deg, rgba(13, 31, 56, 0.98) 0%, rgba(10, 25, 47, 0.95) 100%)' }}>
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent-gold/5 via-transparent to-cyan-500/5 pointer-events-none" />
+          {/* Header - Enhanced Beautiful Design */}
+          <header className="h-16 flex justify-between items-center px-6 border-b border-white/[0.08] shrink-0 bg-gradient-to-r from-white/[0.02] via-accent-gold/[0.01] to-transparent backdrop-blur-sm relative z-10">
             {/* Left: View Title */}
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-accent-gold/20 to-accent-gold/5 border border-accent-gold/30 shadow-lg shadow-accent-gold/10">
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-accent-gold/25 via-accent-gold/15 to-accent-gold/5 border border-accent-gold/40 shadow-xl shadow-accent-gold/20">
                 {activeView === 'dashboard' && <LayoutDashboard size={16} className="text-accent-gold" />}
                 {activeView === 'livemap' && <Globe size={16} className="text-accent-gold" />}
                 {activeView === 'dispatch' && <Plane size={16} className="text-accent-gold" />}
                 {activeView === 'chat' && <MessageCircle size={16} className="text-accent-gold" />}
                 {activeView === 'logs' && <MessageSquare size={16} className="text-accent-gold" />}
-                {activeView === 'airport' && <Radio size={16} className="text-accent-gold" />}
                 {activeView === 'hoppie' && <AlignLeft size={16} className="text-accent-gold" />}
               </div>
               <div>
@@ -129,7 +128,6 @@ export default function App() {
                   {activeView === 'dispatch' && 'SimBrief Dispatch'}
                   {activeView === 'chat' && 'Pilot Chat'}
                   {activeView === 'logs' && 'Flight Logs'}
-                  {activeView === 'airport' && 'Airport Information'}
                   {activeView === 'hoppie' && 'ATC / CPDLC'}
                 </h2>
                 <p className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">Levant Virtual Airlines</p>
@@ -139,15 +137,15 @@ export default function App() {
             {/* Right: Status & Pilot Info */}
             <div className="flex items-center gap-4">
               {/* Connection Status */}
-              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border backdrop-blur-sm ${
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border backdrop-blur-md shadow-lg ${
                 connection.simConnected && connection.apiConnected && discordVerified
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400 shadow-emerald-500/20'
                   : connection.simConnected
-                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                    : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                    ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 shadow-amber-500/20'
+                    : 'bg-rose-500/15 border-rose-500/40 text-rose-400 shadow-rose-500/20'
               }`}>
                 <div className={`h-2 w-2 rounded-full ${
-                  connection.simConnected ? 'bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/50' : 'bg-rose-400 animate-pulse shadow-lg shadow-rose-400/50'
+                  connection.simConnected ? 'bg-emerald-400 animate-pulse shadow-xl shadow-emerald-400/60' : 'bg-rose-400 animate-pulse shadow-xl shadow-rose-400/60'
                 }`} />
                 <span className="text-[10px] font-bold tracking-[0.15em]">
                   {connection.simConnected && connection.apiConnected ? 'ONLINE' : connection.simConnected ? 'SIM ONLY' : 'OFFLINE'}
@@ -155,10 +153,10 @@ export default function App() {
               </div>
               
               {/* Pilot Info */}
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.02] border border-white/[0.05]">
-                <span className="text-xs text-accent-gold font-mono font-bold tracking-wider">{auth.pilotId}</span>
-                <div className="h-3 w-px bg-white/10" />
-                <span className="text-xs text-gray-400 font-mono tracking-wider">{auth.pilotRank}</span>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-accent-gold/10 to-accent-gold/5 border border-accent-gold/20 shadow-lg shadow-accent-gold/10">
+                <span className="text-xs text-accent-gold font-mono font-bold tracking-wider drop-shadow-[0_0_8px_rgba(197,160,89,0.4)]">{auth.pilotId}</span>
+                <div className="h-3 w-px bg-accent-gold/30" />
+                <span className="text-xs text-gray-300 font-mono tracking-wider">{auth.pilotRank}</span>
               </div>
               
               {/* Avatar */}
@@ -172,24 +170,6 @@ export default function App() {
               <DashboardView telemetry={telemetry} flight={flight} score={score} activityLog={activityLog} exceedanceLog={exceedanceLog} connection={connection} auth={auth} bid={bid} injectBid={injectBid} addLogEntry={addLogEntry} setQnhOverride={setQnhOverride} cancelFlight={cancelFlight} submitFlight={submitFlight} />
             )}
             {activeView === 'livemap' && <LiveMap telemetry={telemetry} touchdownPoint={touchdownPoint} />}
-            {activeView === 'airport' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-                {bid?.departureIcao ? (
-                  <AirportInfoPanel icao={bid.departureIcao} type="departure" />
-                ) : (
-                  <div className="flex items-center justify-center h-full bg-[#0a0a0a] rounded-xl border border-white/[0.04] text-gray-500 text-xs uppercase tracking-widest font-mono">
-                    No flight plan
-                  </div>
-                )}
-                {bid?.arrivalIcao ? (
-                  <AirportInfoPanel icao={bid.arrivalIcao} type="arrival" />
-                ) : (
-                  <div className="flex items-center justify-center h-full bg-[#0a0a0a] rounded-xl border border-white/[0.04] text-gray-500 text-xs uppercase tracking-widest font-mono">
-                    No flight plan
-                  </div>
-                )}
-              </div>
-            )}
             {activeView === 'hoppie' && <HoppiePanel messages={hoppieMessages} logs={hoppieLogs} callsign={bid?.callsign || ''} />}
             {activeView === 'dispatch' && <DispatchPanel auth={auth} bid={bid} />}
             {activeView === 'chat' && <ChatPanel pilotId={auth.pilotId} pilotName={auth.pilotName} />}
