@@ -87,7 +87,7 @@ GET /api/public/blacklist/list?api_key=BLACKLIST_KEY_NOSHA@RE
 BLACKLIST_API_KEY=your-secret-key-here
 ```
 
-**Default Key:** `levant-va-blacklist-2026`
+**Default Key:** `BLACKLIST_KEY_NOSHA@RE`
 
 **Usage:**
 - Query parameter: `?api_key=your-key`
@@ -107,7 +107,7 @@ BLACKLIST_API_KEY=your-secret-key-here
 
 class LevantBlacklistChecker {
     private $apiUrl = 'https://levant-va.com/api/public/blacklist';
-    private $apiKey = 'levant-va-blacklist-2026';
+    private $apiKey = 'BLACKLIST_KEY_NOSHA@RE';
     
     /**
      * Check if IP is blacklisted
@@ -232,7 +232,7 @@ $blacklist = $checker->getBlacklist();
  */
 
 class LevantBlacklistChecker {
-    constructor(apiUrl = 'https://levant-va.com/api/public/blacklist', apiKey = 'levant-va-blacklist-2026') {
+    constructor(apiUrl = 'https://levant-va.com/api/public/blacklist', apiKey = 'BLACKLIST_KEY_NOSHA@RE') {
         this.apiUrl = apiUrl;
         this.apiKey = apiKey;
     }
@@ -363,7 +363,7 @@ from typing import Optional, List, Dict
 
 class LevantBlacklistChecker:
     def __init__(self, api_url: str = 'https://levant-va.com/api/public/blacklist', 
-                 api_key: str = 'levant-va-blacklist-2026'):
+                 api_key: str = 'BLACKLIST_KEY_NOSHA@RE'):
         self.api_url = api_url
         self.api_key = api_key
     
@@ -540,7 +540,7 @@ app.use('/api/public/blacklist', limiter);
 ## 📝 Notes
 
 - API is designed to fail open (allow access on errors)
-- Default API key: `levant-va-blacklist-2026`
+- Default API key: `BLACKLIST_KEY_NOSHA@RE`
 - Rate limit: Recommended 60 req/min per IP
 - Cache blacklist for better performance
 - IP geolocation uses ip-api.com (45 req/min limit)

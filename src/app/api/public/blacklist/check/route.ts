@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         const apiKey = searchParams.get('api_key') || request.headers.get('x-api-key');
 
         // Simple API key validation (optional - you can make this required)
-        const validApiKey = process.env.BLACKLIST_API_KEY || 'levant-va-blacklist-2026';
+        const validApiKey = process.env.BLACKLIST_API_KEY || '';
         if (apiKey && apiKey !== validApiKey) {
             return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
         }
