@@ -16,14 +16,14 @@ interface StaffRole {
 
 interface StaffMember {
     _id: string;
-    pilot: {
+    pilot_id: {
         _id: string;
         first_name: string;
         last_name: string;
         pilot_id: string;
         rank: string;
     };
-    role: StaffRole;
+    role_id: StaffRole;
     is_head: boolean;
     name?: string;
     callsign?: string;
@@ -117,10 +117,10 @@ export default function AdminStaffPage() {
 
     const handleEdit = (member: StaffMember) => {
         setEditingMemberId(member._id);
-        setPilotIdInput(member.pilot.pilot_id);
+        setPilotIdInput(member.pilot_id?.pilot_id || '');
         setMemberDetails({
-            roleTitle: member.role.title,
-            category: member.role.category,
+            roleTitle: member.role_id?.title || '',
+            category: member.role_id?.category || 'Board of Governor',
             name: member.name || '',
             email: member.email || '',
             picture: member.picture || '',
@@ -292,17 +292,17 @@ export default function AdminStaffPage() {
                                             {member.picture ? (
                                                 <img src={member.picture} alt="" className="w-full h-full object-cover" />
                                             ) : (
-                                                <span className="text-2xl font-bold text-gray-600 uppercase">{(member.name || member.pilot?.first_name)?.[0]}</span>
+                                                <span className="text-2xl font-bold text-gray-600 uppercase">{(member.name || member.pilot_id?.first_name)?.[0]}</span>
                                             )}
                                         </div>
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-white text-lg leading-tight">
-                                            {member.name || `${member.pilot?.first_name} ${member.pilot?.last_name}`}
+                                            {member.name || `${member.pilot_id?.first_name} ${member.pilot_id?.last_name}`}
                                         </h3>
                                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">
-                                            <span className={`text-[10px] font-bold uppercase tracking-wider ${member.role?.color}`}>{member.role?.title}</span>
-                                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{member.role?.category}</span>
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider ${member.role_id?.color}`}>{member.role_id?.title}</span>
+                                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{member.role_id?.category}</span>
                                         </div>
                                     </div>
                                 </div>

@@ -12,8 +12,8 @@ export async function GET() {
     await dbConnect();
     try {
         const members = await StaffMember.find({})
-            .populate('pilot', 'first_name last_name rank pilot_id country')
-            .populate('role', 'title order color')
+            .populate('pilot_id', 'first_name last_name rank pilot_id country')
+            .populate('role_id', 'title category color order')
             .sort('-assigned_at'); // Sorting logic can be refined on client-side based on Role Order
             
         return NextResponse.json({ success: true, members });
@@ -43,7 +43,12 @@ export async function POST(req: Request) {
 
         // If no roleId, but we have title and category, Find or Create
         if (!finalRoleId && roleTitle && category) {
-            let role = await StaffRole.findOne({ title: roleTitle, category });
+            let role = await StaffRole.findOne({ 
+                $or: [
+                    { title: roleTitle, category },
+                    { name: roleTitle, category }
+                ]
+            });
             if (!role) {
                 // Determine a default color based on category
                 let color = 'text-white';
@@ -67,14 +72,14 @@ export async function POST(req: Request) {
         }
         
         // Check if exists
-        const exists = await StaffMember.findOne({ pilot: pilotId, role: finalRoleId });
+        const exists = await StaffMember.findOne({ pilot_id: finalPilotId, role_id: finalRoleId });
         if (exists) {
              return NextResponse.json({ success: false, error: 'Pilot already assigned to this role' }, { status: 400 });
         }
 
         const member = await StaffMember.create({ 
-            pilot: finalPilotId, 
-            role: finalRoleId,
+            pilot_id: finalPilotId, 
+            role_id: finalRoleId,
             name,
             callsign,
             email,
@@ -82,7 +87,7 @@ export async function POST(req: Request) {
             discord
         });
         // Populate for immediate return
-        await member.populate(['pilot', 'role']);
+        await member.populate(['pilot_id', 'role_id']);
         
         return NextResponse.json({ success: true, member });
     } catch (error: any) {

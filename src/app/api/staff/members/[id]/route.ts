@@ -14,7 +14,12 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
         // Find or Create Role
         if (roleTitle && category) {
-            let role = await StaffRole.findOne({ title: roleTitle, category });
+            let role = await StaffRole.findOne({ 
+                $or: [
+                    { title: roleTitle, category },
+                    { name: roleTitle, category }
+                ]
+            });
             if (!role) {
                 const categoryColorMap: { [key: string]: string } = {
                     'Board of Governor': 'text-accent-gold',
@@ -39,12 +44,12 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         }
 
         const member = await StaffMember.findByIdAndUpdate(id, {
-            role: finalRoleId,
+            role_id: finalRoleId,
             name,
             email,
             picture,
             discord
-        }, { new: true }).populate('pilot').populate('role');
+        }, { new: true }).populate(['pilot_id', 'role_id']);
 
         return NextResponse.json({ success: true, member });
     } catch (error: any) {
