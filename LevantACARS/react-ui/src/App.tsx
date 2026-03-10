@@ -298,10 +298,10 @@ function DashboardView({
   const departureIcao = flight.departureIcao || bid?.departureIcao || '';
 
   return (
-    <div className="flex flex-col gap-3 h-full">
+    <div className="flex flex-col gap-3 h-full overflow-y-auto">
       {/* FSUIPC Connection Warning */}
       {!connection.simConnected && (
-        <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-500/10 border border-rose-500/20">
+        <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-500/10 border border-rose-500/20 shrink-0">
           <div className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
           <span className="text-xs font-bold text-rose-400 uppercase tracking-[0.15em]">FSUIPC &mdash; Not Detected</span>
         </div>
@@ -315,7 +315,7 @@ function DashboardView({
 
       {/* Pilot Stats Row (below flight card) */}
       {stats && (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2 shrink-0">
           <StatCard label="Total Hours" value={stats.pilot.totalHours.toFixed(1)} color="text-accent-gold" />
           <StatCard label="Total Flights" value={String(stats.pilot.totalFlights)} color="text-accent-emerald" />
           <StatCard label="Rank" value={stats.pilot.rank} color="text-purple-400" small />
@@ -323,7 +323,7 @@ function DashboardView({
       )}
 
       {/* Departure & Arrival METAR */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 shrink-0">
         <WeatherTile icao={departureIcao} label="Departure METAR" />
         <WeatherTile icao={arrivalIcao} label="Arrival METAR" onQnhUpdate={setQnhOverride} />
       </div>
@@ -331,8 +331,8 @@ function DashboardView({
       {/* Landing Summary (after flight) */}
       {score && <LandingSummary score={score} flight={flight} />}
 
-      {/* Activity Log — flex-1 takes all remaining vertical space */}
-      <div className="flex-1 min-h-[160px] rounded-xl bg-dark-900/40 backdrop-blur-md border border-white/[0.04] overflow-hidden">
+      {/* Activity Log */}
+      <div className="rounded-xl bg-dark-900/40 backdrop-blur-md border border-white/[0.04] overflow-hidden shrink-0" style={{ height: '200px' }}>
         <FlightLogs activityLog={activityLog} exceedanceLog={exceedanceLog} />
       </div>
     </div>
