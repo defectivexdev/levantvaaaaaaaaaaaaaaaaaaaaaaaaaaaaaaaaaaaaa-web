@@ -59,7 +59,8 @@ export default function LinkDiscordPage() {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                toast.error('Not authenticated');
+                toast.error('Not authenticated - please log in again');
+                setVerifying(false);
                 return;
             }
 
@@ -68,10 +69,12 @@ export default function LinkDiscordPage() {
             });
 
             const data = await res.json();
+            
             if (res.ok && data.authUrl) {
                 window.location.href = data.authUrl;
             } else {
-                toast.error('Failed to generate IVAO authorization link');
+                console.error('IVAO OAuth authorize failed:', { status: res.status, data });
+                toast.error(data.error || 'Failed to generate IVAO authorization link');
                 setVerifying(false);
             }
         } catch (error) {
