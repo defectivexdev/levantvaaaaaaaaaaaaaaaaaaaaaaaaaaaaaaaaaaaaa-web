@@ -1,7 +1,8 @@
 import discord
 from discord import app_commands
-from discord.ext import commands
+from discord.ext import commands, tasks
 import asyncio
+import aiohttp
 import config
 from utils import connect_database, get_database, assign_roles_to_member, get_rating_name, fetch_web_config
 
@@ -10,6 +11,38 @@ intents.members = True
 intents.guilds = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
+
+async def get_live_pilots() -> int:
+    """Fetch live pilot count from ACARS API"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f'{config.WEB_API_URL}/api/acars/online',
+                timeout=aiohttp.ClientTimeout(total=5)
+            ) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    return data.get('online', 0)
+    except Exception as e:
+        print(f'Error fetching live pilots: {e}')
+    return 0
+
+@tasks.loop(minutes=2)
+async def update_status():
+    """Update bot status with live pilot count every 2 minutes"""
+    try:
+        pilot_count = await get_live_pilots()
+        activity_text = f'{pilot_count} pilot{"s" if pilot_count != 1 else ""} flying'
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.watching,
+                name=activity_text
+            ),
+            status=discord.Status.online
+        )
+        print(f'Updated status: {activity_text}')
+    except Exception as e:
+        print(f'Error updating status: {e}')
 
 @bot.event
 async def on_ready():
@@ -30,6 +63,11 @@ async def on_ready():
         bot.tree.copy_global_to(guild=guild)
         await bot.tree.sync(guild=guild)
         print(f'Synced commands to guild {config.GUILD_ID}')
+        
+        # Start status update task
+        if not update_status.is_running():
+            update_status.start()
+            print('Started live pilot count status updates')
     except Exception as e:
         print(f'Error during bot initialization: {e}')
 
