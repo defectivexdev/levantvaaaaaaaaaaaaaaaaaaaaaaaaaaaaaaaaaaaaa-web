@@ -1,7 +1,6 @@
 import Pilot from '@/models/Pilot';
 import Award, { IAward } from '@/models/Award';
 import PilotAward from '@/models/PilotAward';
-import { sendDiscordNotification } from './discord';
 
 /**
  * Checks and grants automated awards based on pilot statistics.
@@ -43,33 +42,18 @@ export async function checkAndGrantAwards(pilotInternalId: string) {
                 });
 
                 if (!existing) {
-                    // Grant the award!
-                    await PilotAward.create({
+                    // Grant the award
+                    const newAward = await PilotAward.create({
                         pilot_id: pilot._id,
                         award_id: award._id,
                         earned_at: new Date()
                     });
-
                     newlyGranted.push(award);
-                    console.log(`Award Granted: Pilot ${pilot.pilot_id} earned "${award.name}"`);
 
-                    // Discord Notification for Award
-                    await sendDiscordNotification(`🏆 **ACHIEVEMENT UNLOCKED!**`, [
-                        {
-                            title: 'New Award Earned!',
-                            description: `**${pilot.first_name} ${pilot.last_name} | ${pilot.pilot_id}** has earned the **${award.name}** award!`,
-                            color: 0x3498DB, // Blue
-                            thumbnail: {
-                                url: award.imageUrl || 'https://levant-va.com/img/awards/default.png'
-                            },
-                            fields: [
-                                { name: 'Category', value: award.category || 'Special', inline: true },
-                                { name: 'Requirement', value: `${award.requiredValue} ${award.category}`, inline: true }
-                            ],
-                            footer: { text: 'Levant Virtual Airline • Excellence in Operations' },
-                            timestamp: new Date().toISOString()
-                        }
-                    ], 'award');
+                    // Log award earned
+                    if (newAward) {
+                        console.log(`[Awards] ${pilot.pilot_id} earned award: ${award.name}`);
+                    }
                 }
             }
         }
