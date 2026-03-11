@@ -53,7 +53,7 @@ export async function PATCH(request: NextRequest) {
     const pilotQuery = {
         $or: [
             { pilot_id: session.pilotId },
-            { pilot_id: session.id }
+            { pilot_id: new mongoose.Types.ObjectId(session.id) }
         ]
     };
 
