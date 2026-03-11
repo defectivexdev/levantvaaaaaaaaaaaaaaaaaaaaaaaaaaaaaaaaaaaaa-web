@@ -210,20 +210,8 @@ function TelemetryFooter({ telemetry, flight, connection, qnhAltitude }: { telem
         </div>
       </div>
 
-      {/* Phase pill */}
+      {/* Flight time only */}
       <div className="flex items-center gap-3">
-        {flight.isActive && flight.currentPhase && (
-          <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[10px] font-bold tracking-wider uppercase ${
-            flight.currentPhase === 'Cruise' ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
-            : flight.currentPhase === 'Climbing' || flight.currentPhase === 'Takeoff' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-            : flight.currentPhase === 'Descending' || flight.currentPhase === 'Approach' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-            : flight.currentPhase === 'Landed' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-            : 'bg-gray-500/10 border-gray-500/30 text-gray-400'
-          }`}>
-            <span className="h-1.5 w-1.5 rounded-full bg-current animate-pulse" />
-            {flight.currentPhase}
-          </span>
-        )}
         {flight.isActive && flight.flightTime && (
           <span className="text-xs font-mono font-bold text-accent-gold tracking-wider">{flight.flightTime}</span>
         )}
