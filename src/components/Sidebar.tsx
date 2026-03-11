@@ -49,7 +49,6 @@ export default function Sidebar() {
     const { isAdmin, user, refresh } = useAuth();
     const isGroupflightRole = user?.role === 'Groupflight';
     const [vaultBalance, setVaultBalance] = useState<number | null>(null);
-    const [discordLinking, setDiscordLinking] = useState(false);
     const [manualPirepCount, setManualPirepCount] = useState(0);
     const [avatarError, setAvatarError] = useState(false);
     const [avatarTimestamp, setAvatarTimestamp] = useState(Date.now());
@@ -86,28 +85,6 @@ export default function Sidebar() {
         }
     }, [isAdmin, user?.pilotId, refresh]);
 
-    const handleDiscordLink = useCallback(async () => {
-        setDiscordLinking(true);
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) return;
-
-            const res = await fetch('/api/discord/verify-link', {
-                headers: { 'Authorization': `Bearer ${token}` },
-            });
-
-            const data = await res.json();
-            if (res.ok && data.authUrl) {
-                window.location.href = data.authUrl;
-            } else {
-                setDiscordLinking(false);
-            }
-        } catch (error) {
-            console.error('Discord link error:', error);
-            setDiscordLinking(false);
-        }
-    }, []);
-
     const menuItems = useMemo<{ category: string; items: MenuItem[] }[]>(() => {
         // Filter PILOT and OPERATIONS sections for Groupflight role - hide most items except Group Flights
         const pilotItems = isGroupflightRole 
@@ -132,7 +109,7 @@ export default function Sidebar() {
         const communityItems = isGroupflightRole
             ? []
             : [
-                { name: 'Link Discord & IVAO', path: '#', icon: Shield, onClick: handleDiscordLink },
+                { name: 'Link Discord & IVAO', path: '/portal/link-discord', icon: Shield },
                 { name: 'Settings', path: '/portal/settings', icon: Settings },
             ];
         
