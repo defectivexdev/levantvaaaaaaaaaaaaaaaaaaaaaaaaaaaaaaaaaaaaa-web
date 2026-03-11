@@ -17,39 +17,16 @@ export async function GET(request: Request) {
         const pilotId = searchParams.get('pilotId');
         const limit = parseInt(searchParams.get('limit') || '10', 10);
 
-        console.log('[Reports API] Session:', { id: session.id, pilotId: session.pilotId });
-        console.log('[Reports API] Query pilotId param:', pilotId);
-        
-        // TEMPORARY: Show all flights to diagnose issue
-        // Debug: Get sample flights to see actual pilot_id values
-        const sampleFlights = await FlightModel.find({}).select('pilot_id pilot_name').limit(5).lean();
-        console.log('[Reports API] Sample flights pilot_id values:', sampleFlights.map(f => ({ 
-            pilot_id: f.pilot_id, 
-            type: typeof f.pilot_id,
-            isObjectId: f.pilot_id instanceof mongoose.Types.ObjectId,
-            toString: f.pilot_id?.toString?.(),
-            pilot_name: f.pilot_name
-        })));
-        
-        console.log('[Reports API] Session info:', { 
-            sessionId: session.id, 
-            sessionPilotId: session.pilotId,
-            sessionIdType: typeof session.id,
-            sessionPilotIdType: typeof session.pilotId
-        });
-        
-        // SHOW ALL FLIGHTS FOR NOW - NO PILOT FILTER
-        const query: any = { approved_status: { $in: [0, 1, 2] } };
-        
-        console.log('[Reports API] Query (showing all flights):', JSON.stringify(query));
+        // Query for pilot's flights - pilot_id is stored as ObjectId in database
+        const query: any = { 
+            approved_status: { $in: [0, 1, 2] },
+            pilot_id: new mongoose.Types.ObjectId(session.id)
+        };
         
         const flights = await FlightModel.find(query)
             .sort({ submitted_at: -1 })
-            .limit(50) // Increase limit to see more
+            .limit(limit)
             .lean();
-            
-        console.log('[Reports API] Found flights:', flights.length);
-        console.log('[Reports API] First flight pilot_id:', flights[0]?.pilot_id, 'Type:', typeof flights[0]?.pilot_id);
 
         const formattedReports = flights.map((f: any) => {
             console.log('Flight aircraft_type:', f.aircraft_type, 'for flight:', f.flight_number);
