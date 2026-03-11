@@ -31,11 +31,24 @@ export async function GET() {
             pilot_id: pilotIdToQuery, 
             approved_status: 1 
         });
-        console.log('Stats API - Total flights found:', totalFlights);
+        console.log('Stats API - Total flights found (approved_status=1):', totalFlights);
         
         // Debug: check all flights for this pilot regardless of status
         const allFlights = await Flight.countDocuments({ pilot_id: pilotIdToQuery });
         console.log('Stats API - All flights (any status):', allFlights);
+        
+        // Debug: check flights by different approved_status values
+        const pending = await Flight.countDocuments({ pilot_id: pilotIdToQuery, approved_status: 0 });
+        const rejected = await Flight.countDocuments({ pilot_id: pilotIdToQuery, approved_status: 2 });
+        console.log('Stats API - Pending flights (status=0):', pending);
+        console.log('Stats API - Rejected flights (status=2):', rejected);
+        
+        // Debug: sample a few flight records to see actual data
+        const sampleFlights = await Flight.find({ pilot_id: pilotIdToQuery })
+            .limit(3)
+            .select('pilot_id flight_number approved_status')
+            .lean();
+        console.log('Stats API - Sample flights:', JSON.stringify(sampleFlights));
 
         // Format hours nicely (no decimals for whole numbers)
         const hours = Number(pilot.total_hours) || 0;
