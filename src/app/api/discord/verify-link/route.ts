@@ -3,12 +3,12 @@ import { jwtVerify } from 'jose';
 
 export async function GET(req: NextRequest) {
     try {
-        const token = req.headers.get('authorization')?.split(' ')[1];
+        const token = req.cookies.get('lva_session')?.value;
         if (!token) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET || "");
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || '');
         const { payload } = await jwtVerify(token, secret);
         
         const pilotId = payload.pilotId as string;

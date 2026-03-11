@@ -29,7 +29,6 @@ export default function LinkDiscordPage() {
 
     useEffect(() => {
         console.log('=== LinkDiscordPage mounted at', new Date().toISOString(), '===');
-        alert('Page loaded - check console for logs');
         fetchStatus();
         
         // Check if returning from IVAO OAuth
