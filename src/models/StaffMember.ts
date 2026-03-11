@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IStaffMember extends Document {
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     role_id: mongoose.Types.ObjectId;
     name?: string;
     email?: string;
@@ -12,7 +12,7 @@ export interface IStaffMember extends Document {
 }
 
 const StaffMemberSchema = new Schema<IStaffMember>({
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     role_id: { type: Schema.Types.ObjectId, ref: 'StaffRole', required: true, index: true },
     name: { type: String, required: false },
     email: { type: String, required: false },

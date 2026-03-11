@@ -12,7 +12,7 @@ export interface ITourReportLeg {
 
 export interface ITourReport extends Document {
     tour_id: mongoose.Types.ObjectId;
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     pilot_name: string;
     tour_name: string;
     legs: ITourReportLeg[];
@@ -39,7 +39,7 @@ const TourReportLegSchema = new Schema({
 
 const TourReportSchema = new Schema<ITourReport>({
     tour_id: { type: Schema.Types.ObjectId, ref: 'Tour', required: true, index: true },
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     pilot_name: { type: String, required: true },
     tour_name: { type: String, required: true },
     legs: { type: [TourReportLegSchema], default: [] },

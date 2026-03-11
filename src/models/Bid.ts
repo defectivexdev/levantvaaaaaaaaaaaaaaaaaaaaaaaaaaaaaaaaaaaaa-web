@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IBid extends Document {
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     pilot_name: string;
     callsign: string;
     departure_icao: string;
@@ -22,7 +22,7 @@ export interface IBid extends Document {
 }
 
 const BidSchema = new Schema<IBid>({
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     pilot_name: { type: String, required: true },
     callsign: { type: String, required: true },
     departure_icao: { type: String, required: true },

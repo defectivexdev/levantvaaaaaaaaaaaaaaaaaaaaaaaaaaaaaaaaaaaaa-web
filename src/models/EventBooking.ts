@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IEventBooking extends Document {
     event_id: mongoose.Types.ObjectId;
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     booked_at: Date;
     status: 'booked' | 'attended' | 'cancelled';
     flight_id?: mongoose.Types.ObjectId;
@@ -11,7 +11,7 @@ export interface IEventBooking extends Document {
 
 const EventBookingSchema = new Schema<IEventBooking>({
     event_id: { type: Schema.Types.ObjectId, ref: 'Event', required: true, index: true },
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     booked_at: { type: Date, default: Date.now },
     status: { type: String, enum: ['booked', 'attended', 'cancelled'], default: 'booked', index: true },
     flight_id: { type: Schema.Types.ObjectId, ref: 'Flight', index: true },

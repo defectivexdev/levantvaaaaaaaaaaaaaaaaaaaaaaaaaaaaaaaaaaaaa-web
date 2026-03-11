@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface INotification extends Document {
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     type: 'pirep_approved' | 'pirep_rejected' | 'rank_up' | 'award' | 'event' | 'system' | 'tour';
     title: string;
     message: string;
@@ -11,7 +11,7 @@ export interface INotification extends Document {
 }
 
 const NotificationSchema = new Schema<INotification>({
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     type: {
         type: String,
         enum: ['pirep_approved', 'pirep_rejected', 'rank_up', 'award', 'event', 'system', 'tour'],

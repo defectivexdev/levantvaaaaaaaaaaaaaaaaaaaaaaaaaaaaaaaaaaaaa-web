@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IFinanceLog extends Document {
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     type: string;
     amount: number;
     description?: string;
@@ -10,7 +10,7 @@ export interface IFinanceLog extends Document {
 }
 
 const FinanceLogSchema = new Schema<IFinanceLog>({
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     type: { type: String, required: true, index: true },
     amount: { type: Number, required: true },
     description: String,

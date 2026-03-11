@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IActivityProgress extends Document {
     activity_id: mongoose.Types.ObjectId;
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     legsComplete: number;
     percentComplete: number;
     completedLegIds: string[];
@@ -14,7 +14,7 @@ export interface IActivityProgress extends Document {
 
 const ActivityProgressSchema = new Schema<IActivityProgress>({
     activity_id: { type: Schema.Types.ObjectId, ref: 'Activity', required: true, index: true },
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     legsComplete: { type: Number, default: 0 },
     percentComplete: { type: Number, default: 0 },
     completedLegIds: [String],

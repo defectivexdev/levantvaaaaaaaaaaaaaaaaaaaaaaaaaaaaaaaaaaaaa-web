@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IDownloadLog extends Document {
-    pilot_id?: mongoose.Types.ObjectId;
+    pilot_id?: string;
     file_name: string;
     file_size?: number;
     ip_address?: string;
@@ -10,7 +10,7 @@ export interface IDownloadLog extends Document {
 }
 
 const DownloadLogSchema = new Schema<IDownloadLog>({
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', index: true },
+    pilot_id: { type: String, index: true },
     file_name: { type: String, required: true, index: true },
     file_size: Number,
     ip_address: String,

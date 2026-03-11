@@ -8,7 +8,7 @@ export interface IMaintenanceLog extends Document {
     cost_cr: number;
     description: string;
     flight_id?: mongoose.Types.ObjectId;
-    pilot_id?: mongoose.Types.ObjectId;
+    pilot_id?: string;
     performed_by?: string;
     created_at: Date;
 }
@@ -26,7 +26,7 @@ const MaintenanceLogSchema = new Schema<IMaintenanceLog>({
     cost_cr: { type: Number, default: 0 },
     description: { type: String, required: true },
     flight_id: { type: Schema.Types.ObjectId, ref: 'Flight' },
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot' },
+    pilot_id: { type: String },
     performed_by: String,
     created_at: { type: Date, default: Date.now, index: true },
 });

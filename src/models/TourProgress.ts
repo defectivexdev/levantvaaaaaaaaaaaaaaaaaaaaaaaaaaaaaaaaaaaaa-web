@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ITourProgress extends Document {
     tour_id: mongoose.Types.ObjectId;
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     current_leg: number;
     completed_legs: number[];
     started_at: Date;
@@ -11,7 +11,7 @@ export interface ITourProgress extends Document {
 
 const TourProgressSchema = new Schema<ITourProgress>({
     tour_id: { type: Schema.Types.ObjectId, ref: 'Tour', required: true, index: true },
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     current_leg: { type: Number, default: 0 },
     completed_legs: [Number],
     started_at: { type: Date, default: Date.now },

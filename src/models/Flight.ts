@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IFlight extends Document {
-    pilot_id: mongoose.Types.ObjectId;
+    pilot_id: string;
     pilot_name: string;
     flight_number: string;
     callsign: string;
@@ -49,7 +49,7 @@ export interface IFlight extends Document {
 }
 
 const FlightSchema = new Schema<IFlight>({
-    pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
+    pilot_id: { type: String, required: true, index: true },
     pilot_name: { type: String, required: true },
     flight_number: { type: String, required: true, index: true },
     callsign: { type: String, required: true },
