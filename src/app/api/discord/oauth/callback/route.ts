@@ -122,7 +122,14 @@ export async function GET(req: NextRequest) {
                     }
                 }
 
-                // Remove the unlinked role after successful linking
+                if (verification) {
+                    verification.discord_roles_assigned = true;
+                    await verification.save();
+                }
+
+                console.log(`Assigned ${rolesToAssign.length} role(s) to ${discordUser.username}`);
+                
+                // Remove unlinked role after successful linking
                 const unlinkedRoleId = '1481168075876466740';
                 try {
                     await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}/roles/${unlinkedRoleId}`, {
@@ -135,13 +142,6 @@ export async function GET(req: NextRequest) {
                 } catch (error) {
                     console.error(`Failed to remove unlinked role:`, error);
                 }
-
-                if (verification) {
-                    verification.discord_roles_assigned = true;
-                    await verification.save();
-                }
-
-                console.log(`Assigned ${rolesToAssign.length} role(s) to ${discordUser.username}`);
             } catch (error) {
                 console.error('Failed to add member to guild or assign roles:', error);
             }
