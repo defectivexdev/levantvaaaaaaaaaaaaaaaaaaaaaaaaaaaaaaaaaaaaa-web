@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plane, RefreshCw, Download, MapPin, Clock, Fuel, Weight, Route as RouteIcon, AlertCircle } from 'lucide-react';
+import { Plane, RefreshCw, MapPin, Clock, Fuel, Weight, Route as RouteIcon, AlertCircle } from 'lucide-react';
 import { pushToast } from './ToastOverlay';
 import type { AuthState, BidData } from '../types';
 
@@ -143,19 +143,6 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
     }
   };
 
-  const importFlightPlan = () => {
-    if (!flightPlan) return;
-    
-    // Send flight plan data to C# backend via bridge
-    if (window.chrome?.webview) {
-      window.chrome.webview.postMessage(JSON.stringify({
-        action: 'importSimbrief',
-        data: flightPlan
-      }));
-      pushToast('success', 'Flight plan imported to ACARS');
-    }
-  };
-
   return (
     <div className="flex flex-col h-full bg-[#0a0a0a] rounded-xl border border-white/[0.04] overflow-hidden">
       {/* Header */}
@@ -278,15 +265,15 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Plan</div>
-                  <div className="text-sm font-mono text-white">{flightPlan.fuel.plan} lbs</div>
+                  <div className="text-sm font-mono text-white">{flightPlan.fuel.plan} {auth.weightUnit || 'lbs'}</div>
                 </div>
                 <div>
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Extra</div>
-                  <div className="text-sm font-mono text-white">{flightPlan.fuel.extra} lbs</div>
+                  <div className="text-sm font-mono text-white">{flightPlan.fuel.extra} {auth.weightUnit || 'lbs'}</div>
                 </div>
                 <div>
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Taxi</div>
-                  <div className="text-sm font-mono text-white">{flightPlan.fuel.taxi} lbs</div>
+                  <div className="text-sm font-mono text-white">{flightPlan.fuel.taxi} {auth.weightUnit || 'lbs'}</div>
                 </div>
               </div>
             </div>
@@ -300,11 +287,11 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">ZFW</div>
-                  <div className="text-sm font-mono text-white">{flightPlan.weights.zfw} lbs</div>
+                  <div className="text-sm font-mono text-white">{flightPlan.weights.zfw} {auth.weightUnit || 'lbs'}</div>
                 </div>
                 <div>
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">TOW</div>
-                  <div className="text-sm font-mono text-white">{flightPlan.weights.tow} lbs</div>
+                  <div className="text-sm font-mono text-white">{flightPlan.weights.tow} {auth.weightUnit || 'lbs'}</div>
                 </div>
               </div>
             </div>
@@ -315,14 +302,6 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
               <div className="text-xs font-mono text-white leading-relaxed break-all">{flightPlan.route}</div>
             </div>
 
-            {/* Import Button */}
-            <button
-              onClick={importFlightPlan}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-lg text-emerald-400 text-sm font-bold uppercase tracking-wider transition-colors"
-            >
-              <Download size={16} />
-              Import to ACARS
-            </button>
           </div>
         )}
       </div>
