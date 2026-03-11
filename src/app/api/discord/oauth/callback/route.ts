@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
             },
             body: new URLSearchParams({
                 client_id: process.env.DISCORD_CLIENT_ID!,
-                client_secret: process.env.DISCORD_BOT_SECRET!,
+                client_secret: process.env.DISCORD_CLIENT_SECRET!,
                 grant_type: 'authorization_code',
                 code,
                 redirect_uri: `${process.env.BASE_URL}/api/discord/oauth/callback`,
@@ -325,7 +325,16 @@ export async function GET(req: NextRequest) {
 
         console.log('=== DISCORD BOT INTEGRATION END ===');
 
-        return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?discord_linked=success`);
+        // Encode logs for URL (truncate if too long)
+        const logsString = JSON.stringify({
+            success: true,
+            discordUser: discordUser.username,
+            pilotId,
+            nickname,
+            timestamp: new Date().toISOString()
+        });
+        
+        return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?discord_linked=success&logs=${encodeURIComponent(logsString)}`);
     } catch (error) {
         console.error('Discord OAuth callback error:', error);
         return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?error=server_error`);
