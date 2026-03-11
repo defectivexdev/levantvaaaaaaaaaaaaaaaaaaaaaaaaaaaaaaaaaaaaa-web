@@ -8,6 +8,7 @@ import {
     ChevronRight, Trophy, Medal, Camera, Loader2, Trash2, X, Award, MapPin, Star, Activity
 } from 'lucide-react';
 import { toast } from 'sonner';
+import IVAOVerification from '@/components/IVAOVerification';
 
 interface Pilot {
     pilot_id: string;
@@ -475,6 +476,12 @@ export default function ProfilePage() {
                             ))}
                         </div>
                     </motion.div>
+
+                    {/* IVAO Verification */}
+                    <IVAOVerification 
+                        pilotId={pilot.pilot_id}
+                        currentIvaoVid={pilot.ivao_vid}
+                    />
 
                     {/* Badges */}
                     <motion.div 

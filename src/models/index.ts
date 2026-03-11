@@ -36,6 +36,8 @@ export { default as DownloadLog } from './DownloadLog';
 export { default as GlobalConfig } from './GlobalConfig';
 export { default as MaintenanceLog } from './MaintenanceLog';
 export { default as SecurityConfig } from './SecurityConfig';
+export { default as IVAOVerification } from './IVAOVerification';
+export { type IIVAOVerification } from './IVAOVerification';
 // Legacy aliases for backward compatibility with API routes
 export { default as PilotModel } from './Pilot';
 export { default as FlightModel } from './Flight';

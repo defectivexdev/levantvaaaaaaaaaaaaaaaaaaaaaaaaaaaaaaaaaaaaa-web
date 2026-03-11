@@ -37,6 +37,9 @@ export interface IPilot extends Document {
     weight_unit?: 'lbs' | 'kgs';
     discord_id?: string;
     discord_username?: string;
+    ivao_atc_rating?: number;
+    ivao_pilot_rating?: number;
+    ivao_verified?: boolean;
     type_ratings: string[];
     inventory: string[];
     routes_flown: string[];
@@ -82,6 +85,9 @@ const PilotSchema = new Schema<IPilot>({
     weight_unit: { type: String, enum: ['lbs', 'kgs'], default: 'lbs' },
     discord_id: String,
     discord_username: String,
+    ivao_atc_rating: Number,
+    ivao_pilot_rating: Number,
+    ivao_verified: { type: Boolean, default: false },
     type_ratings: [String],
     inventory: [String],
     routes_flown: [String],
