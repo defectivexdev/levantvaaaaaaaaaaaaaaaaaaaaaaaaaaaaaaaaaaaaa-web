@@ -11,13 +11,19 @@ export async function GET(request: NextRequest) {
     }
 
     await connectDB();
-    const pilotObjectId = session.id;
 
     const { searchParams } = new URL(request.url);
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 50);
     const unreadOnly = searchParams.get('unread') === 'true';
 
-    const filter: any = { pilot_id: pilotObjectId };
+    const pilotQuery = {
+        $or: [
+            { pilot_id: session.pilotId },
+            { pilot_id: session.id }
+        ]
+    };
+
+    const filter: any = { ...pilotQuery };
     if (unreadOnly) filter.read = false;
 
     const [notifications, unreadCount] = await Promise.all([
@@ -25,7 +31,7 @@ export async function GET(request: NextRequest) {
             .sort({ created_at: -1 })
             .limit(limit)
             .lean(),
-        Notification.countDocuments({ pilot_id: pilotObjectId, read: false }),
+        Notification.countDocuments({ ...pilotQuery, read: false }),
     ]);
 
     return NextResponse.json({ notifications, unreadCount });
@@ -39,19 +45,25 @@ export async function PATCH(request: NextRequest) {
     }
 
     await connectDB();
-    const pilotObjectId = session.id;
 
     const body = await request.json();
     const { ids, markAll } = body;
 
+    const pilotQuery = {
+        $or: [
+            { pilot_id: session.pilotId },
+            { pilot_id: session.id }
+        ]
+    };
+
     if (markAll) {
         await Notification.updateMany(
-            { pilot_id: pilotObjectId, read: false },
+            { ...pilotQuery, read: false },
             { $set: { read: true } }
         );
     } else if (ids && Array.isArray(ids)) {
         await Notification.updateMany(
-            { _id: { $in: ids }, pilot_id: pilotObjectId },
+            { _id: { $in: ids }, ...pilotQuery },
             { $set: { read: true } }
         );
     }

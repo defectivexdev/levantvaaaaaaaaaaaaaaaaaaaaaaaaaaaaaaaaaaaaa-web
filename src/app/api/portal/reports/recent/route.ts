@@ -16,6 +16,9 @@ export async function GET(request: Request) {
         const pilotId = searchParams.get('pilotId');
         const limit = parseInt(searchParams.get('limit') || '10', 10);
 
+        console.log('[Reports API] Session:', { id: session.id, pilotId: session.pilotId });
+        console.log('[Reports API] Query pilotId param:', pilotId);
+        
         const query: any = { approved_status: { $in: [0, 1, 2] } };
         if (pilotId) {
             // Query using both string pilot_id and ObjectId for backwards compatibility
@@ -25,10 +28,22 @@ export async function GET(request: Request) {
             ];
         }
 
+        console.log('[Reports API] Query:', JSON.stringify(query));
+        
         const flights = await FlightModel.find(query)
             .sort({ submitted_at: -1 })
             .limit(limit)
             .lean();
+            
+        console.log('[Reports API] Found flights:', flights.length);
+        
+        // Debug: check what pilot_id format exists in database
+        const sampleFlight = await FlightModel.findOne({}).select('pilot_id').lean();
+        console.log('[Reports API] Sample flight pilot_id:', sampleFlight?.pilot_id, 'Type:', typeof sampleFlight?.pilot_id);
+        
+        // Debug: try querying without pilot filter to see if ANY flights exist
+        const allFlightsCount = await FlightModel.countDocuments({});
+        console.log('[Reports API] Total flights in database:', allFlightsCount);
 
         const formattedReports = flights.map((f: any) => {
             console.log('Flight aircraft_type:', f.aircraft_type, 'for flight:', f.flight_number);
