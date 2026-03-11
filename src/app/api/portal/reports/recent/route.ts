@@ -20,39 +20,36 @@ export async function GET(request: Request) {
         console.log('[Reports API] Session:', { id: session.id, pilotId: session.pilotId });
         console.log('[Reports API] Query pilotId param:', pilotId);
         
+        // TEMPORARY: Show all flights to diagnose issue
         // Debug: Get sample flights to see actual pilot_id values
         const sampleFlights = await FlightModel.find({}).select('pilot_id pilot_name').limit(5).lean();
         console.log('[Reports API] Sample flights pilot_id values:', sampleFlights.map(f => ({ 
             pilot_id: f.pilot_id, 
             type: typeof f.pilot_id,
             isObjectId: f.pilot_id instanceof mongoose.Types.ObjectId,
-            toString: f.pilot_id?.toString?.()
+            toString: f.pilot_id?.toString?.(),
+            pilot_name: f.pilot_name
         })));
         
-        // Try query without pilot filter first
-        const allFlights = await FlightModel.find({ approved_status: { $in: [0, 1, 2] } })
-            .sort({ submitted_at: -1 })
-            .limit(limit)
-            .lean();
-        console.log('[Reports API] All flights (no pilot filter):', allFlights.length);
+        console.log('[Reports API] Session info:', { 
+            sessionId: session.id, 
+            sessionPilotId: session.pilotId,
+            sessionIdType: typeof session.id,
+            sessionPilotIdType: typeof session.pilotId
+        });
         
-        // Now try with pilot filter
+        // SHOW ALL FLIGHTS FOR NOW - NO PILOT FILTER
         const query: any = { approved_status: { $in: [0, 1, 2] } };
-        if (pilotId) {
-            query.$or = [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ];
-        }
-
-        console.log('[Reports API] Query with pilot filter:', JSON.stringify(query));
+        
+        console.log('[Reports API] Query (showing all flights):', JSON.stringify(query));
         
         const flights = await FlightModel.find(query)
             .sort({ submitted_at: -1 })
-            .limit(limit)
+            .limit(50) // Increase limit to see more
             .lean();
             
-        console.log('[Reports API] Found flights with pilot filter:', flights.length);
+        console.log('[Reports API] Found flights:', flights.length);
+        console.log('[Reports API] First flight pilot_id:', flights[0]?.pilot_id, 'Type:', typeof flights[0]?.pilot_id);
 
         const formattedReports = flights.map((f: any) => {
             console.log('Flight aircraft_type:', f.aircraft_type, 'for flight:', f.flight_number);
