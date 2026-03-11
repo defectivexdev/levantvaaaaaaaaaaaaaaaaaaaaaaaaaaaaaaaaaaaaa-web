@@ -20,35 +20,42 @@ export async function GET() {
         }
 
         // Get total completed flights
-        // pilot_id is now a string (e.g., "LVT7FG"), not ObjectId
-        // Use pilot.pilot_id from database as fallback if session.pilotId is not set
-        const pilotIdToQuery = session.pilotId || (pilot as any).pilot_id;
+        // Try both pilot_id (string like "LVT7FG") and session.id (ObjectId) for backwards compatibility
+        const pilotIdString = session.pilotId || (pilot as any).pilot_id;
         console.log('Stats API - Session pilotId:', session.pilotId);
+        console.log('Stats API - Session id (ObjectId):', session.id);
         console.log('Stats API - Pilot DB pilot_id:', (pilot as any).pilot_id);
-        console.log('Stats API - Using pilot_id for query:', pilotIdToQuery);
         
+        // Query using both string pilot_id and ObjectId for old records
         const totalFlights = await Flight.countDocuments({ 
-            pilot_id: pilotIdToQuery, 
+            $or: [
+                { pilot_id: pilotIdString },
+                { pilot_id: session.id }
+            ],
             approved_status: 1 
         });
         console.log('Stats API - Total flights found (approved_status=1):', totalFlights);
         
         // Debug: check all flights for this pilot regardless of status
-        const allFlights = await Flight.countDocuments({ pilot_id: pilotIdToQuery });
+        const allFlights = await Flight.countDocuments({ 
+            $or: [
+                { pilot_id: pilotIdString },
+                { pilot_id: session.id }
+            ]
+        });
         console.log('Stats API - All flights (any status):', allFlights);
         
         // Debug: check flights by different approved_status values
-        const pending = await Flight.countDocuments({ pilot_id: pilotIdToQuery, approved_status: 0 });
-        const rejected = await Flight.countDocuments({ pilot_id: pilotIdToQuery, approved_status: 2 });
+        const pending = await Flight.countDocuments({ 
+            $or: [{ pilot_id: pilotIdString }, { pilot_id: session.id }],
+            approved_status: 0 
+        });
+        const rejected = await Flight.countDocuments({ 
+            $or: [{ pilot_id: pilotIdString }, { pilot_id: session.id }],
+            approved_status: 2 
+        });
         console.log('Stats API - Pending flights (status=0):', pending);
         console.log('Stats API - Rejected flights (status=2):', rejected);
-        
-        // Debug: sample a few flight records to see actual data
-        const sampleFlights = await Flight.find({ pilot_id: pilotIdToQuery })
-            .limit(3)
-            .select('pilot_id flight_number approved_status')
-            .lean();
-        console.log('Stats API - Sample flights:', JSON.stringify(sampleFlights));
 
         // Format hours nicely (no decimals for whole numbers)
         const hours = Number(pilot.total_hours) || 0;
@@ -101,7 +108,8 @@ export async function GET() {
                 allFlights,
                 pending,
                 rejected,
-                pilotIdQueried: pilotIdToQuery
+                pilotIdString,
+                sessionIdObjectId: session.id
             }
         });
         res.headers.set('Cache-Control', 'private, max-age=15, stale-while-revalidate=30');
