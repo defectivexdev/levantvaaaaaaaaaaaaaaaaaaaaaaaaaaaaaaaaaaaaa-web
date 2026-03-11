@@ -127,7 +127,7 @@ export default function Sidebar() {
             },
         ];
         return items;
-    }, [isGroupflightRole]);
+    }, [isGroupflightRole, handleDiscordLink]);
 
     const adminSubGroups = useMemo<AdminSubGroup[]>(() => [
         {
@@ -165,28 +165,6 @@ export default function Sidebar() {
         } catch (error) {
             console.error('Logout failed', error);
             window.location.href = '/login';
-        }
-    }, []);
-
-    const handleDiscordLink = useCallback(async () => {
-        setDiscordLinking(true);
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) return;
-
-            const res = await fetch('/api/discord/verify-link', {
-                headers: { 'Authorization': `Bearer ${token}` },
-            });
-
-            const data = await res.json();
-            if (res.ok && data.authUrl) {
-                window.location.href = data.authUrl;
-            } else {
-                setDiscordLinking(false);
-            }
-        } catch (error) {
-            console.error('Discord link error:', error);
-            setDiscordLinking(false);
         }
     }, []);
 
