@@ -76,7 +76,31 @@ export async function GET(request: Request) {
             };
         });
 
-        return NextResponse.json({ flights: formattedReports, reports: formattedReports });
+        // Add debug info to response that will show in browser console
+        const debugInfo = {
+            samplePilotIds: sampleFlights.map(f => ({ 
+                pilot_id: f.pilot_id, 
+                type: typeof f.pilot_id,
+                isObjectId: f.pilot_id instanceof mongoose.Types.ObjectId,
+                toString: f.pilot_id?.toString?.(),
+                pilot_name: f.pilot_name
+            })),
+            sessionInfo: { 
+                sessionId: session.id, 
+                sessionPilotId: session.pilotId,
+                sessionIdType: typeof session.id,
+                sessionPilotIdType: typeof session.pilotId
+            },
+            totalFlights: flights.length,
+            firstFlightPilotId: flights[0]?.pilot_id,
+            firstFlightPilotIdType: typeof flights[0]?.pilot_id
+        };
+
+        return NextResponse.json({ 
+            flights: formattedReports, 
+            reports: formattedReports,
+            _debug: debugInfo 
+        });
 
     } catch (error: any) {
         console.error('Recent reports API Error:', error);
