@@ -24,14 +24,23 @@ export async function GET(request: Request) {
         const flights = await FlightModel.find(query)
             .sort({ submitted_at: -1 })
             .limit(limit)
-            .populate('pilot_id', 'first_name last_name pilot_id')
             .lean();
 
         const formattedReports = flights.map((f: any) => {
             console.log('Flight aircraft_type:', f.aircraft_type, 'for flight:', f.flight_number);
+            // pilot_id is now a string (e.g., "LVT7FG"), not an ObjectId
+            // pilot data is stored directly in pilot_name field
+            const pilotNameParts = (f.pilot_name || 'Unknown Pilot').split(' ');
+            const firstName = pilotNameParts[0] || 'Unknown';
+            const lastName = pilotNameParts.slice(1).join(' ') || 'Pilot';
+            
             return {
                 ...f,
-                pilot: f.pilot_id || { first_name: 'Unknown', last_name: 'Pilot', pilot_id: 'N/A' },
+                pilot: { 
+                    first_name: firstName, 
+                    last_name: lastName, 
+                    pilot_id: f.pilot_id || 'N/A' 
+                },
                 id: `PIREP-${(f._id?.toString() || '').slice(-6).toUpperCase()}`,
                 route: `${f.departure_icao} → ${f.arrival_icao}`,
                 aircraft: f.aircraft_type,
