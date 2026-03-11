@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
         const state = searchParams.get('state');
 
         if (!code || !state) {
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?error=invalid_request`);
+            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=invalid_request`);
         }
 
         const pilotId = Buffer.from(state, 'base64').toString('utf-8');
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
 
         if (!tokenResponse.ok) {
             console.error('Discord token exchange failed:', await tokenResponse.text());
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?error=token_exchange_failed`);
+            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=token_exchange_failed`);
         }
 
         const tokenData = await tokenResponse.json();
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
 
         if (!userResponse.ok) {
             console.error('Failed to fetch Discord user:', await userResponse.text());
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?error=user_fetch_failed`);
+            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=user_fetch_failed`);
         }
 
         const discordUser = await userResponse.json();
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
 
         const pilot = await Pilot.findOne({ pilot_id: pilotId });
         if (!pilot) {
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?error=pilot_not_found`);
+            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=pilot_not_found`);
         }
 
         pilot.discord_id = discordUser.id;
@@ -334,9 +334,9 @@ export async function GET(req: NextRequest) {
             timestamp: new Date().toISOString()
         });
         
-        return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?discord_linked=success&logs=${encodeURIComponent(logsString)}`);
+        return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?discord_linked=success&logs=${encodeURIComponent(logsString)}`);
     } catch (error) {
         console.error('Discord OAuth callback error:', error);
-        return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?error=server_error`);
+        return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=server_error`);
     }
 }
