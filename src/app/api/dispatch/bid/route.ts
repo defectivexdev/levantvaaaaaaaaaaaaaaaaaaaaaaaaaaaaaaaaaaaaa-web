@@ -3,6 +3,7 @@ import { verifyAuth } from '@/lib/auth';
 import connectDB from '@/lib/database';
 import Bid from '@/models/Bid';
 import { PilotModel } from '@/models';
+import mongoose from 'mongoose';
 
 // POST - Create a new flight bid
 export async function POST(request: NextRequest) {
@@ -92,7 +93,7 @@ export async function GET() {
         await Bid.deleteMany({
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             status: { $in: ['Active', 'InProgress'] }, 
             expires_at: { $lte: new Date() }
@@ -101,7 +102,7 @@ export async function GET() {
         const bid = await Bid.findOne({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             status: { $in: ['Active', 'InProgress'] } 
         }).sort({ created_at: -1 });

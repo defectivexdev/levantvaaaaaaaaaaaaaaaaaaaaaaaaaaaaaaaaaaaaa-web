@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import connectDB from '@/lib/database';
 import Bid from '@/models/Bid';
+import mongoose from 'mongoose';
 
 export async function POST(request: NextRequest) {
     try {
@@ -19,8 +20,8 @@ export async function POST(request: NextRequest) {
 
         await connectDB();
 
-        const userId = payload.id;
-        const pilotIdString = payload.pilotId;
+        const userId = payload.id as string;
+        const pilotIdString = payload.pilotId as string;
         
         let result;
 
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
                     _id: bidId, 
                     $or: [
                         { pilot_id: pilotIdString },
-                        { pilot_id: userId }
+                        { pilot_id: new mongoose.Types.ObjectId(userId) }
                     ],
                     status: 'Active' 
                 },
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
                  { 
                      $or: [
                          { pilot_id: pilotIdString },
-                         { pilot_id: userId }
+                         { pilot_id: new mongoose.Types.ObjectId(userId) }
                      ],
                      status: 'Active' 
                  },

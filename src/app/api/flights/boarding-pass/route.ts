@@ -4,6 +4,7 @@ import { verifyAuth } from '@/lib/auth';
 import Bid from '@/models/Bid';
 import { PilotModel } from '@/models';
 import Airport from '@/models/Airport';
+import mongoose from 'mongoose';
 
 // GET /api/flights/boarding-pass — returns boarding pass data for active bid
 export async function GET(request: NextRequest) {
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
         const bid = await Bid.findOne({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             status: 'Active' 
         }).sort({ created_at: -1 });

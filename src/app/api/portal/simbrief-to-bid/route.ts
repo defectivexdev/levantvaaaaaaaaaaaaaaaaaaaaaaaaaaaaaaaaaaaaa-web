@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/auth';
 import connectDB from '@/lib/database';
-import { PilotModel, Bid, ActiveFlightModel } from '@/models';
+import { verifyAuth } from '@/lib/auth';
+import Bid from '@/models/Bid';
+import { ActiveFlightModel } from '@/models';
+import mongoose from 'mongoose';
 
 export async function POST(request: NextRequest) {
     const session = await verifyAuth();
@@ -144,7 +146,7 @@ export async function GET(request: NextRequest) {
         const bid = await Bid.findOne({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             status: { $in: ['Active', 'InProgress'] } 
         }).sort({ created_at: -1 }).lean();
@@ -155,7 +157,7 @@ export async function GET(request: NextRequest) {
         const activeFlight = await ActiveFlightModel.findOne({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ]
         }).lean();
 

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyAuth } from '@/lib/auth';
 import connectDB from '@/lib/database';
 import { FlightModel } from '@/models';
+import mongoose from 'mongoose';
 
 export async function GET(request: Request) {
     const session = await verifyAuth();
@@ -24,7 +25,7 @@ export async function GET(request: Request) {
             // Query using both string pilot_id and ObjectId for backwards compatibility
             query.$or = [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ];
         }
 

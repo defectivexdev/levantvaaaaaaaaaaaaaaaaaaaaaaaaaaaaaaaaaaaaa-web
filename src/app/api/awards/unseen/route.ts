@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/database';
 import PilotAward from '@/models/PilotAward';
 import { verifyAuth } from '@/lib/auth';
+import mongoose from 'mongoose';
 
 // GET /api/awards/unseen - Get unseen awards for the current pilot
 export async function GET(request: NextRequest) {
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
         const unseen = await PilotAward.find({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             seen: { $ne: true } 
         })
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
                     _id: { $in: ids }, 
                     $or: [
                         { pilot_id: session.pilotId },
-                        { pilot_id: session.id }
+                        { pilot_id: new mongoose.Types.ObjectId(session.id) }
                     ]
                 },
                 { $set: { seen: true } }

@@ -6,6 +6,7 @@ import PilotAward from '@/models/PilotAward';
 import Award from '@/models/Award';
 import Event from '@/models/Event';
 import Bid from '@/models/Bid';
+import mongoose from 'mongoose';
 
 // GET /api/portal/dashboard-extras — returns rank progress, awards, next event, weather
 export async function GET(request: NextRequest) {
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
         const pilotAwards = await PilotAward.find({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ]
         })
             .sort({ earned_at: -1 })
@@ -78,7 +79,7 @@ export async function GET(request: NextRequest) {
         const activeBid = await Bid.findOne({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             status: 'Active' 
         }).sort({ created_at: -1 }).lean();

@@ -4,6 +4,7 @@ import connectDB from '@/lib/database';
 import Pilot from '@/models/Pilot';
 import Flight from '@/models/Flight';
 import { checkAndUpgradeRank } from '@/lib/ranks';
+import mongoose from 'mongoose';
 
 export async function GET() {
     const session = await verifyAuth();
@@ -30,7 +31,7 @@ export async function GET() {
         const totalFlights = await Flight.countDocuments({ 
             $or: [
                 { pilot_id: pilotIdString },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             approved_status: 1 
         });

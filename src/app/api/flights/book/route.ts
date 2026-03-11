@@ -4,6 +4,7 @@ import { verifyAuth } from '@/lib/auth';
 import Bid from '@/models/Bid';
 import Fleet from '@/models/Fleet';
 import { PilotModel } from '@/models';
+import mongoose from 'mongoose';
 
 export async function POST(request: NextRequest) {
     const session = await verifyAuth();
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
         const existingBid = await Bid.findOne({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             status: { $in: ['Active', 'InProgress'] } 
         });

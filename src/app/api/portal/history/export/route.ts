@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/database';
 import { FlightModel } from '@/models';
 import { verifyAuth } from '@/lib/auth';
+import mongoose from 'mongoose';
 
 // GET /api/portal/history/export?format=csv
 export async function GET(request: NextRequest) {
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
         const flights = await FlightModel.find({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ]
         })
             .sort({ submitted_at: -1 })

@@ -3,6 +3,7 @@ import { verifyAuth } from '@/lib/auth';
 import connectDB from '@/lib/database';
 import Tour from '@/models/Tour';
 import TourProgress from '@/models/TourProgress';
+import mongoose from 'mongoose';
 
 // GET - Tour Details
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -30,7 +31,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             progress = await TourProgress.findOne({ 
                 $or: [
                     { pilot_id: session.pilotId },
-                    { pilot_id: session.id }
+                    { pilot_id: new mongoose.Types.ObjectId(session.id) }
                 ],
                 tour_id: id 
             });
@@ -78,7 +79,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         const existing = await TourProgress.findOne({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ],
             tour_id: id 
         });

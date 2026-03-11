@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/database';
 import PilotAward from '@/models/PilotAward';
 import { verifyAuth } from '@/lib/auth';
+import mongoose from 'mongoose';
 
 // GET /api/awards/my - Get current pilot's earned awards
 export async function GET(request: NextRequest) {
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
         const pilotAwards = await PilotAward.find({ 
             $or: [
                 { pilot_id: session.pilotId },
-                { pilot_id: session.id }
+                { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ]
         })
             .populate('award_id')

@@ -3,6 +3,7 @@ import connectDB from '@/lib/database';
 import Flight from '@/models/Flight';
 import Bid from '@/models/Bid';
 import { findPilot, corsHeaders } from '@/lib/acars/helpers';
+import mongoose from 'mongoose';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
         const recentFlights = await Flight.find({ 
             $or: [
                 { pilot_id: pilot.pilot_id },
-                { pilot_id: pilot._id }
+                { pilot_id: new mongoose.Types.ObjectId(pilot._id) }
             ]
         })
             .sort({ submitted_at: -1 })
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
         const totalFlights = await Flight.countDocuments({ 
             $or: [
                 { pilot_id: pilot.pilot_id },
-                { pilot_id: pilot._id }
+                { pilot_id: new mongoose.Types.ObjectId(pilot._id) }
             ],
             approved_status: { $ne: 2 } 
         });

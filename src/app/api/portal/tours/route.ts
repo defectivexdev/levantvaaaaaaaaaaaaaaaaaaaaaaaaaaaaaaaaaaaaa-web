@@ -3,6 +3,7 @@ import { verifyAuth } from '@/lib/auth';
 import connectDB from '@/lib/database';
 import Tour from '@/models/Tour';
 import TourProgress from '@/models/TourProgress';
+import mongoose from 'mongoose';
 
 export async function GET(request: NextRequest) {
     try {
@@ -51,7 +52,7 @@ export async function GET(request: NextRequest) {
             const progressList = await TourProgress.find({ 
                 $or: [
                     { pilot_id: session.pilotId },
-                    { pilot_id: session.id }
+                    { pilot_id: new mongoose.Types.ObjectId(session.id) }
                 ]
             }).lean();
             progressList.forEach((p: any) => {
