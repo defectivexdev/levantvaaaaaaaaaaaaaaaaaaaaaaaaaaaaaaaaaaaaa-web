@@ -3,12 +3,22 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IStaffMember extends Document {
     pilot_id: mongoose.Types.ObjectId;
     role_id: mongoose.Types.ObjectId;
+    name?: string;
+    email?: string;
+    discord?: string;
+    callsign?: string;
+    is_head?: boolean;
     assigned_at: Date;
 }
 
 const StaffMemberSchema = new Schema<IStaffMember>({
     pilot_id: { type: Schema.Types.ObjectId, ref: 'Pilot', required: true, index: true },
     role_id: { type: Schema.Types.ObjectId, ref: 'StaffRole', required: true, index: true },
+    name: { type: String, required: false },
+    email: { type: String, required: false },
+    discord: { type: String, required: false },
+    callsign: { type: String, required: false },
+    is_head: { type: Boolean, default: false },
     assigned_at: { type: Date, default: Date.now },
 });
 

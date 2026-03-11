@@ -192,22 +192,26 @@ export default function StaffPage() {
                                                                         <div className="flex-1 min-w-0 space-y-2">
                                                                             <div>
                                                                                 <h4 className={`font-display font-bold text-white truncate group-hover:text-accent-gold transition-colors ${isBOG ? 'text-2xl' : 'text-xl'}`}>
-                                                                                    {member.name || `${member.pilot?.first_name} ${member.pilot?.last_name}`}
+                                                                                    {member.name || (member.pilot_id?.first_name && member.pilot_id?.last_name 
+                                                                                        ? `${member.pilot_id.first_name} ${member.pilot_id.last_name}` 
+                                                                                        : 'Staff Member')}
                                                                                 </h4>
                                                                                 <div className="flex items-center gap-2 mt-1">
                                                                                     <span className="text-[10px] font-bold text-white/40 tracking-[0.1em] uppercase bg-white/5 px-2 py-0.5 rounded border border-white/5">
-                                                                                        {member.callsign || member.pilot?.pilot_id}
+                                                                                        {member.callsign || member.pilot_id?.pilot_id || 'N/A'}
                                                                                     </span>
-                                                                                    {member.pilot?.country && (
-                                                                                        <span className="text-[10px] text-zinc-500 uppercase">{member.pilot.country}</span>
+                                                                                    {member.pilot_id?.country && (
+                                                                                        <span className="text-[10px] text-zinc-500 uppercase">{member.pilot_id.country}</span>
                                                                                     )}
                                                                                 </div>
                                                                             </div>
 
                                                                             <div className="flex items-center gap-4 pt-1">
-                                                                                <a href={`mailto:${member.email || roleGroup.role.email}`} className="text-white/20 hover:text-white transition-colors">
-                                                                                    <Mail size={16} />
-                                                                                </a>
+                                                                                {(member.email || roleGroup.role.email) && (
+                                                                                    <a href={`mailto:${member.email || roleGroup.role.email}`} className="text-white/20 hover:text-white transition-colors">
+                                                                                        <Mail size={16} />
+                                                                                    </a>
+                                                                                )}
                                                                                 {member.discord && (
                                                                                     <div className="flex items-center gap-1.5 text-[11px] text-indigo-400 font-medium">
                                                                                         <MessageSquare size={14} />
