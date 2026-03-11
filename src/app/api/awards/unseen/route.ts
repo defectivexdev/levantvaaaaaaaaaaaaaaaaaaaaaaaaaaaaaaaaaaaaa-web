@@ -13,18 +13,15 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const unseen = await PilotAward.find({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
-            seen: { $ne: true } 
+        const unseenAwards = await PilotAward.find({
+            pilot_id: new mongoose.Types.ObjectId(session.id),
+            seen: false
         })
             .populate('award_id')
             .sort({ earned_at: -1 })
             .lean();
 
-        return NextResponse.json(unseen);
+        return NextResponse.json(unseenAwards);
     } catch (error: any) {
         console.error('Error fetching unseen awards:', error);
         return NextResponse.json({ error: 'Failed' }, { status: 500 });
@@ -43,14 +40,10 @@ export async function POST(request: NextRequest) {
         const { ids } = await request.json();
         if (ids && ids.length > 0) {
             await PilotAward.updateMany(
-                { 
-                    _id: { $in: ids }, 
-                    $or: [
-                        { pilot_id: session.pilotId },
-                        { pilot_id: new mongoose.Types.ObjectId(session.id) }
-                    ]
-                },
-                { $set: { seen: true } }
+                {
+                    pilot_id: new mongoose.Types.ObjectId(session.id),
+                    seen: false
+                },{ $set: { seen: true } }
             );
         }
 

@@ -84,8 +84,8 @@ export async function GET(request: NextRequest) {
                     fetchMetar(activeBids[0].arrival_icao),
                 ]);
                 weather = {
-                    departure_icao: activeBid.departure_icao,
-                    arrival_icao: activeBid.arrival_icao,
+                    departure_icao: activeBids[0].departure_icao,
+                    arrival_icao: activeBids[0].arrival_icao,
                     departure_metar: depMetar,
                     arrival_metar: arrMetar,
                 };
