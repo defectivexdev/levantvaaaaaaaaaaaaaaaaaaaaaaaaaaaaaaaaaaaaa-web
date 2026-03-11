@@ -22,11 +22,7 @@ export async function GET() {
         // Get total completed flights
         // Try both pilot_id (string like "LVT7FG") and session.id (ObjectId) for backwards compatibility
         const pilotIdString = session.pilotId || (pilot as any).pilot_id;
-        console.log('Stats API - Session pilotId:', session.pilotId);
-        console.log('Stats API - Session id (ObjectId):', session.id);
-        console.log('Stats API - Pilot DB pilot_id:', (pilot as any).pilot_id);
         
-        // Query using both string pilot_id and ObjectId for old records
         const totalFlights = await Flight.countDocuments({ 
             $or: [
                 { pilot_id: pilotIdString },
@@ -34,28 +30,6 @@ export async function GET() {
             ],
             approved_status: 1 
         });
-        console.log('Stats API - Total flights found (approved_status=1):', totalFlights);
-        
-        // Debug: check all flights for this pilot regardless of status
-        const allFlights = await Flight.countDocuments({ 
-            $or: [
-                { pilot_id: pilotIdString },
-                { pilot_id: session.id }
-            ]
-        });
-        console.log('Stats API - All flights (any status):', allFlights);
-        
-        // Debug: check flights by different approved_status values
-        const pending = await Flight.countDocuments({ 
-            $or: [{ pilot_id: pilotIdString }, { pilot_id: session.id }],
-            approved_status: 0 
-        });
-        const rejected = await Flight.countDocuments({ 
-            $or: [{ pilot_id: pilotIdString }, { pilot_id: session.id }],
-            approved_status: 2 
-        });
-        console.log('Stats API - Pending flights (status=0):', pending);
-        console.log('Stats API - Rejected flights (status=2):', rejected);
 
         // Format hours nicely (no decimals for whole numbers)
         const hours = Number(pilot.total_hours) || 0;
@@ -101,17 +75,7 @@ export async function GET() {
             },
         ];
 
-        const res = NextResponse.json({ 
-            stats,
-            debug: {
-                totalFlights,
-                allFlights,
-                pending,
-                rejected,
-                pilotIdString,
-                sessionIdObjectId: session.id
-            }
-        });
+        const res = NextResponse.json({ stats });
         res.headers.set('Cache-Control', 'private, max-age=15, stale-while-revalidate=30');
         return res;
 
