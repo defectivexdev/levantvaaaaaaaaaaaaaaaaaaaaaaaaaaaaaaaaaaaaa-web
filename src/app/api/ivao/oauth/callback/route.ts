@@ -11,8 +11,18 @@ export async function GET(req: NextRequest) {
         const stateParam = searchParams.get('state');
         const storedState = req.cookies.get('ivao_oauth_state')?.value;
 
+        // Get the actual host from headers (must match authorize request)
+        const host = req.headers.get('host') || req.nextUrl.hostname;
+        const forwardedProto = req.headers.get('x-forwarded-proto');
+        const protocol = forwardedProto
+            ? forwardedProto.split(',')[0].trim()
+            : req.nextUrl.protocol === 'https:' ? 'https' : 'http';
+
+        const baseUrl = `${protocol}://${host}`;
+        const redirectUri = `${baseUrl}/api/ivao/oauth/callback`;
+
         if (!code || !stateParam) {
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=invalid_request`);
+            return NextResponse.redirect(`${baseUrl}/portal/link-discord?error=invalid_request`);
         }
 
         // Parse state: format is "uuid:redirectPath"
@@ -20,7 +30,7 @@ export async function GET(req: NextRequest) {
         
         if (state !== storedState) {
             console.error('State mismatch:', { state, storedState });
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=state_mismatch`);
+            return NextResponse.redirect(`${baseUrl}/portal/link-discord?error=state_mismatch`);
         }
 
         // Discover token endpoint from OpenID configuration
@@ -39,6 +49,13 @@ export async function GET(req: NextRequest) {
             console.error('Discovery error:', err);
         }
 
+        console.log('IVAO OAuth callback - Token exchange:', {
+            redirectUri,
+            host,
+            protocol,
+            tokenEndpoint,
+        });
+
         // Exchange code for access token
         const tokenResponse = await fetch(tokenEndpoint, {
             method: 'POST',
@@ -51,7 +68,7 @@ export async function GET(req: NextRequest) {
                 client_secret: process.env.IVAO_CLIENT_SECRET!,
                 grant_type: 'authorization_code',
                 code,
-                redirect_uri: `${process.env.BASE_URL}/api/ivao/oauth/callback`,
+                redirect_uri: redirectUri,
             }),
         });
 
@@ -60,8 +77,9 @@ export async function GET(req: NextRequest) {
             console.error('IVAO token exchange failed:', {
                 status: tokenResponse.status,
                 error: errorText,
+                redirectUri,
             });
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=token_exchange_failed`);
+            return NextResponse.redirect(`${baseUrl}/portal/link-discord?error=token_exchange_failed`);
         }
 
         const tokenData = await tokenResponse.json();
@@ -78,7 +96,7 @@ export async function GET(req: NextRequest) {
 
         if (!userResponse.ok) {
             console.error('Failed to fetch IVAO user:', await userResponse.text());
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=user_fetch_failed`);
+            return NextResponse.redirect(`${baseUrl}/portal/link-discord?error=user_fetch_failed`);
         }
 
         const userInfo = await userResponse.json();
@@ -93,7 +111,7 @@ export async function GET(req: NextRequest) {
         
         if (!ivaoVid) {
             console.error('No VID found in IVAO response');
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=missing_vid`);
+            return NextResponse.redirect(`${baseUrl}/portal/link-discord?error=missing_vid`);
         }
 
         // Fetch detailed profile
@@ -142,7 +160,7 @@ export async function GET(req: NextRequest) {
 
         console.log('IVAO verification successful:', ivaoData);
         
-        const response = NextResponse.redirect(`${process.env.BASE_URL}${redirectPath}?ivao_verified=success&ivao_vid=${ivaoVid}`);
+        const response = NextResponse.redirect(`${baseUrl}${redirectPath}?ivao_verified=success&ivao_vid=${ivaoVid}`);
         
         // Store IVAO data in cookie for the link-discord page to use
         response.cookies.set({
