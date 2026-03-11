@@ -38,7 +38,8 @@ export async function POST(request: NextRequest) {
         const lastPos = positionCache.get(pilotId);
         if (lastPos && latitude && longitude) {
             const elapsed = now - lastPos.ts;
-            if (elapsed < SLEW_TIME_MS && elapsed > 0) {
+            // Only check if elapsed time is between 1s and 30s (ignore initial connection and long pauses)
+            if (elapsed > 1000 && elapsed < SLEW_TIME_MS) {
                 const distNm = haversineNm(lastPos.lat, lastPos.lon, latitude, longitude);
                 if (distNm > SLEW_DISTANCE_NM) {
                     console.warn(`[SLEW] ${pilotId} moved ${distNm.toFixed(1)}nm in ${(elapsed / 1000).toFixed(0)}s`);
