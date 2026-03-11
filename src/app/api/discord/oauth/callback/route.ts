@@ -6,16 +6,28 @@ const DISCORD_API_URL = 'https://discord.com/api/v10';
 
 export async function GET(req: NextRequest) {
     try {
+        console.log('=== DISCORD OAUTH CALLBACK STARTED ===');
+        console.log('Environment variables check:', {
+            hasClientId: !!process.env.DISCORD_CLIENT_ID,
+            hasClientSecret: !!process.env.DISCORD_CLIENT_SECRET,
+            hasBotToken: !!process.env.DISCORD_BOT_TOKEN,
+            hasGuildId: !!process.env.DISCORD_GUILD_ID,
+            clientSecretPrefix: process.env.DISCORD_CLIENT_SECRET?.substring(0, 10) + '...',
+        });
+        
         const { searchParams } = new URL(req.url);
         const code = searchParams.get('code');
         const state = searchParams.get('state');
 
         if (!code || !state) {
+            console.log('❌ Missing code or state');
             return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=invalid_request`);
         }
 
         const pilotId = Buffer.from(state, 'base64').toString('utf-8');
+        console.log('Pilot ID:', pilotId);
 
+        console.log('Attempting token exchange...');
         const tokenResponse = await fetch(`${DISCORD_API_URL}/oauth2/token`, {
             method: 'POST',
             headers: {
@@ -30,10 +42,21 @@ export async function GET(req: NextRequest) {
             }),
         });
 
+        console.log('Token exchange response status:', tokenResponse.status);
+        
         if (!tokenResponse.ok) {
-            console.error('Discord token exchange failed:', await tokenResponse.text());
+            const errorText = await tokenResponse.text();
+            console.error('❌ Discord token exchange failed:', errorText);
+            console.error('Token exchange details:', {
+                status: tokenResponse.status,
+                statusText: tokenResponse.statusText,
+                clientIdUsed: process.env.DISCORD_CLIENT_ID,
+                redirectUri: `${process.env.BASE_URL}/api/discord/oauth/callback`,
+            });
             return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=token_exchange_failed`);
         }
+        
+        console.log('✅ Token exchange successful');
 
         const tokenData = await tokenResponse.json();
         const accessToken = tokenData.access_token;
@@ -70,11 +93,14 @@ export async function GET(req: NextRequest) {
         const nickname = `${pilotName} | ${pilotId}`;
 
         console.log('=== DISCORD BOT INTEGRATION START ===');
-        console.log('Environment check:', {
+        console.log('Bot credentials:', {
             guildId: guildId || 'MISSING',
             hasBotToken: !!botToken,
-            botTokenPrefix: botToken ? botToken.substring(0, 20) + '...' : 'MISSING',
+            botTokenPrefix: botToken ? botToken.substring(0, 30) + '...' : 'MISSING',
+        });
+        console.log('Target user:', {
             discordUserId: discordUser.id,
+            discordUsername: discordUser.username,
             pilotId,
             nickname,
         });
