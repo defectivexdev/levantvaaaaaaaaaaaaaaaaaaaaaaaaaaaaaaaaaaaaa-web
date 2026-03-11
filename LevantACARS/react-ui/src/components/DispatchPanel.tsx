@@ -105,7 +105,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
           registration: data.aircraft.reg
         },
         route: data.general.route,
-        altitude: parseInt(data.general.initial_altitude),
+        altitude: parseInt(data.general.initial_altitude) * 100, // Convert flight level to feet
         distance: parseInt(data.general.air_distance),
         flightTime: Math.round(parseInt(data.times.est_time_enroute) / 60), // Convert seconds to minutes
         fuel: {
