@@ -44,12 +44,17 @@ export default function LinkDiscordPage() {
     const fetchStatus = async () => {
         try {
             const token = localStorage.getItem('token');
-            if (!token) return;
+            if (!token) {
+                console.log('No token found in localStorage');
+                return;
+            }
 
+            console.log('Fetching IVAO status...');
             const res = await fetch('/api/ivao/verify', {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
 
+            console.log('API response status:', res.status);
             if (res.ok) {
                 const data = await res.json();
                 console.log('IVAO status fetched:', data);
@@ -60,7 +65,8 @@ export default function LinkDiscordPage() {
                     setIvaoVid(data.ivao_vid);
                 }
             } else {
-                console.error('Failed to fetch status:', res.status);
+                const errorText = await res.text();
+                console.error('Failed to fetch status:', res.status, errorText);
             }
         } catch (error) {
             console.error('Failed to fetch IVAO status:', error);
