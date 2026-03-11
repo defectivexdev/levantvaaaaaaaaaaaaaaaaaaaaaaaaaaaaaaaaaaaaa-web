@@ -171,10 +171,10 @@ export default function DashboardPage() {
                 </div>
             </motion.div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {dashboardData.stats.length > 0 ? (
-                    dashboardData.stats.map((stat: any, i: number) => {
+            {/* Stats Grid - Hidden when no stats */}
+            {dashboardData.stats.length > 0 && (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    {dashboardData.stats.map((stat: any, i: number) => {
                         const iconMap: Record<string, any> = {
                             location: MapPin,
                             clock: Clock,
@@ -216,16 +216,9 @@ export default function DashboardPage() {
                                 </div>
                             </motion.div>
                         );
-                    })
-                ) : (
-                    Array.from({ length: 4 }).map((_, i) => (
-                        <div key={i} className="bg-[#0a0a0a] rounded-2xl p-5 border border-white/[0.04] animate-pulse">
-                            <div className="h-3 w-16 bg-white/[0.06] rounded mb-3" />
-                            <div className="h-8 w-24 bg-white/[0.06] rounded" />
-                        </div>
-                    ))
-                )}
-            </div>
+                    })}
+                </div>
+            )}
 
             {/* Main Content Grid */}
             <div className="grid lg:grid-cols-3 gap-6">
