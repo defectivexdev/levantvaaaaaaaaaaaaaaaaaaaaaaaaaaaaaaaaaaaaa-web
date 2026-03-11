@@ -237,7 +237,7 @@ export async function GET(req: NextRequest) {
                         }
                     }
 
-                    await fetch(webhookUrl, {
+                    const webhookResponse = await fetch(webhookUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -257,6 +257,7 @@ export async function GET(req: NextRequest) {
                             }],
                         }),
                     });
+                    console.log('Webhook sent, status:', webhookResponse.status);
                 } catch (webhookError) {
                     console.error('Failed to send webhook notification:', webhookError);
                 }
