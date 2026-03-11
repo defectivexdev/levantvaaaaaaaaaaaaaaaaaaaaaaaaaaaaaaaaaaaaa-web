@@ -52,18 +52,24 @@ Or on Windows:
 py bot.py
 ```
 
-## Available Commands
+## How It Works
 
-### `/verify <pilot_id>`
-Link your Discord account with your Levant VA account and receive roles based on your IVAO ratings.
+### No Commands Needed!
 
-**Example**: `/verify LVA001`
+All verification is handled automatically through the web application:
 
-### `/sync`
-Sync your IVAO ratings and update your Discord roles. Use this after your IVAO ratings change.
+1. **Link Your Account**: Go to your Levant VA profile page
+2. **Enter IVAO VID**: Verify your IVAO account
+3. **Click "Link Discord Account"**: Authorize Discord OAuth2
+4. **Done!**: Roles automatically assigned, nickname updated, and you're in the server
 
-### `/ivao`
-Check your current IVAO verification status and role assignment.
+### What Happens Automatically
+
+- **Joins Discord Server**: Automatically added if not already a member
+- **Assigns Roles**: Levant Members + IVAO-based roles (ADC+, PP+, etc.)
+- **Sets Nickname**: Updates to "FirstName LastName | PILOT_ID"
+- **Removes Unlinked Role**: Removes role ID `1481168075876466740`
+- **Live Status**: Bot shows "X pilots flying" based on ACARS data
 
 ## Role Assignment Logic
 

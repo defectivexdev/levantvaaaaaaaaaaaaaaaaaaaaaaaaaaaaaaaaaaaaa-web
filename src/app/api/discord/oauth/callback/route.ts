@@ -86,21 +86,26 @@ export async function GET(req: NextRequest) {
                     console.log(`Added user ${discordUser.username} to guild`);
                 }
                 
+                // Wait a moment for member to be fully added
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
                 // Update nickname to "Pilot Name | PILOT_ID"
-                try {
-                    await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Authorization': `Bot ${botToken}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            nick: nickname,
-                        }),
-                    });
+                const nicknameResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bot ${botToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nick: nickname,
+                    }),
+                });
+                
+                if (nicknameResponse.ok) {
                     console.log(`Updated nickname for ${discordUser.username} to: ${nickname}`);
-                } catch (error) {
-                    console.error(`Failed to update nickname:`, error);
+                } else {
+                    const errorText = await nicknameResponse.text();
+                    console.error(`Failed to update nickname (${nicknameResponse.status}):`, errorText);
                 }
 
                 const levantMemberRoleId = process.env.ROLE_LEVANT_MEMBERS_ID || '1293262463940427869';
@@ -152,16 +157,18 @@ export async function GET(req: NextRequest) {
                 
                 // Remove unlinked role after successful linking
                 const unlinkedRoleId = '1481168075876466740';
-                try {
-                    await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}/roles/${unlinkedRoleId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bot ${botToken}`,
-                        },
-                    });
+                const removeRoleResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}/roles/${unlinkedRoleId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bot ${botToken}`,
+                    },
+                });
+                
+                if (removeRoleResponse.ok || removeRoleResponse.status === 204) {
                     console.log(`Removed unlinked role from ${discordUser.username}`);
-                } catch (error) {
-                    console.error(`Failed to remove unlinked role:`, error);
+                } else {
+                    const errorText = await removeRoleResponse.text();
+                    console.error(`Failed to remove unlinked role (${removeRoleResponse.status}):`, errorText);
                 }
             } catch (error) {
                 console.error('Failed to add member to guild or assign roles:', error);
