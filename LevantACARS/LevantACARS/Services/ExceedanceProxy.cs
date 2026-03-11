@@ -86,7 +86,8 @@ public sealed class ExceedanceProxy
                 isOnRunway = true;
 
             bool speedExceeded = data.OnGround && data.GroundSpeed > limits.MaxTaxiSpeed;
-            bool isTakeoffRollContext = data.Ias > 80 || data.GroundSpeed > 60;
+            // Expanded takeoff roll detection: high throttle OR high speed OR high IAS
+            bool isTakeoffRollContext = data.Ias > 80 || data.GroundSpeed > 60 || data.Throttle > 70;
 
             if (!isRunwayOrAirborne && !isOnRunway && speedExceeded && !isTakeoffRollContext)
             {
