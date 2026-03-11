@@ -86,6 +86,28 @@ export default function Sidebar() {
         }
     }, [isAdmin, user?.pilotId, refresh]);
 
+    const handleDiscordLink = useCallback(async () => {
+        setDiscordLinking(true);
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const res = await fetch('/api/discord/verify-link', {
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+
+            const data = await res.json();
+            if (res.ok && data.authUrl) {
+                window.location.href = data.authUrl;
+            } else {
+                setDiscordLinking(false);
+            }
+        } catch (error) {
+            console.error('Discord link error:', error);
+            setDiscordLinking(false);
+        }
+    }, []);
+
     const menuItems = useMemo<{ category: string; items: MenuItem[] }[]>(() => {
         // Filter PILOT and OPERATIONS sections for Groupflight role - hide most items except Group Flights
         const pilotItems = isGroupflightRole 
