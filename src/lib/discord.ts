@@ -5,12 +5,10 @@ const BANNER = 'https://levant-va.com/img/discord-banner.png';
 const DISCORD_WEBHOOKS: Record<DiscordEvent, string> = {
     takeoff:      process.env.DISCORD_WEBHOOK_TAKEOFF       || '',
     landing:      process.env.DISCORD_WEBHOOK_LANDING       || '',
-    rankPromote:  process.env.DISCORD_WEBHOOK_RANK_PROMOTE  || '',
-    award:        process.env.DISCORD_WEBHOOK_AWARD         || process.env.DISCORD_WEBHOOK_RANK_PROMOTE || '',
     moderation:   process.env.DISCORD_MOD_WEBHOOK           || '',
 };
 
-type DiscordEvent = 'takeoff' | 'landing' | 'rankPromote' | 'award' | 'moderation';
+type DiscordEvent = 'takeoff' | 'landing' | 'moderation';
 
 interface DiscordEmbed {
     title?: string;
@@ -148,24 +146,6 @@ function getLandingGrade(rate: number): string {
     return '\u{1F4A5} Hard Landing';
 }
 
-export async function notifyRankPromotion(pilotName: string, pilotId: string, rankName: string, rankImageUrl?: string) {
-    await sendDiscordNotification('', [{
-        author: { name: 'RANK PROMOTION', icon_url: LOGO },
-        title: `\u{1F396}\uFE0F ${pilotName} has been promoted!`,
-        description: [
-            `> **${pilotName}** (\`${pilotId}\`) has earned a new rank.`,
-            '',
-            `\u{1F451} **New Rank:** ${rankName}`,
-            `\u{1F4CB} **Status:** Active Duty`,
-            '',
-            '*Congratulations on this achievement!*',
-        ].join('\n'),
-        color: 0xD4AF37,
-        thumbnail: { url: rankImageUrl || 'https://i.pinimg.com/originals/f4/b3/aa/f4b3aaa7400915aa71fd58a2e3ed3bd7.gif' },
-        footer: { text: FOOTER_MAIN, icon_url: LOGO },
-        timestamp: new Date().toISOString(),
-    }], 'rankPromote');
-}
 
 export async function notifyTakeoff(pilotName: string, pilotId: string, origin: string, destination: string, aircraft: string, callsign: string) {
     await sendDiscordNotification('', [{
@@ -233,9 +213,4 @@ export async function notifyModeration(type: ModerationEvent, pilotName: string,
 
 export async function notifyBlacklist(pilotName: string, pilotId: string, reason: string, adminId: string) {
     await notifyModeration('blacklist', pilotName, pilotId, `\u{1F4DD} **Reason:** ${reason}\n\u{1F6E1}\uFE0F **Blacklisted by:** ${adminId}`);
-}
-
-export async function notifyError(errorTitle: string, errorMessage: string, context?: string) {
-    // Logging errors directly instead of Discord since errorLog is removed
-    console.error(`[SYSTEM ALERT] ${errorTitle}\n${errorMessage}\n${context ? 'Context: ' + context : ''}`);
 }

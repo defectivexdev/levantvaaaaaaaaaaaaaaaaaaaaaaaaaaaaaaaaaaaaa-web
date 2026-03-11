@@ -1,6 +1,5 @@
 import Pilot, { IPilot } from '@/models/Pilot';
 import Rank, { IRank } from '@/models/Rank';
-import { notifyRankPromotion } from './discord';
 
 /**
  * Checks if a pilot is eligible for a rank upgrade and performs it.
@@ -46,14 +45,6 @@ export async function checkAndUpgradeRank(pilotId: string): Promise<string | nul
             
             pilot.rank = eligibleRank.name;
             await pilot.save();
-            
-            // Send Discord notification
-            await notifyRankPromotion(
-                `${pilot.first_name} ${pilot.last_name}`,
-                pilot.pilot_id,
-                eligibleRank.name,
-                eligibleRank.image_url
-            );
             
             return eligibleRank.name;
         }
