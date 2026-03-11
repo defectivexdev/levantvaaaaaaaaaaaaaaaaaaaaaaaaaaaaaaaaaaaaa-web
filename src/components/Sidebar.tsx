@@ -126,7 +126,7 @@ export default function Sidebar() {
             },
         ];
         return items;
-    }, [isGroupflightRole, handleDiscordLink]);
+    }, [isGroupflightRole]);
 
     const adminSubGroups = useMemo<AdminSubGroup[]>(() => [
         {
@@ -216,15 +216,6 @@ export default function Sidebar() {
                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full shadow-lg shadow-cyan-500/50" />
                                     ) : null;
 
-                                    if (item.onClick) {
-                                        return (
-                                            <button key={item.name} onClick={item.onClick} disabled={discordLinking} className={`${linkClasses} w-full text-left disabled:opacity-50 disabled:cursor-not-allowed`}>
-                                                {activeBar}
-                                                <item.icon className={iconClasses} />
-                                                {discordLinking && item.name === 'Link Discord & IVAO' ? 'Redirecting...' : item.name}
-                                            </button>
-                                        );
-                                    }
                                     if (item.external) {
                                         return (
                                             <a key={item.name} href={item.path} target="_blank" rel="noopener noreferrer" className={linkClasses}>
