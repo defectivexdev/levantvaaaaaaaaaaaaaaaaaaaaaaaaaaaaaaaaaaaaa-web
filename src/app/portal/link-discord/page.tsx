@@ -55,42 +55,28 @@ export default function LinkDiscordPage() {
     };
 
     const handleVerifyIVAO = async () => {
-        if (!ivaoVid.trim()) {
-            toast.error('Please enter your IVAO VID');
-            return;
-        }
-
         setVerifying(true);
-        const toastId = toast.loading('Verifying IVAO account...');
-
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                toast.error('Not authenticated', { id: toastId });
+                toast.error('Not authenticated');
                 return;
             }
 
-            const res = await fetch('/api/ivao/verify', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ ivao_vid: ivaoVid }),
+            const res = await fetch('/api/ivao/oauth/authorize', {
+                headers: { 'Authorization': `Bearer ${token}` },
             });
 
             const data = await res.json();
-
-            if (res.ok) {
-                toast.success('IVAO account verified successfully!', { id: toastId });
-                await fetchStatus();
+            if (res.ok && data.authUrl) {
+                window.location.href = data.authUrl;
             } else {
-                toast.error(data.error || 'Failed to verify IVAO account', { id: toastId });
+                toast.error('Failed to generate IVAO authorization link');
+                setVerifying(false);
             }
         } catch (error) {
-            console.error('Verification error:', error);
-            toast.error('Failed to verify IVAO account', { id: toastId });
-        } finally {
+            console.error('IVAO OAuth error:', error);
+            toast.error('Failed to verify IVAO account');
             setVerifying(false);
         }
     };
@@ -193,33 +179,26 @@ export default function LinkDiscordPage() {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
-                                    IVAO VID
-                                </label>
-                                <input
-                                    type="text"
-                                    value={ivaoVid}
-                                    onChange={(e) => setIvaoVid(e.target.value)}
-                                    placeholder="Enter your IVAO VID"
-                                    className="w-full px-4 py-3 bg-black/30 border border-white/[0.08] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
-                                    disabled={verifying}
-                                />
+                            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
+                                <p className="text-amber-400 text-sm mb-2 font-medium">IVAO OAuth Authorization</p>
+                                <p className="text-gray-300 text-sm">
+                                    Click the button below to authorize with IVAO. You'll be redirected to IVAO's website to log in and grant access.
+                                </p>
                             </div>
                             <button
                                 onClick={handleVerifyIVAO}
-                                disabled={verifying || !ivaoVid.trim()}
+                                disabled={verifying}
                                 className="w-full px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {verifying ? (
                                     <>
                                         <Loader2 className="w-5 h-5 animate-spin" />
-                                        Verifying...
+                                        Redirecting to IVAO...
                                     </>
                                 ) : (
                                     <>
-                                        <Shield className="w-5 h-5" />
-                                        Verify IVAO Account
+                                        <ExternalLink className="w-5 h-5" />
+                                        Authorize with IVAO
                                     </>
                                 )}
                             </button>
