@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/database';
 import { verifyAuth } from '@/lib/auth';
 import Bid from '@/models/Bid';
-import { ActiveFlightModel } from '@/models';
+import { ActiveFlightModel, PilotModel } from '@/models';
 import mongoose from 'mongoose';
 
 export async function POST(request: NextRequest) {

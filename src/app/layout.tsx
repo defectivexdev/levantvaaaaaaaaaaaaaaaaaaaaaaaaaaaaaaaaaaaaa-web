@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     keywords: ['virtual airline', 'flight simulator', 'Middle East', 'aviation', 'VATSIM'],
     icons: {
         icon: [
-            { url: '/img/logo.ico', sizes: '16x16 32x32 48x48' },
+            { url: '/img/logo.png', sizes: '16x16 32x32 48x48' },
             { url: '/img/logo-256.png', sizes: '256x256', type: 'image/png' },
         ],
         apple: '/img/logo-256.png',
