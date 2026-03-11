@@ -175,14 +175,6 @@ public sealed class FlightManager : IDisposable
             await CancelFlightAsync("Superseded by new flight");
         }
 
-        // Validate: Cannot start flight if engines are already running (anti-cheat)
-        if (_lastEnginesOn)
-        {
-            _logger.LogWarning("[FlightManager] Cannot start flight - engines are already running. Turn off engines first.");
-            OnFlightEvent?.Invoke("Cannot start flight: Engines must be OFF before starting flight");
-            return false;
-        }
-
         _pilotId = p.PilotId;
         _flightNumber = p.FlightNumber;
         _callsign = p.Callsign;
