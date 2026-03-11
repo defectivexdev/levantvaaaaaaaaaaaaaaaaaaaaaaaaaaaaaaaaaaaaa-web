@@ -20,31 +20,39 @@ export async function GET(request: Request) {
         console.log('[Reports API] Session:', { id: session.id, pilotId: session.pilotId });
         console.log('[Reports API] Query pilotId param:', pilotId);
         
+        // Debug: Get sample flights to see actual pilot_id values
+        const sampleFlights = await FlightModel.find({}).select('pilot_id pilot_name').limit(5).lean();
+        console.log('[Reports API] Sample flights pilot_id values:', sampleFlights.map(f => ({ 
+            pilot_id: f.pilot_id, 
+            type: typeof f.pilot_id,
+            isObjectId: f.pilot_id instanceof mongoose.Types.ObjectId,
+            toString: f.pilot_id?.toString?.()
+        })));
+        
+        // Try query without pilot filter first
+        const allFlights = await FlightModel.find({ approved_status: { $in: [0, 1, 2] } })
+            .sort({ submitted_at: -1 })
+            .limit(limit)
+            .lean();
+        console.log('[Reports API] All flights (no pilot filter):', allFlights.length);
+        
+        // Now try with pilot filter
         const query: any = { approved_status: { $in: [0, 1, 2] } };
         if (pilotId) {
-            // Query using both string pilot_id and ObjectId for backwards compatibility
             query.$or = [
                 { pilot_id: session.pilotId },
                 { pilot_id: new mongoose.Types.ObjectId(session.id) }
             ];
         }
 
-        console.log('[Reports API] Query:', JSON.stringify(query));
+        console.log('[Reports API] Query with pilot filter:', JSON.stringify(query));
         
         const flights = await FlightModel.find(query)
             .sort({ submitted_at: -1 })
             .limit(limit)
             .lean();
             
-        console.log('[Reports API] Found flights:', flights.length);
-        
-        // Debug: check what pilot_id format exists in database
-        const sampleFlight = await FlightModel.findOne({}).select('pilot_id').lean();
-        console.log('[Reports API] Sample flight pilot_id:', sampleFlight?.pilot_id, 'Type:', typeof sampleFlight?.pilot_id);
-        
-        // Debug: try querying without pilot filter to see if ANY flights exist
-        const allFlightsCount = await FlightModel.countDocuments({});
-        console.log('[Reports API] Total flights in database:', allFlightsCount);
+        console.log('[Reports API] Found flights with pilot filter:', flights.length);
 
         const formattedReports = flights.map((f: any) => {
             console.log('Flight aircraft_type:', f.aircraft_type, 'for flight:', f.flight_number);
