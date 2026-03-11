@@ -34,10 +34,10 @@ export default function LinkDiscordPage() {
         const params = new URLSearchParams(window.location.search);
         if (params.get('ivao_verified') === 'success') {
             toast.success('IVAO account verified successfully!');
-            // Refresh status after a short delay to ensure DB is updated
-            setTimeout(() => {
-                fetchStatus();
-            }, 1000);
+            // Refresh status multiple times to ensure DB is updated
+            setTimeout(() => fetchStatus(), 500);
+            setTimeout(() => fetchStatus(), 1500);
+            setTimeout(() => fetchStatus(), 3000);
         }
     }, []);
 
@@ -52,6 +52,7 @@ export default function LinkDiscordPage() {
 
             if (res.ok) {
                 const data = await res.json();
+                console.log('IVAO status fetched:', data);
                 setStatus(data);
                 if (data.ivao_vid) {
                     setIvaoVid(data.ivao_vid);
