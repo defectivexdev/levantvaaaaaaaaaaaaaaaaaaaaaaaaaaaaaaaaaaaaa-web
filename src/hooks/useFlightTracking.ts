@@ -101,14 +101,42 @@ const interpolator = new PositionInterpolator();
 // ============================================================================
 
 async function fetchLiveFlights(): Promise<FlightTrackingData> {
-    const response = await fetch('/api/flights/live');
+    const response = await fetch('/api/acars/live-map');
     if (!response.ok) {
         throw new Error('Failed to fetch live flights');
     }
     const data = await response.json();
+    
+    // Transform data to match LiveFlight interface
+    const flights: LiveFlight[] = Array.isArray(data) ? data.map((f: any) => ({
+        _id: f.callsign, // Use callsign as unique ID
+        callsign: f.callsign,
+        pilotId: f.pilot || '',
+        pilotName: f.pilot || '',
+        departure: f.departure,
+        arrival: f.arrival,
+        aircraft: f.equipment,
+        telemetry: {
+            lat: f.latitude,
+            lng: f.longitude,
+            alt: f.altitude,
+            heading: f.heading,
+            groundspeed: f.groundspeed,
+            ias: f.ias || 0,
+            v_speed: f.verticalSpeed || 0,
+            timestamp: new Date(f.started_at || Date.now()),
+        },
+        phase: f.phase || f.status,
+        status: f.status,
+        lastUpdate: new Date(),
+        isOnline: true,
+        createdAt: new Date(f.started_at || Date.now()),
+        updatedAt: new Date(),
+    })) : [];
+    
     return {
-        flights: data.flights || [],
-        totalActive: data.totalActive || 0,
+        flights,
+        totalActive: flights.length,
         lastRefresh: new Date(),
     };
 }
