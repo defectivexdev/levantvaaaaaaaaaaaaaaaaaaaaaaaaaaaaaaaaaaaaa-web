@@ -48,6 +48,7 @@ export default function Sidebar() {
     const { isAdmin, user, refresh } = useAuth();
     const isGroupflightRole = user?.role === 'Groupflight';
     const [vaultBalance, setVaultBalance] = useState<number | null>(null);
+    const [discordLinking, setDiscordLinking] = useState(false);
     const [manualPirepCount, setManualPirepCount] = useState(0);
     const [avatarError, setAvatarError] = useState(false);
     const [avatarTimestamp, setAvatarTimestamp] = useState(Date.now());
@@ -162,6 +163,28 @@ export default function Sidebar() {
         } catch (error) {
             console.error('Logout failed', error);
             window.location.href = '/login';
+        }
+    }, []);
+
+    const handleDiscordLink = useCallback(async () => {
+        setDiscordLinking(true);
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const res = await fetch('/api/discord/verify-link', {
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+
+            const data = await res.json();
+            if (res.ok && data.authUrl) {
+                window.location.href = data.authUrl;
+            } else {
+                setDiscordLinking(false);
+            }
+        } catch (error) {
+            console.error('Discord link error:', error);
+            setDiscordLinking(false);
         }
     }, []);
 
@@ -321,6 +344,17 @@ export default function Sidebar() {
                         </div>
                     </Link>
                 )}
+
+                {/* Link Discord & IVAO */}
+                <button
+                    onClick={handleDiscordLink}
+                    disabled={discordLinking}
+                    className="w-full flex items-center px-3 py-2.5 text-[13px] font-medium text-cyan-400 hover:text-cyan-300 hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 rounded-xl transition-all group relative border border-cyan-500/20 hover:border-cyan-500/40 shadow-lg shadow-cyan-500/5 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Link Discord & IVAO Account"
+                >
+                    <Shield className="w-[18px] h-[18px] mr-3 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                    {discordLinking ? 'Redirecting...' : 'Link Discord & IVAO'}
+                </button>
 
                 {/* Logout */}
                 <button
