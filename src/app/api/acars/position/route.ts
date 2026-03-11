@@ -98,18 +98,25 @@ export async function POST(request: NextRequest) {
             console.log('[ACARS Position] Flight session recovered via upsert.');
         }
 
-        // Takeoff notification — fires once per flight on 'Takeoff' phase
+        // Takeoff notification — fires once per flight on 'Takeoff' phase (atomic update prevents duplicates)
         if (flight && !flight.takeoff_notified && (phase === 'Takeoff' || status === 'Takeoff')) {
-            flight.takeoff_notified = true;
-            await flight.save();
-            await notifyTakeoff(
-                `${pilot.first_name} ${pilot.last_name}`,
-                pilotId,
-                flight.departure_icao,
-                flight.arrival_icao,
-                flight.aircraft_type,
-                callsign
+            const updated = await ActiveFlight.findOneAndUpdate(
+                { _id: flight._id, takeoff_notified: false },
+                { $set: { takeoff_notified: true } },
+                { new: true }
             );
+            
+            // Only send webhook if we successfully set the flag (prevents race condition duplicates)
+            if (updated && updated.takeoff_notified) {
+                await notifyTakeoff(
+                    `${pilot.first_name} ${pilot.last_name}`,
+                    pilotId,
+                    flight.departure_icao,
+                    flight.arrival_icao,
+                    flight.aircraft_type,
+                    callsign
+                );
+            }
         }
 
         // Broadcast to dashboard via Pusher
