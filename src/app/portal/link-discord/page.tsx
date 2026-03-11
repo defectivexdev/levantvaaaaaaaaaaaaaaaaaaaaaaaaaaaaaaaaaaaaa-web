@@ -53,10 +53,14 @@ export default function LinkDiscordPage() {
             if (res.ok) {
                 const data = await res.json();
                 console.log('IVAO status fetched:', data);
+                console.log('Is verified?', data.verified);
+                console.log('IVAO VID:', data.ivao_vid);
                 setStatus(data);
                 if (data.ivao_vid) {
                     setIvaoVid(data.ivao_vid);
                 }
+            } else {
+                console.error('Failed to fetch status:', res.status);
             }
         } catch (error) {
             console.error('Failed to fetch IVAO status:', error);
