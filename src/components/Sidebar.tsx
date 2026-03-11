@@ -109,7 +109,6 @@ export default function Sidebar() {
         const communityItems = isGroupflightRole
             ? []
             : [
-                { name: 'Discord', path: 'https://discord.levant-va.com/', icon: MessageSquare, external: true },
                 { name: 'Settings', path: '/portal/settings', icon: Settings },
             ];
         
