@@ -16,9 +16,13 @@ export async function GET(request: Request) {
         const pilotId = searchParams.get('pilotId');
         const limit = parseInt(searchParams.get('limit') || '10', 10);
 
-        const query: any = { approved_status: { $in: [0, 1] } };
+        const query: any = { approved_status: { $in: [0, 1, 2] } };
         if (pilotId) {
-            query.pilot_id = pilotId;
+            // Query using both string pilot_id and ObjectId for backwards compatibility
+            query.$or = [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ];
         }
 
         const flights = await FlightModel.find(query)
