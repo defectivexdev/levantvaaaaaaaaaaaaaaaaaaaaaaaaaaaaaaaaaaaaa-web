@@ -159,8 +159,9 @@ export async function GET(req: NextRequest) {
         };
 
         // Check if user is logged in and save to their account
-        const token = req.cookies.get('token')?.value;
+        const token = req.cookies.get('lva_session')?.value;
         if (token) {
+            console.log('Found lva_session cookie, verifying JWT...');
             try {
                 const { jwtVerify } = await import('jose');
                 const secret = new TextEncoder().encode(process.env.JWT_SECRET || '');
