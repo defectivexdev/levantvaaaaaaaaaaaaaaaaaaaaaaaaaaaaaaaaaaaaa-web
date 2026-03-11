@@ -90,21 +90,17 @@ export async function GET() {
         await connectDB();
 
         // Delete any expired bids first
+        const expiryTime = new Date();
+        expiryTime.setMinutes(expiryTime.getMinutes() - 30);
         await Bid.deleteMany({
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
-            status: { $in: ['Active', 'InProgress'] }, 
-            expires_at: { $lte: new Date() }
+            pilot_id: new mongoose.Types.ObjectId(session.id),
+            status: 'Active',
+            created_at: { $lt: expiryTime }
         });
 
-        const bid = await Bid.findOne({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
-            status: { $in: ['Active', 'InProgress'] } 
+        const bid = await Bid.findOne({
+            pilot_id: new mongoose.Types.ObjectId(session.id),
+            status: { $in: ['Active', 'InProgress'] }
         }).sort({ created_at: -1 });
 
         if (!bid) {

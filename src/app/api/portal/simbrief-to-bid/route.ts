@@ -143,22 +143,16 @@ export async function GET(request: NextRequest) {
 
     try {
         await connectDB();
-        const bid = await Bid.findOne({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
+        const bid = await Bid.findOne({
+            pilot_id: new mongoose.Types.ObjectId(session.id),
             status: { $in: ['Active', 'InProgress'] } 
         }).sort({ created_at: -1 }).lean();
 
         if (!bid) return NextResponse.json({ bid: null });
 
         // Check if there's an active flight for this bid
-        const activeFlight = await ActiveFlightModel.findOne({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ]
+        const activeFlight = await ActiveFlightModel.findOne({
+            pilot_id: new mongoose.Types.ObjectId(session.id)
         }).lean();
 
         return NextResponse.json({

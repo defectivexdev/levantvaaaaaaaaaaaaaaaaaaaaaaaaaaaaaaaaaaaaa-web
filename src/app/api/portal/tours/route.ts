@@ -49,13 +49,10 @@ export async function GET(request: NextRequest) {
         // Fetch user progress for all tours if logged in
         const progressMap: Record<string, any> = {};
         if (session) {
-            const progressList = await TourProgress.find({ 
-                $or: [
-                    { pilot_id: session.pilotId },
-                    { pilot_id: new mongoose.Types.ObjectId(session.id) }
-                ]
+            const progress = await TourProgress.find({
+                pilot_id: new mongoose.Types.ObjectId(session.id)
             }).lean();
-            progressList.forEach((p: any) => {
+            progress.forEach((p: any) => {
                 progressMap[p.tour_id?.toString?.() || String(p.tour_id)] = p;
             });
         }

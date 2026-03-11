@@ -32,11 +32,8 @@ export async function POST(request: NextRequest) {
         } = data;
 
         // 1. Check if pilot already has an active bid
-        const existingBid = await Bid.findOne({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
+        const existingBid = await Bid.findOne({
+            pilot_id: new mongoose.Types.ObjectId(session.id),
             status: { $in: ['Active', 'InProgress'] } 
         });
 

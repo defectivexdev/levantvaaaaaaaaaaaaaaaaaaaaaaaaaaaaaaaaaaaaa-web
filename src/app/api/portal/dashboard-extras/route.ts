@@ -21,21 +21,18 @@ export async function GET(request: NextRequest) {
 
 
         // --- Recent Awards (Medal Case) ---
-        const pilotAwards = await PilotAward.find({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ]
+        const recentAwards = await PilotAward.find({
+            pilot_id: new mongoose.Types.ObjectId(session.id)
         })
             .sort({ earned_at: -1 })
             .limit(6)
             .lean();
 
-        const awardIds = pilotAwards.map((pa: any) => pa.award_id);
+        const awardIds = recentAwards.map((pa: any) => pa.award_id);
         const awards = await Award.find({ _id: { $in: awardIds } }).lean();
         const awardMap = new Map(awards.map((a: any) => [a._id.toString(), a]));
 
-        const medalCase = pilotAwards.map((pa: any) => {
+        const medalCase = recentAwards.map((pa: any) => {
             const award = awardMap.get(pa.award_id?.toString());
             return {
                 name: (award as any)?.name || 'Unknown Award',
@@ -76,18 +73,15 @@ export async function GET(request: NextRequest) {
 
         // --- Active Bid Weather ---
         let weather = null;
-        const activeBid = await Bid.findOne({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
-            status: 'Active' 
+        const activeBids = await Bid.find({
+            pilot_id: new mongoose.Types.ObjectId(session.id),
+            status: 'active'
         }).sort({ created_at: -1 }).lean();
-        if (activeBid) {
+        if (activeBids.length > 0) {
             try {
                 const [depMetar, arrMetar] = await Promise.all([
-                    fetchMetar(activeBid.departure_icao),
-                    fetchMetar(activeBid.arrival_icao),
+                    fetchMetar(activeBids[0].departure_icao),
+                    fetchMetar(activeBids[0].arrival_icao),
                 ]);
                 weather = {
                     departure_icao: activeBid.departure_icao,

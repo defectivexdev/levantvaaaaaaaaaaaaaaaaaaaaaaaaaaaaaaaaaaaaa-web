@@ -25,14 +25,8 @@ export async function GET() {
         }
 
         // Get total completed flights
-        // Try both pilot_id (string like "LVT7FG") and session.id (ObjectId) for backwards compatibility
-        const pilotIdString = session.pilotId || (pilot as any).pilot_id;
-        
-        const totalFlights = await Flight.countDocuments({ 
-            $or: [
-                { pilot_id: pilotIdString },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
+        const totalFlights = await Flight.countDocuments({
+            pilot_id: new mongoose.Types.ObjectId(session.id),
             approved_status: 1 
         });
 

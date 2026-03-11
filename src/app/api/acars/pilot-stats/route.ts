@@ -27,10 +27,7 @@ export async function GET(request: NextRequest) {
         }
 
         const recentFlights = await Flight.find({ 
-            $or: [
-                { pilot_id: pilot.pilot_id },
-                { pilot_id: new mongoose.Types.ObjectId(pilot._id) }
-            ]
+            pilot_id: new mongoose.Types.ObjectId(pilot._id)
         })
             .sort({ submitted_at: -1 })
             .limit(10)
@@ -38,15 +35,14 @@ export async function GET(request: NextRequest) {
             .lean();
 
         const totalFlights = await Flight.countDocuments({ 
-            $or: [
-                { pilot_id: pilot.pilot_id },
-                { pilot_id: new mongoose.Types.ObjectId(pilot._id) }
-            ],
+            pilot_id: new mongoose.Types.ObjectId(pilot._id),
             approved_status: { $ne: 2 } 
         });
 
-        let activeBid = await Bid.findOne({ pilot_id: pilot._id, status: 'Active' }).sort({ created_at: -1 }).lean();
-        if (!activeBid) activeBid = await Bid.findOne({ pilot_id: pilot._id.toString(), status: 'Active' }).sort({ created_at: -1 }).lean();
+        const activeBid = await Bid.findOne({
+            pilot_id: new mongoose.Types.ObjectId(pilot._id),
+            status: 'Active'
+        }).sort({ created_at: -1 }).lean();
 
         return NextResponse.json({
             success: true,

@@ -14,12 +14,9 @@ export async function GET(request: NextRequest) {
     try {
         await connectDB();
 
-        const bid = await Bid.findOne({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
-            status: 'Active' 
+        const bid = await Bid.findOne({
+            pilot_id: new mongoose.Types.ObjectId(session.id),
+            status: 'active'
         }).sort({ created_at: -1 });
         if (!bid) return NextResponse.json({ error: 'No active booking' }, { status: 404 });
 

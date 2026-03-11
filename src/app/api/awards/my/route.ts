@@ -14,11 +14,8 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
         
-        const pilotAwards = await PilotAward.find({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ]
+        const pilotAwards = await PilotAward.find({
+            pilot_id: new mongoose.Types.ObjectId(session.id)
         })
             .populate('award_id')
             .sort({ earned_at: -1 })

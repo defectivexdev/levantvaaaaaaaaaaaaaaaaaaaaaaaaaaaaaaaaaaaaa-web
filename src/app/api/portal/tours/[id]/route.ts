@@ -28,12 +28,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
         let progress = null;
         if (session) {
-            progress = await TourProgress.findOne({ 
-                $or: [
-                    { pilot_id: session.pilotId },
-                    { pilot_id: new mongoose.Types.ObjectId(session.id) }
-                ],
-                tour_id: id 
+            progress = await TourProgress.findOne({
+                tour_id: new mongoose.Types.ObjectId(id),
+                pilot_id: new mongoose.Types.ObjectId(session.id)
             });
         }
 
@@ -77,11 +74,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
         // Check if already joined
         const existing = await TourProgress.findOne({ 
-            $or: [
-                { pilot_id: session.pilotId },
-                { pilot_id: new mongoose.Types.ObjectId(session.id) }
-            ],
-            tour_id: id 
+            tour_id: new mongoose.Types.ObjectId(id),
+            pilot_id: new mongoose.Types.ObjectId(session.id)
         });
         if (existing) {
              return NextResponse.json({ success: true, message: 'Already joined', progress: existing });
@@ -89,8 +83,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
         // Create Progress
         const progress = await TourProgress.create({
-            pilot_id: session.id,
-            tour_id: id,
+            pilot_id: new mongoose.Types.ObjectId(session.id),
+            tour_id: new mongoose.Types.ObjectId(id),
             current_leg_index: 0,
             completed_legs: [],
             status: 'In Progress'

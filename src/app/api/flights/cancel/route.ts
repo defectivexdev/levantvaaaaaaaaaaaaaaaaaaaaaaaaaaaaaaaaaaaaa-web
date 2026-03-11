@@ -27,28 +27,27 @@ export async function POST(request: NextRequest) {
 
         if (bidId) {
             // Cancel specific bid (verify ownership)
-            result = await Bid.findOneAndUpdate(
-                { 
-                    _id: bidId, 
-                    $or: [
-                        { pilot_id: pilotIdString },
-                        { pilot_id: new mongoose.Types.ObjectId(userId) }
-                    ],
-                    status: 'Active' 
+            const result = await Bid.updateOne(
+                {
+                    _id: bidId,
+                    pilot_id: new mongoose.Types.ObjectId(userId)
                 },
                 { status: 'Cancelled' }
             );
         } else {
              // Cancel all active bids for this pilot
-             result = await Bid.updateMany(
-                 { 
-                     $or: [
-                         { pilot_id: pilotIdString },
-                         { pilot_id: new mongoose.Types.ObjectId(userId) }
-                     ],
-                     status: 'Active' 
-                 },
-                 { status: 'Cancelled' }
+            const result = await Bid.updateMany(
+                {
+                    pilot_id: new mongoose.Types.ObjectId(userId),
+                    status: 'Active'
+                },
+                {
+                    $set: {
+                        status: 'Cancelled',
+                        cancelled_at: new Date(),
+                        cancelled_by: userId
+                    }
+                }
             );
         }
 
