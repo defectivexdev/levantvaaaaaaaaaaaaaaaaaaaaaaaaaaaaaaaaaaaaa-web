@@ -14,7 +14,10 @@ const PilotAwardSchema = new Schema<IPilotAward>({
     seen: { type: Boolean, default: false },
 });
 
+// Compound indexes
 PilotAwardSchema.index({ pilot_id: 1, award_id: 1 }, { unique: true });
+PilotAwardSchema.index({ pilot_id: 1, earned_at: -1 });
+PilotAwardSchema.index({ pilot_id: 1, seen: 1, earned_at: -1 });
 
 const PilotAward = mongoose.models.PilotAward || mongoose.model<IPilotAward>('PilotAward', PilotAwardSchema);
 export default PilotAward;

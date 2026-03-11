@@ -18,10 +18,7 @@ export async function GET(request: NextRequest) {
     const unreadOnly = searchParams.get('unread') === 'true';
 
     const pilotQuery = {
-        $or: [
-            { pilot_id: session.pilotId },
-            { pilot_id: new mongoose.Types.ObjectId(session.id) }
-        ]
+        pilot_id: new mongoose.Types.ObjectId(session.id)
     };
 
     const filter: any = { ...pilotQuery };
@@ -51,10 +48,7 @@ export async function PATCH(request: NextRequest) {
     const { ids, markAll } = body;
 
     const pilotQuery = {
-        $or: [
-            { pilot_id: session.pilotId },
-            { pilot_id: new mongoose.Types.ObjectId(session.id) }
-        ]
+        pilot_id: new mongoose.Types.ObjectId(session.id)
     };
 
     if (markAll) {

@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
         const recentAwards = await PilotAward.find({
             pilot_id: new mongoose.Types.ObjectId(session.id)
         })
+            .select('award_id earned_at')
             .sort({ earned_at: -1 })
             .limit(6)
             .lean();
@@ -76,7 +77,11 @@ export async function GET(request: NextRequest) {
         const activeBids = await Bid.find({
             pilot_id: new mongoose.Types.ObjectId(session.id),
             status: 'active'
-        }).sort({ created_at: -1 }).lean();
+        })
+            .select('departure_icao arrival_icao')
+            .sort({ created_at: -1 })
+            .limit(1)
+            .lean();
         if (activeBids.length > 0) {
             try {
                 const [depMetar, arrMetar] = await Promise.all([

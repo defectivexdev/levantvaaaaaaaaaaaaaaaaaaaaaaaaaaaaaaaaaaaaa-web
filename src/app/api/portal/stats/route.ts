@@ -24,11 +24,11 @@ export async function GET() {
             return NextResponse.json({ error: 'Pilot not found' }, { status: 404 });
         }
 
-        // Get total completed flights
+        // Get total completed flights - use indexed fields in optimal order
         const totalFlights = await Flight.countDocuments({
             pilot_id: new mongoose.Types.ObjectId(session.id),
-            approved_status: 1 
-        });
+            approved_status: 1
+        }).hint({ pilot_id: 1, approved_status: 1, submitted_at: -1 });
 
         // Format hours nicely (no decimals for whole numbers)
         const hours = Number(pilot.total_hours) || 0;

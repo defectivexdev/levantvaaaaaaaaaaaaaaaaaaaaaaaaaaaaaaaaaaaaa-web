@@ -101,7 +101,9 @@ export async function GET() {
         const bid = await Bid.findOne({
             pilot_id: new mongoose.Types.ObjectId(session.id),
             status: { $in: ['Active', 'InProgress'] }
-        }).sort({ created_at: -1 });
+        })
+            .sort({ created_at: -1 })
+            .lean();
 
         if (!bid) {
             return NextResponse.json({ bid: null });

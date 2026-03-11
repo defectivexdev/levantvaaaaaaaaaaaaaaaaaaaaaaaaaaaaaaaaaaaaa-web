@@ -26,18 +26,19 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Pilot not found' }, { status: 404, headers: corsHeaders() });
         }
 
-        const recentFlights = await Flight.find({ 
-            pilot_id: new mongoose.Types.ObjectId(pilot._id)
-        })
-            .sort({ submitted_at: -1 })
-            .limit(10)
-            .select('flight_number callsign departure_icao arrival_icao aircraft_type flight_time landing_rate landing_grade score distance submitted_at approved_status')
-            .lean();
-
-        const totalFlights = await Flight.countDocuments({ 
-            pilot_id: new mongoose.Types.ObjectId(pilot._id),
-            approved_status: { $ne: 2 } 
-        });
+        const [recentFlights, totalFlights] = await Promise.all([
+            Flight.find({ 
+                pilot_id: new mongoose.Types.ObjectId(pilot._id)
+            })
+                .select('flight_number callsign departure_icao arrival_icao aircraft_type flight_time landing_rate landing_grade score distance submitted_at approved_status')
+                .sort({ submitted_at: -1 })
+                .limit(10)
+                .lean(),
+            Flight.countDocuments({ 
+                pilot_id: new mongoose.Types.ObjectId(pilot._id),
+                approved_status: { $ne: 2 }
+            })
+        ]);
 
         const activeBid = await Bid.findOne({
             pilot_id: new mongoose.Types.ObjectId(pilot._id),

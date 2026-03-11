@@ -24,6 +24,9 @@ const NotificationSchema = new Schema<INotification>({
     created_at: { type: Date, default: Date.now },
 });
 
+// Compound index for performance
+NotificationSchema.index({ pilot_id: 1, read: 1, created_at: -1 });
+
 // Auto-delete notifications older than 30 days
 NotificationSchema.index({ created_at: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
 

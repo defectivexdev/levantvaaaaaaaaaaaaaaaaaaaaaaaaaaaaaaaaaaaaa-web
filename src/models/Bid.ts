@@ -42,5 +42,9 @@ const BidSchema = new Schema<IBid>({
     expires_at: { type: Date, default: () => new Date(Date.now() + 24 * 60 * 60 * 1000) },
 });
 
+// Compound indexes for performance
+BidSchema.index({ pilot_id: 1, status: 1, created_at: -1 });
+BidSchema.index({ pilot_id: 1, created_at: -1 });
+
 const Bid = mongoose.models.Bid || mongoose.model<IBid>('Bid', BidSchema);
 export default Bid;

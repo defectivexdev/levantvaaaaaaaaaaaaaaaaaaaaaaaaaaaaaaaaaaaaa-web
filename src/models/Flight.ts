@@ -96,5 +96,9 @@ const FlightSchema = new Schema<IFlight>({
     event_id: { type: Schema.Types.ObjectId, ref: 'Event', index: true },
 });
 
+// Compound indexes for performance
+FlightSchema.index({ pilot_id: 1, approved_status: 1, submitted_at: -1 });
+FlightSchema.index({ pilot_id: 1, submitted_at: -1 });
+
 const Flight = mongoose.models.Flight || mongoose.model<IFlight>('Flight', FlightSchema);
 export default Flight;

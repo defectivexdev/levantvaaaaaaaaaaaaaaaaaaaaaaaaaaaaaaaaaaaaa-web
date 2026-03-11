@@ -19,11 +19,12 @@ export async function GET(request: Request) {
 
         // Query for pilot's flights - pilot_id is stored as ObjectId in database
         const query: any = { 
-            approved_status: { $in: [0, 1, 2] },
-            pilot_id: new mongoose.Types.ObjectId(session.id)
+            pilot_id: new mongoose.Types.ObjectId(session.id),
+            approved_status: { $in: [0, 1, 2] }
         };
         
         const flights = await FlightModel.find(query)
+            .select('flight_number callsign departure_icao arrival_icao aircraft_type flight_time landing_rate landing_grade score approved_status submitted_at pilot_name log')
             .sort({ submitted_at: -1 })
             .limit(limit)
             .lean();
