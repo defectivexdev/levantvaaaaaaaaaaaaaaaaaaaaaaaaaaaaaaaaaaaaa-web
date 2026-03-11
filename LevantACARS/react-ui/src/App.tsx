@@ -35,7 +35,6 @@ export default function App() {
     injectBid,
     addLogEntry,
     qnhAltitude,
-    discordVerified,
     setQnhOverride,
     updateStatus,
     touchdownPoint,
@@ -128,24 +127,8 @@ export default function App() {
               </div>
             </div>
             
-            {/* Right: Status & Pilot Info */}
+            {/* Right: Pilot Info */}
             <div className="flex items-center gap-4">
-              {/* Connection Status */}
-              <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border backdrop-blur-md shadow-lg ${
-                connection.simConnected && connection.apiConnected && discordVerified
-                  ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400 shadow-emerald-500/20'
-                  : connection.simConnected
-                    ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 shadow-amber-500/20'
-                    : 'bg-rose-500/15 border-rose-500/40 text-rose-400 shadow-rose-500/20'
-              }`}>
-                <div className={`h-2 w-2 rounded-full ${
-                  connection.simConnected ? 'bg-emerald-400 animate-pulse shadow-xl shadow-emerald-400/60' : 'bg-rose-400 animate-pulse shadow-xl shadow-rose-400/60'
-                }`} />
-                <span className="text-[10px] font-bold tracking-[0.15em]">
-                  {connection.simConnected && connection.apiConnected ? 'ONLINE' : connection.simConnected ? 'SIM ONLY' : 'OFFLINE'}
-                </span>
-              </div>
-              
               {/* Pilot Info */}
               <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-accent-gold/10 to-accent-gold/5 border border-accent-gold/20 shadow-lg shadow-accent-gold/10">
                 <span className="text-xs text-accent-gold font-mono font-bold tracking-wider drop-shadow-[0_0_8px_rgba(197,160,89,0.4)]">{auth.pilotId}</span>
@@ -154,7 +137,7 @@ export default function App() {
               </div>
               
               {/* Avatar */}
-              <AnimatedTooltip items={[{ id: 1, name: auth.pilotName || 'Pilot', designation: `${auth.pilotRank || 'Cadet'} | ${auth.pilotId || '—'}`, image: auth.pilotAvatar || 'img/icon.jpg' }]} />
+              <AnimatedTooltip items={[{ id: 1, name: auth.pilotName || 'Pilot', designation: `${auth.pilotRank || 'Cadet'} | ${auth.pilotId || '—'}`, image: `https://res.cloudinary.com/dryamvxbg/image/upload/c_fill,w_200,h_200,f_auto,q_auto/avatars/pilot_${auth.pilotId}` }]} />
             </div>
           </header>
 
