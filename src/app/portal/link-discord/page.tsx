@@ -36,7 +36,6 @@ export default function LinkDiscordPage() {
         console.log('URL params:', params.toString());
         if (params.get('ivao_verified') === 'success') {
             console.log('Returning from IVAO OAuth success');
-            toast.success('IVAO account verified successfully!');
             // Refresh status multiple times to ensure DB is updated
             setTimeout(() => {
                 console.log('Refreshing status (500ms)');
