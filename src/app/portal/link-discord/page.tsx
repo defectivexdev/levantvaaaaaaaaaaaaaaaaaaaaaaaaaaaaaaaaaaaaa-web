@@ -28,16 +28,28 @@ export default function LinkDiscordPage() {
     const [statusLoading, setStatusLoading] = useState(true);
 
     useEffect(() => {
+        console.log('LinkDiscordPage mounted');
         fetchStatus();
         
         // Check if returning from IVAO OAuth
         const params = new URLSearchParams(window.location.search);
+        console.log('URL params:', params.toString());
         if (params.get('ivao_verified') === 'success') {
+            console.log('Returning from IVAO OAuth success');
             toast.success('IVAO account verified successfully!');
             // Refresh status multiple times to ensure DB is updated
-            setTimeout(() => fetchStatus(), 500);
-            setTimeout(() => fetchStatus(), 1500);
-            setTimeout(() => fetchStatus(), 3000);
+            setTimeout(() => {
+                console.log('Refreshing status (500ms)');
+                fetchStatus();
+            }, 500);
+            setTimeout(() => {
+                console.log('Refreshing status (1500ms)');
+                fetchStatus();
+            }, 1500);
+            setTimeout(() => {
+                console.log('Refreshing status (3000ms)');
+                fetchStatus();
+            }, 3000);
         }
     }, []);
 
