@@ -53,13 +53,6 @@ export async function GET() {
                 color: 'blue'
             },
             { 
-                label: 'Flight Time', 
-                value: formattedHours, 
-                subtext: 'Total Hours',
-                icon: 'clock',
-                color: 'emerald'
-            },
-            { 
                 label: 'Total Flights', 
                 value: String(totalFlights), 
                 subtext: 'Approved PIREPs',
