@@ -1,10 +1,8 @@
 import discord
-from discord import app_commands
 from discord.ext import commands, tasks
-import asyncio
 import aiohttp
 import config
-from utils import connect_database, get_database, assign_roles_to_member, get_rating_name, fetch_web_config
+from utils import fetch_web_config
 
 intents = discord.Intents.default()
 intents.members = True
@@ -54,15 +52,8 @@ async def on_ready():
         web_config = await fetch_web_config()
         print(f'Web API URL: {web_config["web_api_url"]}')
         
-        # Connect to database
-        connect_database()
-        print('Bot is ready and connected to database!')
-        
-        # Sync commands
-        guild = discord.Object(id=config.GUILD_ID)
-        bot.tree.copy_global_to(guild=guild)
-        await bot.tree.sync(guild=guild)
-        print(f'Synced commands to guild {config.GUILD_ID}')
+        print('Bot is ready! All verification is handled via web OAuth2.')
+        print('No slash commands available - users should link accounts at the profile page.')
         
         # Start status update task
         if not update_status.is_running():
@@ -71,9 +62,7 @@ async def on_ready():
     except Exception as e:
         print(f'Error during bot initialization: {e}')
 
-@bot.tree.command(name='verify', description='Verify your IVAO account and get roles')
-@app_commands.describe(pilot_id='Your Levant VA Pilot ID (e.g., LVA001)')
-async def verify(interaction: discord.Interaction, pilot_id: str):
+# All slash commands removed - verification handled via web OAuth2 only
     """Verify IVAO account and assign roles"""
     await interaction.response.defer(ephemeral=True)
     

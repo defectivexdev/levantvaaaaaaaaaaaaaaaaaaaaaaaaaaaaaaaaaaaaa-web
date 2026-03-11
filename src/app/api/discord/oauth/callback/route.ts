@@ -64,6 +64,10 @@ export async function GET(req: NextRequest) {
 
         const guildId = process.env.DISCORD_GUILD_ID;
         const botToken = process.env.DISCORD_BOT_TOKEN;
+        
+        // Prepare nickname: "Pilot Name | PILOT_ID"
+        const pilotName = `${pilot.first_name} ${pilot.last_name}`;
+        const nickname = `${pilotName} | ${pilotId}`;
 
         if (guildId && botToken) {
             try {
@@ -80,6 +84,23 @@ export async function GET(req: NextRequest) {
 
                 if (addMemberResponse.ok || addMemberResponse.status === 204) {
                     console.log(`Added user ${discordUser.username} to guild`);
+                }
+                
+                // Update nickname to "Pilot Name | PILOT_ID"
+                try {
+                    await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bot ${botToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            nick: nickname,
+                        }),
+                    });
+                    console.log(`Updated nickname for ${discordUser.username} to: ${nickname}`);
+                } catch (error) {
+                    console.error(`Failed to update nickname:`, error);
                 }
 
                 const levantMemberRoleId = process.env.ROLE_LEVANT_MEMBERS_ID || '1293262463940427869';

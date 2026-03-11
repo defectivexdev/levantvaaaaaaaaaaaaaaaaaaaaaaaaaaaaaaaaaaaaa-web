@@ -1,14 +1,14 @@
 # Levant Virtual Airlines - IVAO Discord Bot (Python)
 
-This Discord bot handles IVAO verification and automatic role assignment for Levant Virtual Airlines members.
+This Discord bot provides live status updates for Levant Virtual Airlines. All verification and role assignment is handled automatically through the web application.
 
 ## Features
 
-- **IVAO Verification**: Link Discord accounts with IVAO accounts
-- **Automatic Role Assignment**: Assigns Discord roles based on IVAO ATC and Pilot ratings
-- **Role Sync**: Update roles when IVAO ratings change
-- **Status Check**: View current IVAO verification status
-- **OAuth2 Integration**: Works seamlessly with web-based Discord linking
+- **Live Pilot Count**: Displays number of pilots currently flying in bot status
+- **Automatic Updates**: Status updates every 2 minutes from ACARS API
+- **No Commands Required**: All verification handled via web OAuth2
+- **Automatic Role Assignment**: Roles assigned when users link accounts on website
+- **Automatic Nickname**: Sets Discord nickname to "Pilot Name | PILOT_ID"
 
 ## Setup Instructions
 
