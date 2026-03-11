@@ -4,7 +4,6 @@ import { findPilot, corsHeaders } from '@/lib/acars/helpers';
 import ActiveFlight from '@/models/ActiveFlight';
 import Bid from '@/models/Bid';
 import Fleet from '@/models/Fleet';
-import { isIpBlacklisted, getIpCountry } from '@/lib/ipBlockCheck';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,16 +15,6 @@ export async function POST(request: NextRequest) {
     try {
         await connectDB();
         
-        // Check IP country blocking
-        const isBlocked = await isIpBlacklisted(request);
-        if (isBlocked) {
-            const ipCountry = getIpCountry(request);
-            console.log(`[ACARS Start] Blocked IP from blacklisted country: ${ipCountry}`);
-            return NextResponse.json(
-                { error: 'Access from your location is currently not available.' },
-                { status: 403, headers: corsHeaders() }
-            );
-        }
         const { pilotId, callsign, departureIcao, arrivalIcao, aircraftType } = await request.json();
 
         const pilot = await findPilot(pilotId);
