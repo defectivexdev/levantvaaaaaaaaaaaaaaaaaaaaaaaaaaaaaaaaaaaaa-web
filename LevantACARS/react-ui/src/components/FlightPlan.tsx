@@ -126,9 +126,9 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
     if (!hasBid || !bid || !pilotId || expired) return;
     if (flight.isActive) return; // already active
 
-    // Use airport elevation + 50ft threshold for more accurate detection
-    const altitudeThreshold = departureElevation + 50;
-    const hasMovement = telemetry.altitude > altitudeThreshold || telemetry.groundSpeed > 30;
+    // Use airport elevation + 20ft threshold for more sensitive detection
+    const altitudeThreshold = departureElevation + 20;
+    const hasMovement = telemetry.altitude > altitudeThreshold || telemetry.groundSpeed > 15;
     if (hasMovement) {
       console.log('[FlightPlan] Auto-start triggered — altitude:', telemetry.altitude, 'threshold:', altitudeThreshold, 'GS:', telemetry.groundSpeed);
       autoStartFiredRef.current = true;
@@ -178,17 +178,19 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
             </div>
 
             {/* Status badges */}
-            <div className="flex items-center gap-2 px-4 pt-4 pb-3 flex-wrap">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.12em] border bg-emerald-500/10 border-emerald-500/20 text-emerald-400 whitespace-nowrap">
-                <div className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-                DATA LINK ACTIVE
+            <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.12em] border bg-emerald-500/10 border-emerald-500/20 text-emerald-400 whitespace-nowrap">
+                  <div className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
+                  DATA LINK ACTIVE
+                </div>
+                {flight.callsign && (
+                  <span className="text-[11px] font-mono font-bold text-accent-gold/50 tracking-wider whitespace-nowrap">{flight.callsign}</span>
+                )}
+                {flight.aircraftType && (
+                  <span className="text-[11px] font-mono text-gray-600 tracking-wider whitespace-nowrap">{flight.aircraftType}</span>
+                )}
               </div>
-              {flight.callsign && (
-                <span className="text-[11px] font-mono font-bold text-accent-gold/50 tracking-wider whitespace-nowrap">{flight.callsign}</span>
-              )}
-              {flight.aircraftType && (
-                <span className="text-[11px] font-mono text-gray-600 tracking-wider whitespace-nowrap">{flight.aircraftType}</span>
-              )}
             </div>
 
             {/* DEP → ARR */}
@@ -253,18 +255,18 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
         <div className="p-0">
           <div className="bg-dark-900/40 border border-white/5 rounded-xl flex flex-col relative overflow-hidden m-2">
             {/* Header: status + countdown */}
-            <div className="flex items-center justify-between px-4 pt-3 pb-1">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-bold tracking-[0.15em] border bg-amber-500/10 border-amber-500/20 text-amber-400">
+            <div className="flex items-center justify-between px-4 pt-3 pb-1 gap-2">
+              <div className="flex items-center gap-2 flex-shrink min-w-0">
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-bold tracking-[0.15em] border bg-amber-500/10 border-amber-500/20 text-amber-400 whitespace-nowrap">
                   <div className="h-1 w-1 rounded-full bg-amber-400 animate-pulse" />
                   FLIGHT BOOKED
                 </div>
-                <span className="text-xs font-mono font-bold text-accent-gold/50 tracking-widest">{bid!.callsign}</span>
+                <span className="text-xs font-mono font-bold text-accent-gold/50 tracking-widest truncate">{bid!.callsign}</span>
               </div>
               {/* Countdown timer */}
               {remaining && (
                 <div className={cn(
-                  "flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-bold tracking-wider border",
+                  "flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-bold tracking-wider border flex-shrink-0",
                   expired
                     ? "bg-rose-500/10 border-rose-500/20 text-rose-400"
                     : pct < 15
