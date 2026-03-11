@@ -76,7 +76,9 @@ export default function LinkDiscordPage() {
     };
 
     const handleLinkDiscord = async () => {
+        console.log('handleLinkDiscord called, status:', status);
         if (!status?.verified) {
+            console.error('IVAO not verified, status:', status);
             toast.error('Please verify your IVAO account first');
             return;
         }
@@ -86,18 +88,24 @@ export default function LinkDiscordPage() {
             const token = localStorage.getItem('token');
             if (!token) {
                 toast.error('Not authenticated');
+                setLoading(false);
                 return;
             }
 
+            console.log('Fetching Discord auth URL...');
             const res = await fetch('/api/discord/verify-link', {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
 
             const data = await res.json();
+            console.log('Discord verify-link response:', data);
+            
             if (res.ok && data.authUrl) {
+                console.log('Redirecting to Discord:', data.authUrl);
                 window.location.href = data.authUrl;
             } else {
-                toast.error('Failed to generate Discord link');
+                console.error('Discord link failed:', data);
+                toast.error(data.error || 'Failed to generate Discord link');
                 setLoading(false);
             }
         } catch (error) {

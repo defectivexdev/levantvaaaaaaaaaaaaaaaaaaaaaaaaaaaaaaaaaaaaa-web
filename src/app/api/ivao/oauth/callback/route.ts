@@ -158,6 +158,58 @@ export async function GET(req: NextRequest) {
             division,
         };
 
+        // Check if user is logged in and save to their account
+        const token = req.cookies.get('token')?.value;
+        if (token) {
+            try {
+                const { jwtVerify } = await import('jose');
+                const secret = new TextEncoder().encode(process.env.JWT_SECRET || '');
+                const { payload } = await jwtVerify(token, secret);
+                const pilotId = payload.pilotId as string;
+
+                if (pilotId) {
+                    await connectDB();
+                    
+                    const pilot = await Pilot.findOne({ pilot_id: pilotId });
+                    if (pilot) {
+                        pilot.ivao_vid = ivaoVid;
+                        pilot.ivao_atc_rating = atcRating;
+                        pilot.ivao_pilot_rating = pilotRating;
+                        pilot.ivao_verified = true;
+                        pilot.ivao_last_sync = new Date();
+                        await pilot.save();
+
+                        // Update or create IVAO verification record
+                        const existingVerification = await IVAOVerification.findOne({ pilot_id: pilotId });
+                        if (existingVerification) {
+                            existingVerification.ivao_vid = ivaoVid;
+                            existingVerification.atc_rating = atcRating;
+                            existingVerification.pilot_rating = pilotRating;
+                            existingVerification.division = division;
+                            existingVerification.last_sync = new Date();
+                            existingVerification.discord_roles_assigned = false;
+                            await existingVerification.save();
+                        } else {
+                            await IVAOVerification.create({
+                                pilot_id: pilotId,
+                                ivao_vid: ivaoVid,
+                                atc_rating: atcRating,
+                                pilot_rating: pilotRating,
+                                division,
+                                verified_at: new Date(),
+                                last_sync: new Date(),
+                                discord_roles_assigned: false,
+                            });
+                        }
+
+                        console.log('IVAO data saved to pilot account:', pilotId);
+                    }
+                }
+            } catch (err) {
+                console.error('Error saving IVAO data to pilot account:', err);
+            }
+        }
+
         console.log('IVAO verification successful:', ivaoData);
         
         const response = NextResponse.redirect(`${baseUrl}${redirectPath}?ivao_verified=success&ivao_vid=${ivaoVid}`);
