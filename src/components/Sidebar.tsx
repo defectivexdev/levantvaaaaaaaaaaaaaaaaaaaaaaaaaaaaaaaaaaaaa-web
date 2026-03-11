@@ -28,6 +28,7 @@ import {
     BarChart3,
     Calendar,
     Users,
+    Shield,
 } from 'lucide-react';
 
 interface MenuItem {
@@ -90,6 +91,7 @@ export default function Sidebar() {
             : [
                 { name: 'Dashboard', path: '/portal/dashboard', icon: LayoutDashboard },
                 { name: 'Profile', path: '/portal/profile', icon: User },
+                { name: 'Discord & IVAO', path: '/portal/profile#ivao-verification', icon: Shield },
             ];
         
         const operationsItems = isGroupflightRole
