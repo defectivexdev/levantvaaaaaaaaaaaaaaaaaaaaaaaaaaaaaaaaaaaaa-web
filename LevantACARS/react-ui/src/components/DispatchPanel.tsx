@@ -107,7 +107,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
         route: data.general.route,
         altitude: parseInt(data.general.initial_altitude),
         distance: parseInt(data.general.air_distance),
-        flightTime: parseInt(data.times.est_time_enroute),
+        flightTime: Math.round(parseInt(data.times.est_time_enroute) / 60), // Convert seconds to minutes
         fuel: {
           plan: parseInt(data.fuel.plan_ramp),
           extra: parseInt(data.fuel.extra),
@@ -245,7 +245,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
                   <Clock size={14} className="text-cyan-400" />
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider">Flight Time</div>
                 </div>
-                <div className="text-lg font-mono text-white">{Math.floor(flightPlan.flightTime / 60)}h {flightPlan.flightTime % 60}m</div>
+                <div className="text-lg font-mono text-white">{Math.floor(flightPlan.flightTime / 60)}h {Math.round(flightPlan.flightTime % 60)}m</div>
               </div>
               <div className="bg-white/[0.02] border border-white/[0.04] rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-2">
