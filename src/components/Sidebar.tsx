@@ -36,6 +36,7 @@ interface MenuItem {
     path: string;
     icon: LucideIcon;
     external?: boolean;
+    onClick?: () => void;
 }
 
 interface AdminSubGroup {
@@ -109,6 +110,7 @@ export default function Sidebar() {
         const communityItems = isGroupflightRole
             ? []
             : [
+                { name: 'Link Discord & IVAO', path: '#', icon: Shield, onClick: handleDiscordLink },
                 { name: 'Settings', path: '/portal/settings', icon: Settings },
             ];
         
@@ -237,6 +239,15 @@ export default function Sidebar() {
                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full shadow-lg shadow-cyan-500/50" />
                                     ) : null;
 
+                                    if (item.onClick) {
+                                        return (
+                                            <button key={item.name} onClick={item.onClick} disabled={discordLinking} className={`${linkClasses} w-full text-left disabled:opacity-50 disabled:cursor-not-allowed`}>
+                                                {activeBar}
+                                                <item.icon className={iconClasses} />
+                                                {discordLinking && item.name === 'Link Discord & IVAO' ? 'Redirecting...' : item.name}
+                                            </button>
+                                        );
+                                    }
                                     if (item.external) {
                                         return (
                                             <a key={item.name} href={item.path} target="_blank" rel="noopener noreferrer" className={linkClasses}>
@@ -344,17 +355,6 @@ export default function Sidebar() {
                         </div>
                     </Link>
                 )}
-
-                {/* Link Discord & IVAO */}
-                <button
-                    onClick={handleDiscordLink}
-                    disabled={discordLinking}
-                    className="w-full flex items-center px-3 py-2.5 text-[13px] font-medium text-cyan-400 hover:text-cyan-300 hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 rounded-xl transition-all group relative border border-cyan-500/20 hover:border-cyan-500/40 shadow-lg shadow-cyan-500/5 disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Link Discord & IVAO Account"
-                >
-                    <Shield className="w-[18px] h-[18px] mr-3 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                    {discordLinking ? 'Redirecting...' : 'Link Discord & IVAO'}
-                </button>
 
                 {/* Logout */}
                 <button
