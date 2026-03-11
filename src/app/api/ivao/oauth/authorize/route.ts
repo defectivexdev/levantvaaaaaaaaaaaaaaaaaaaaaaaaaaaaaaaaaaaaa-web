@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
-const AUTH_URL = 'https://api.ivao.aero/oauth/authorize';
+const AUTH_URL = 'https://sso.ivao.aero/authorize';
 const STATE_COOKIE = 'ivao_oauth_state';
 
 export async function GET(request: NextRequest) {
