@@ -20,8 +20,9 @@ export async function GET() {
         }
 
         // Get total completed flights
+        // pilot_id is now a string (e.g., "LVT7FG"), not ObjectId
         const totalFlights = await Flight.countDocuments({ 
-            pilot_id: session.id, 
+            pilot_id: session.pilotId, 
             approved_status: 1 
         });
 
