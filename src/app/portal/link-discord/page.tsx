@@ -29,6 +29,16 @@ export default function LinkDiscordPage() {
 
     useEffect(() => {
         fetchStatus();
+        
+        // Check if returning from IVAO OAuth
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('ivao_verified') === 'success') {
+            toast.success('IVAO account verified successfully!');
+            // Refresh status after a short delay to ensure DB is updated
+            setTimeout(() => {
+                fetchStatus();
+            }, 1000);
+        }
     }, []);
 
     const fetchStatus = async () => {
