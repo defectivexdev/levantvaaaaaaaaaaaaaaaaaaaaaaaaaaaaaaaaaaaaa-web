@@ -28,7 +28,8 @@ export default function LinkDiscordPage() {
     const [statusLoading, setStatusLoading] = useState(true);
 
     useEffect(() => {
-        console.log('LinkDiscordPage mounted');
+        console.log('=== LinkDiscordPage mounted at', new Date().toISOString(), '===');
+        alert('Page loaded - check console for logs');
         fetchStatus();
         
         // Check if returning from IVAO OAuth
@@ -55,15 +56,9 @@ export default function LinkDiscordPage() {
 
     const fetchStatus = async () => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.log('No token found in localStorage');
-                return;
-            }
-
             console.log('Fetching IVAO status...');
             const res = await fetch('/api/ivao/verify', {
-                headers: { 'Authorization': `Bearer ${token}` },
+                credentials: 'include', // Include cookies in request
             });
 
             console.log('API response status:', res.status);
@@ -103,16 +98,9 @@ export default function LinkDiscordPage() {
 
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                toast.error('Not authenticated');
-                setLoading(false);
-                return;
-            }
-
             console.log('Fetching Discord auth URL...');
             const res = await fetch('/api/discord/verify-link', {
-                headers: { 'Authorization': `Bearer ${token}` },
+                credentials: 'include', // Include cookies in request
             });
 
             const data = await res.json();

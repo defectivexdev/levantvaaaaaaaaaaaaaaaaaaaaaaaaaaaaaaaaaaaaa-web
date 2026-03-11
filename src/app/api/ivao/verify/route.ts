@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
     try {
-        const token = req.headers.get('authorization')?.split(' ')[1];
+        const token = req.cookies.get('lva_session')?.value;
         if (!token) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }

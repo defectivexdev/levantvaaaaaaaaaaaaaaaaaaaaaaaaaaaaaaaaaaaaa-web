@@ -172,12 +172,14 @@ export async function GET(req: NextRequest) {
                     
                     const pilot = await Pilot.findOne({ pilot_id: pilotId });
                     if (pilot) {
+                        console.log('Saving IVAO data for pilot:', pilotId);
                         pilot.ivao_vid = ivaoVid;
                         pilot.ivao_atc_rating = atcRating;
                         pilot.ivao_pilot_rating = pilotRating;
                         pilot.ivao_verified = true;
                         pilot.ivao_last_sync = new Date();
                         await pilot.save();
+                        console.log('Pilot saved with ivao_verified:', pilot.ivao_verified);
 
                         // Update or create IVAO verification record
                         const existingVerification = await IVAOVerification.findOne({ pilot_id: pilotId });
@@ -189,6 +191,7 @@ export async function GET(req: NextRequest) {
                             existingVerification.last_sync = new Date();
                             existingVerification.discord_roles_assigned = false;
                             await existingVerification.save();
+                            console.log('Updated existing verification record');
                         } else {
                             await IVAOVerification.create({
                                 pilot_id: pilotId,
@@ -200,10 +203,20 @@ export async function GET(req: NextRequest) {
                                 last_sync: new Date(),
                                 discord_roles_assigned: false,
                             });
+                            console.log('Created new verification record');
                         }
 
-                        console.log('IVAO data saved to pilot account:', pilotId);
+                        console.log('IVAO data saved successfully for pilot:', pilotId, {
+                            vid: ivaoVid,
+                            atcRating,
+                            pilotRating,
+                            verified: true
+                        });
+                    } else {
+                        console.error('Pilot not found for ID:', pilotId);
                     }
+                } else {
+                    console.error('No pilotId found in JWT token');
                 }
             } catch (err) {
                 console.error('Error saving IVAO data to pilot account:', err);
