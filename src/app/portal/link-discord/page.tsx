@@ -1,5 +1,5 @@
 'use client';
-
+// Version: 2.0.0 - Cookie-based auth
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Check, Loader2, ExternalLink, AlertCircle } from 'lucide-react';
