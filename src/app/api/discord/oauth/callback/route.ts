@@ -116,22 +116,39 @@ export async function GET(req: NextRequest) {
                     const atcRating = verification.atc_rating;
                     const pilotRating = verification.pilot_rating;
 
-                    // ATC Ratings: 5-7 (ADC-ACC) → ADIR, 8-10 (SEC-CAI) → DIR
-                    if (atcRating >= 5 && atcRating <= 7) {
-                        rolesToAssign.push(process.env.ROLE_ADIR_ID || '1440763539794169939');
-                    } else if (atcRating >= 8 && atcRating <= 10) {
-                        rolesToAssign.push(process.env.ROLE_DIR_ID || '1440763280028336211');
+                    // ATC Rating Roles (individual roles per rating)
+                    const atcRoleMap: Record<number, string> = {
+                        2: process.env.ROLE_AS1_ID || '1481212423057838181',
+                        3: process.env.ROLE_AS2_ID || '1481212461888573453',
+                        4: process.env.ROLE_AS3_ID || '1481212564133380187',
+                        5: process.env.ROLE_ADC_ID || '1481212575470456853',
+                        6: process.env.ROLE_APC_ID || '1481212584630947910',
+                        7: process.env.ROLE_ACC_ID || '1481212594868977736',
+                        9: process.env.ROLE_SAI_ID || '1481212601588387861',
+                        10: process.env.ROLE_CAI_ID || '1481313822210785421',
+                    };
+
+                    // Pilot Rating Roles (individual roles per rating)
+                    const pilotRoleMap: Record<number, string> = {
+                        2: process.env.ROLE_FS1_ID || '1481212666340053053',
+                        3: process.env.ROLE_FS2_ID || '1481212683293294613',
+                        4: process.env.ROLE_FS3_ID || '1481212691186978826',
+                        5: process.env.ROLE_PP_ID || '1481212699395493888',
+                        6: process.env.ROLE_SPP_ID || '1481212715904270437',
+                        7: process.env.ROLE_CP_ID || '1481212733860085761',
+                        8: process.env.ROLE_ATP_ID || '1481212752231010345',
+                        9: process.env.ROLE_SFI_ID || '1481313746629693510',
+                        10: process.env.ROLE_CFI_ID || '1481313822210785421',
+                    };
+
+                    // Assign ATC role if rating exists
+                    if (atcRating && atcRoleMap[atcRating]) {
+                        rolesToAssign.push(atcRoleMap[atcRating]);
                     }
 
-                    // Pilot Ratings: 5-6 (PP-SPP) → AWM, 7-8 (CP-ATP) → WM, 9 (SFI) → FM, 10 (CFI) → AFM
-                    if (pilotRating === 5 || pilotRating === 6) {
-                        rolesToAssign.push(process.env.ROLE_AWM_ID || '1440765576770224230');
-                    } else if (pilotRating === 7 || pilotRating === 8) {
-                        rolesToAssign.push(process.env.ROLE_WM_ID || '1440764377665110027');
-                    } else if (pilotRating === 9) {
-                        rolesToAssign.push(process.env.ROLE_FM_ID || '1440765742491631747');
-                    } else if (pilotRating === 10) {
-                        rolesToAssign.push(process.env.ROLE_AFM_ID || '1440765823726915625');
+                    // Assign Pilot role if rating exists
+                    if (pilotRating && pilotRoleMap[pilotRating]) {
+                        rolesToAssign.push(pilotRoleMap[pilotRating]);
                     }
                 }
 
