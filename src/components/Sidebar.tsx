@@ -91,7 +91,6 @@ export default function Sidebar() {
             : [
                 { name: 'Dashboard', path: '/portal/dashboard', icon: LayoutDashboard },
                 { name: 'Profile', path: '/portal/profile', icon: User },
-                { name: 'Link Discord & IVAO', path: '/portal/profile#ivao-verification', icon: Shield },
             ];
         
         const operationsItems = isGroupflightRole
