@@ -188,6 +188,51 @@ export async function GET(req: NextRequest) {
                     const errorText = await removeRoleResponse.text();
                     console.error(`Failed to remove unlinked role (${removeRoleResponse.status}):`, errorText);
                 }
+
+                // Send webhook notification for successful linking
+                try {
+                    const webhookUrl = 'https://discordapp.com/api/webhooks/1481338125111398474/RFiWxLbN8ZxxUQITBEXR9N4-xUxThhzcr1IUsuDARdMKP3bVWAjjugGaqSiPWTqzkzjg';
+                    
+                    const roleNames: string[] = ['Levant Members'];
+                    if (verification && pilot.ivao_verified) {
+                        const atcRatingNames: Record<number, string> = {
+                            2: 'AS1', 3: 'AS2', 4: 'AS3', 5: 'ADC', 6: 'APC', 7: 'ACC', 8: 'SEC', 9: 'SAI', 10: 'CAI'
+                        };
+                        const pilotRatingNames: Record<number, string> = {
+                            2: 'FS1', 3: 'FS2', 4: 'FS3', 5: 'PP', 6: 'SPP', 7: 'CP', 8: 'ATP', 9: 'SFI', 10: 'CFI'
+                        };
+                        
+                        if (verification.atc_rating && atcRatingNames[verification.atc_rating]) {
+                            roleNames.push(atcRatingNames[verification.atc_rating]);
+                        }
+                        if (verification.pilot_rating && pilotRatingNames[verification.pilot_rating]) {
+                            roleNames.push(pilotRatingNames[verification.pilot_rating]);
+                        }
+                    }
+
+                    await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: '🔗 Discord Account Linked',
+                                description: `**${pilot.first_name} ${pilot.last_name}** has successfully linked their Discord account.`,
+                                color: 0x00ff00,
+                                fields: [
+                                    { name: 'Pilot ID', value: pilotId, inline: true },
+                                    { name: 'Discord User', value: `${discordUser.username}`, inline: true },
+                                    { name: '\u200b', value: '\u200b', inline: false },
+                                    { name: 'Roles Assigned', value: roleNames.join(', '), inline: false },
+                                    { name: 'IVAO Verified', value: pilot.ivao_verified ? '✅ Yes' : '❌ No', inline: true },
+                                ],
+                                footer: { text: 'Levant Virtual Airlines' },
+                                timestamp: new Date().toISOString(),
+                            }],
+                        }),
+                    });
+                } catch (webhookError) {
+                    console.error('Failed to send webhook notification:', webhookError);
+                }
             } catch (error) {
                 console.error('Failed to add member to guild or assign roles:', error);
             }
