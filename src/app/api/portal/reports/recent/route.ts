@@ -29,8 +29,6 @@ export async function GET(request: Request) {
             .lean();
 
         const formattedReports = flights.map((f: any) => {
-            console.log('Flight aircraft_type:', f.aircraft_type, 'for flight:', f.flight_number);
-            // pilot_id is now a string (e.g., "LVT7FG"), not an ObjectId
             // pilot data is stored directly in pilot_name field
             const pilotNameParts = (f.pilot_name || 'Unknown Pilot').split(' ');
             const firstName = pilotNameParts[0] || 'Unknown';
@@ -53,31 +51,7 @@ export async function GET(request: Request) {
             };
         });
 
-        // Add debug info to response that will show in browser console
-        const debugInfo = {
-            samplePilotIds: sampleFlights.map(f => ({ 
-                pilot_id: f.pilot_id, 
-                type: typeof f.pilot_id,
-                isObjectId: f.pilot_id instanceof mongoose.Types.ObjectId,
-                toString: f.pilot_id?.toString?.(),
-                pilot_name: f.pilot_name
-            })),
-            sessionInfo: { 
-                sessionId: session.id, 
-                sessionPilotId: session.pilotId,
-                sessionIdType: typeof session.id,
-                sessionPilotIdType: typeof session.pilotId
-            },
-            totalFlights: flights.length,
-            firstFlightPilotId: flights[0]?.pilot_id,
-            firstFlightPilotIdType: typeof flights[0]?.pilot_id
-        };
-
-        return NextResponse.json({ 
-            flights: formattedReports, 
-            reports: formattedReports,
-            _debug: debugInfo 
-        });
+        return NextResponse.json({ flights: formattedReports, reports: formattedReports });
 
     } catch (error: any) {
         console.error('Recent reports API Error:', error);
