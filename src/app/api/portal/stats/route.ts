@@ -55,7 +55,7 @@ export async function GET() {
             { 
                 label: 'Flight Time', 
                 value: formattedHours, 
-                subtext: `${totalFlights} Flights`,
+                subtext: 'Total Hours',
                 icon: 'clock',
                 color: 'emerald'
             },
