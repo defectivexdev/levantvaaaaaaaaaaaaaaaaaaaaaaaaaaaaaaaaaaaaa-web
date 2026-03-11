@@ -147,13 +147,12 @@ export async function GET(req: NextRequest) {
             lastSync: pilot.ivao_last_sync,
             verified: pilot.ivao_verified,
             division: verification?.division,
-                atc_rating: atcRating,
-                pilot_rating: pilotRating,
-                division,
-            },
         });
-    } catch (error) {
-        console.error('IVAO sync error:', error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    } catch (error: any) {
+        console.error('Error fetching IVAO sync status:', error);
+        return NextResponse.json(
+            { error: 'Failed to fetch IVAO sync status' },
+            { status: 500 }
+        );
     }
 }
