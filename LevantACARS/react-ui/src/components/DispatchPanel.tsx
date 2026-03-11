@@ -58,7 +58,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
       setLastBidId(null);
       setFlightPlan(null);
     }
-  }, [bid, auth.simbriefId, lastBidId]);
+  }, [bid, auth.simbriefId]);
 
   const fetchFlightPlan = async () => {
     console.log('[DispatchPanel] fetchFlightPlan called, simbriefId:', auth.simbriefId);
