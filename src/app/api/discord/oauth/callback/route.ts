@@ -78,28 +78,43 @@ export async function GET(req: NextRequest) {
 
         if (guildId && botToken) {
             try {
-                console.log('Adding member to guild...');
-                const addMemberResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
-                    method: 'PUT',
+                // First check if user is already in the server
+                console.log('Checking if user is already in guild...');
+                const getMemberResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
                     headers: {
                         'Authorization': `Bot ${botToken}`,
-                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        access_token: accessToken,
-                    }),
                 });
 
-                console.log('Add member response status:', addMemberResponse.status);
-                if (addMemberResponse.ok || addMemberResponse.status === 204) {
-                    console.log(`Added user ${discordUser.username} to guild`);
+                let isExistingMember = getMemberResponse.ok;
+                console.log('User already in guild?', isExistingMember);
+
+                if (!isExistingMember) {
+                    console.log('Adding member to guild...');
+                    const addMemberResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bot ${botToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            access_token: accessToken,
+                        }),
+                    });
+
+                    console.log('Add member response status:', addMemberResponse.status);
+                    if (addMemberResponse.ok || addMemberResponse.status === 204) {
+                        console.log(`Added user ${discordUser.username} to guild`);
+                    } else {
+                        const errorText = await addMemberResponse.text();
+                        console.error('Failed to add member:', errorText);
+                    }
+                    
+                    // Wait a moment for member to be fully added
+                    await new Promise(resolve => setTimeout(resolve, 1500));
                 } else {
-                    const errorText = await addMemberResponse.text();
-                    console.error('Failed to add member:', errorText);
+                    console.log('User already in guild, proceeding with role assignment');
                 }
-                
-                // Wait a moment for member to be fully added
-                await new Promise(resolve => setTimeout(resolve, 1000));
                 
                 // Update nickname to "Pilot Name | PILOT_ID"
                 const nicknameResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
