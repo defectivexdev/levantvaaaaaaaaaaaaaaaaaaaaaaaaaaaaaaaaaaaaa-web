@@ -21,10 +21,16 @@ export async function GET() {
 
         // Get total completed flights
         // pilot_id is now a string (e.g., "LVT7FG"), not ObjectId
+        console.log('Stats API - Counting flights for pilot_id:', session.pilotId);
         const totalFlights = await Flight.countDocuments({ 
             pilot_id: session.pilotId, 
             approved_status: 1 
         });
+        console.log('Stats API - Total flights found:', totalFlights);
+        
+        // Debug: check all flights for this pilot regardless of status
+        const allFlights = await Flight.countDocuments({ pilot_id: session.pilotId });
+        console.log('Stats API - All flights (any status):', allFlights);
 
         // Format hours nicely (no decimals for whole numbers)
         const hours = Number(pilot.total_hours) || 0;
