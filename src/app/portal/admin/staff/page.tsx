@@ -272,16 +272,18 @@ export default function AdminStaffPage() {
                                                 />
                                             ) : null}
                                             <span className={`text-2xl font-bold text-gray-600 uppercase ${member.discord ? 'hidden' : ''}`}>
-                                                {(member.name || member.pilot_id?.first_name)?.[0]}
+                                                {(member.name || member.pilot_id?.first_name || 'S')?.[0]}
                                             </span>
                                         </div>
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-white text-lg leading-tight">
-                                            {member.name || `${member.pilot_id?.first_name} ${member.pilot_id?.last_name}`}
+                                            {member.name || (member.pilot_id?.first_name && member.pilot_id?.last_name 
+                                                ? `${member.pilot_id.first_name} ${member.pilot_id.last_name}` 
+                                                : 'Staff Member')}
                                         </h3>
                                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">
-                                            <span className={`text-[10px] font-bold uppercase tracking-wider ${member.role_id?.color}`}>{member.role_id?.title}</span>
+                                            <span className={`text-[10px] font-bold uppercase tracking-wider ${member.role_id?.color}`}>{member.role_id?.title || 'No Role'}</span>
                                         </div>
                                     </div>
                                 </div>
