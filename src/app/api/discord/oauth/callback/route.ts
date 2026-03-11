@@ -122,6 +122,20 @@ export async function GET(req: NextRequest) {
                     }
                 }
 
+                // Remove the unlinked role after successful linking
+                const unlinkedRoleId = '1481168075876466740';
+                try {
+                    await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}/roles/${unlinkedRoleId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bot ${botToken}`,
+                        },
+                    });
+                    console.log(`Removed unlinked role from ${discordUser.username}`);
+                } catch (error) {
+                    console.error(`Failed to remove unlinked role:`, error);
+                }
+
                 if (verification) {
                     verification.discord_roles_assigned = true;
                     await verification.save();

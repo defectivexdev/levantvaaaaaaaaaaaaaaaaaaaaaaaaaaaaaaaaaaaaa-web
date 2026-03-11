@@ -123,6 +123,16 @@ async def verify(interaction: discord.Interaction, pilot_id: str):
             await interaction.followup.send(f'❌ Failed to assign roles: {role_result.get("error")}', ephemeral=True)
             return
         
+        # Remove unlinked role after successful verification
+        unlinked_role_id = 1481168075876466740
+        try:
+            unlinked_role = member.guild.get_role(unlinked_role_id)
+            if unlinked_role and unlinked_role in member.roles:
+                await member.remove_roles(unlinked_role)
+                print(f'Removed unlinked role from {member.name}')
+        except Exception as e:
+            print(f'Failed to remove unlinked role: {e}')
+        
         # Update verification
         verifications.update_one(
             {'pilot_id': pilot_id},
@@ -188,6 +198,16 @@ async def sync(interaction: discord.Interaction):
         if not role_result['success']:
             await interaction.followup.send(f'❌ Failed to update roles: {role_result.get("error")}', ephemeral=True)
             return
+        
+        # Remove unlinked role after successful sync
+        unlinked_role_id = 1481168075876466740
+        try:
+            unlinked_role = member.guild.get_role(unlinked_role_id)
+            if unlinked_role and unlinked_role in member.roles:
+                await member.remove_roles(unlinked_role)
+                print(f'Removed unlinked role from {member.name}')
+        except Exception as e:
+            print(f'Failed to remove unlinked role: {e}')
         
         # Create embed
         embed = discord.Embed(
