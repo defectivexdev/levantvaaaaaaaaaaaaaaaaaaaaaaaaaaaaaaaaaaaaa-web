@@ -44,29 +44,7 @@ export async function GET() {
                 : String(Math.round(balance));
 
 
-        const stats = [
-            { 
-                label: 'Current Airport', 
-                value: pilot.current_location || 'XXXX', 
-                subtext: 'Base Location',
-                icon: 'location',
-                color: 'blue'
-            },
-            { 
-                label: 'Total Flights', 
-                value: String(totalFlights), 
-                subtext: 'Approved PIREPs',
-                icon: 'plane',
-                color: 'purple'
-            },
-            { 
-                label: 'Balance', 
-                value: `${formattedBalance} cr`, 
-                subtext: pilot.rank || 'Cadet',
-                icon: 'credits',
-                color: 'gold'
-            },
-        ];
+        const stats: any[] = [];
 
         const res = NextResponse.json({ stats });
         res.headers.set('Cache-Control', 'private, max-age=15, stale-while-revalidate=30');
