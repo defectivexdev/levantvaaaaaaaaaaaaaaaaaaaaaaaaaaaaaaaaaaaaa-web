@@ -20,7 +20,12 @@ export async function GET(request: NextRequest) {
 
 
         // --- Recent Awards (Medal Case) ---
-        const pilotAwards = await PilotAward.find({ pilot_id: session.id })
+        const pilotAwards = await PilotAward.find({ 
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ]
+        })
             .sort({ earned_at: -1 })
             .limit(6)
             .lean();
@@ -70,7 +75,13 @@ export async function GET(request: NextRequest) {
 
         // --- Active Bid Weather ---
         let weather = null;
-        const activeBid = await Bid.findOne({ pilot_id: session.id, status: 'Active' }).sort({ created_at: -1 }).lean();
+        const activeBid = await Bid.findOne({ 
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ],
+            status: 'Active' 
+        }).sort({ created_at: -1 }).lean();
         if (activeBid) {
             try {
                 const [depMetar, arrMetar] = await Promise.all([

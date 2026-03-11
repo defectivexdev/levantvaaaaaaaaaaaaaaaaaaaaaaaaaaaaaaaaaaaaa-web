@@ -13,7 +13,13 @@ export async function GET(request: NextRequest) {
     try {
         await connectDB();
 
-        const bid = await Bid.findOne({ pilot_id: session.id, status: 'Active' }).sort({ created_at: -1 });
+        const bid = await Bid.findOne({ 
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ],
+            status: 'Active' 
+        }).sort({ created_at: -1 });
         if (!bid) return NextResponse.json({ error: 'No active booking' }, { status: 404 });
 
         const pilot = await PilotModel.findById(session.id).select('pilot_id first_name last_name rank');

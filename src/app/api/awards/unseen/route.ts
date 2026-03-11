@@ -12,7 +12,13 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const unseen = await PilotAward.find({ pilot_id: session.id, seen: { $ne: true } })
+        const unseen = await PilotAward.find({ 
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ],
+            seen: { $ne: true } 
+        })
             .populate('award_id')
             .sort({ earned_at: -1 })
             .lean();
@@ -36,7 +42,13 @@ export async function POST(request: NextRequest) {
         const { ids } = await request.json();
         if (ids && ids.length > 0) {
             await PilotAward.updateMany(
-                { _id: { $in: ids }, pilot_id: session.id },
+                { 
+                    _id: { $in: ids }, 
+                    $or: [
+                        { pilot_id: session.pilotId },
+                        { pilot_id: session.id }
+                    ]
+                },
                 { $set: { seen: true } }
             );
         }

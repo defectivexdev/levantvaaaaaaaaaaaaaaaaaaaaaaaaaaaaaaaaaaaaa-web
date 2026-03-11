@@ -32,7 +32,10 @@ export async function POST(request: NextRequest) {
 
         // 1. Check if pilot already has an active bid
         const existingBid = await Bid.findOne({ 
-            pilot_id: session.id, 
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ],
             status: { $in: ['Active', 'InProgress'] } 
         });
 

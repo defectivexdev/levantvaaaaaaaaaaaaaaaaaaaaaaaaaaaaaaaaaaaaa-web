@@ -89,12 +89,20 @@ export async function GET() {
         await connectDB();
 
         // Delete any expired bids first
-        await Bid.deleteMany(
-            { pilot_id: session.id, status: { $in: ['Active', 'InProgress'] }, expires_at: { $lte: new Date() } }
-        );
+        await Bid.deleteMany({
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ],
+            status: { $in: ['Active', 'InProgress'] }, 
+            expires_at: { $lte: new Date() }
+        });
 
         const bid = await Bid.findOne({ 
-            pilot_id: session.id, 
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ],
             status: { $in: ['Active', 'InProgress'] } 
         }).sort({ created_at: -1 });
 

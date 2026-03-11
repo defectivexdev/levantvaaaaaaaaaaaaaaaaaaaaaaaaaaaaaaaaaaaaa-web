@@ -27,7 +27,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
         let progress = null;
         if (session) {
-            progress = await TourProgress.findOne({ pilot_id: session.id, tour_id: id });
+            progress = await TourProgress.findOne({ 
+                $or: [
+                    { pilot_id: session.pilotId },
+                    { pilot_id: session.id }
+                ],
+                tour_id: id 
+            });
         }
 
         return NextResponse.json({ 
@@ -69,7 +75,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         }
 
         // Check if already joined
-        const existing = await TourProgress.findOne({ pilot_id: session.id, tour_id: id });
+        const existing = await TourProgress.findOne({ 
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ],
+            tour_id: id 
+        });
         if (existing) {
              return NextResponse.json({ success: true, message: 'Already joined', progress: existing });
         }

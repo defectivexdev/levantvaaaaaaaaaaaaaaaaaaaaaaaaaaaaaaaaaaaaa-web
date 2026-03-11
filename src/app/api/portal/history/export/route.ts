@@ -13,7 +13,12 @@ export async function GET(request: NextRequest) {
     try {
         await dbConnect();
 
-        const flights = await FlightModel.find({ pilot_id: session.id })
+        const flights = await FlightModel.find({ 
+            $or: [
+                { pilot_id: session.pilotId },
+                { pilot_id: session.id }
+            ]
+        })
             .sort({ submitted_at: -1 })
             .lean();
 
