@@ -141,23 +141,13 @@ export default function LinkDiscordPage() {
                     </div>
 
                     {status?.verified ? (
-                        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4">
-                            <div className="flex items-start gap-3">
-                                <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <div className="space-y-3">
+                            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4 flex items-start gap-3">
+                                <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                                 <div className="flex-1">
-                                    <p className="text-emerald-400 font-medium mb-2">IVAO Account Verified</p>
-                                    <div className="grid grid-cols-2 gap-3 text-sm">
-                                        <div>
-                                            <span className="text-gray-400">IVAO VID:</span>
-                                            <span className="text-white ml-2 font-mono">{status.ivao_vid}</span>
-                                        </div>
-                                        {status.atc_rating && (
-                                            <div>
-                                                <span className="text-gray-400">ATC Rating:</span>
-                                                <span className="text-cyan-400 ml-2 font-semibold">{ATC_RATINGS[status.atc_rating] || status.atc_rating}</span>
-                                            </div>
-                                        )}
-                                        {status.pilot_rating && (
+                                    <p className="text-emerald-400 font-medium text-sm">IVAO account verified!</p>
+                                    <p className="text-gray-400 text-xs mt-1">VID: {status.ivao_vid}</p>
+                                    <p className="text-gray-400 text-xs">ATC: {status.atc_rating ? ATC_RATINGS[status.atc_rating] : 'Unknown'} | Pilot: {status.pilot_rating ? PILOT_RATINGS[status.pilot_rating] : 'Unknown'}</p>
                                             <div>
                                                 <span className="text-gray-400">Pilot Rating:</span>
                                                 <span className="text-cyan-400 ml-2 font-semibold">{PILOT_RATINGS[status.pilot_rating] || status.pilot_rating}</span>
