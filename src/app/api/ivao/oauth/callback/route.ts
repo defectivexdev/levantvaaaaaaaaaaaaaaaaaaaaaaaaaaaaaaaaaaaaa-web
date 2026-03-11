@@ -8,13 +8,20 @@ export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
         const code = searchParams.get('code');
-        const state = searchParams.get('state');
+        const stateParam = searchParams.get('state');
+        const storedState = req.cookies.get('ivao_oauth_state')?.value;
 
-        if (!code || !state) {
+        if (!code || !stateParam) {
             return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=invalid_request`);
         }
 
-        const pilotId = Buffer.from(state, 'base64').toString('utf-8');
+        // Parse state: format is "uuid:redirectPath"
+        const [state, redirectPath = '/portal/link-discord'] = stateParam.split(':', 2);
+        
+        if (state !== storedState) {
+            console.error('State mismatch:', { state, storedState });
+            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=state_mismatch`);
+        }
 
         // Discover token endpoint from OpenID configuration
         let tokenEndpoint = `${IVAO_API_URL}/oauth/token`;
@@ -125,46 +132,33 @@ export async function GET(req: NextRequest) {
             division,
         });
 
-        await connectDB();
+        // Store IVAO data in session/cookie for later use when linking to pilot account
+        const ivaoData = {
+            vid: ivaoVid,
+            atcRating,
+            pilotRating,
+            division,
+        };
 
-        const pilot = await Pilot.findOne({ pilot_id: pilotId });
-        if (!pilot) {
-            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=pilot_not_found`);
-        }
-
-        // Update pilot with IVAO data
-        pilot.ivao_vid = ivaoVid;
-        pilot.ivao_atc_rating = atcRating;
-        pilot.ivao_pilot_rating = pilotRating;
-        pilot.ivao_verified = true;
-        await pilot.save();
-
-        // Update or create IVAO verification record
-        const existingVerification = await IVAOVerification.findOne({ pilot_id: pilot.pilot_id });
+        console.log('IVAO verification successful:', ivaoData);
         
-        if (existingVerification) {
-            existingVerification.ivao_vid = ivaoVid;
-            existingVerification.atc_rating = atcRating;
-            existingVerification.pilot_rating = pilotRating;
-            existingVerification.division = division;
-            existingVerification.last_sync = new Date();
-            existingVerification.discord_roles_assigned = false;
-            await existingVerification.save();
-        } else {
-            await IVAOVerification.create({
-                pilot_id: pilot.pilot_id,
-                ivao_vid: ivaoVid,
-                atc_rating: atcRating,
-                pilot_rating: pilotRating,
-                division,
-                verified_at: new Date(),
-                last_sync: new Date(),
-                discord_roles_assigned: false,
-            });
-        }
+        const response = NextResponse.redirect(`${process.env.BASE_URL}${redirectPath}?ivao_verified=success&ivao_vid=${ivaoVid}`);
+        
+        // Store IVAO data in cookie for the link-discord page to use
+        response.cookies.set({
+            name: 'ivao_temp_data',
+            value: JSON.stringify(ivaoData),
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 10 * 60, // 10 minutes
+        });
 
-        console.log('IVAO verification successful for pilot:', pilotId);
-        return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?ivao_verified=success`);
+        // Clear state cookie
+        response.cookies.delete('ivao_oauth_state');
+
+        return response;
     } catch (error) {
         console.error('IVAO OAuth callback error:', error);
         return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=server_error`);

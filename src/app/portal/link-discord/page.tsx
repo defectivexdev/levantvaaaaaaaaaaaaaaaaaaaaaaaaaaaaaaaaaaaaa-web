@@ -56,32 +56,8 @@ export default function LinkDiscordPage() {
 
     const handleVerifyIVAO = async () => {
         setVerifying(true);
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                toast.error('Not authenticated - please log in again');
-                setVerifying(false);
-                return;
-            }
-
-            const res = await fetch('/api/ivao/oauth/authorize', {
-                headers: { 'Authorization': `Bearer ${token}` },
-            });
-
-            const data = await res.json();
-            
-            if (res.ok && data.authUrl) {
-                window.location.href = data.authUrl;
-            } else {
-                console.error('IVAO OAuth authorize failed:', { status: res.status, data });
-                toast.error(data.error || 'Failed to generate IVAO authorization link');
-                setVerifying(false);
-            }
-        } catch (error) {
-            console.error('IVAO OAuth error:', error);
-            toast.error('Failed to verify IVAO account');
-            setVerifying(false);
-        }
+        // Direct redirect to IVAO OAuth - no need for API call
+        window.location.href = '/api/ivao/oauth/authorize?redirect=/portal/link-discord';
     };
 
     const handleLinkDiscord = async () => {

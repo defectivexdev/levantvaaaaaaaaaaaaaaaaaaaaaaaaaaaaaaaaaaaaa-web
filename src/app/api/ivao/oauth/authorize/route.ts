@@ -1,32 +1,50 @@
+import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
 
-export async function GET(req: NextRequest) {
-    try {
-        const token = req.headers.get('authorization')?.split(' ')[1];
-        if (!token) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+const AUTH_URL = 'https://api.ivao.aero/v2/oauth/authorize';
+const STATE_COOKIE = 'ivao_oauth_state';
 
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET || "");
-        const { payload } = await jwtVerify(token, secret);
-        
-        const pilotId = payload.pilotId as string;
-        if (!pilotId) {
-            return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
-        }
+export async function GET(request: NextRequest) {
+    const { searchParams } = request.nextUrl;
+    const redirectPath = searchParams.get('redirect') || '/portal/link-discord';
 
-        const state = Buffer.from(pilotId).toString('base64');
-        const redirectUri = `${process.env.BASE_URL}/api/ivao/oauth/callback`;
-        const clientId = process.env.IVAO_CLIENT_ID;
+    const state = randomUUID();
 
-        const ivaoAuthUrl = `https://api.ivao.aero/v2/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=profile&state=${state}`;
+    // Get the actual host from headers (more reliable behind proxies)
+    const host = request.headers.get('host') || request.nextUrl.hostname;
+    const forwardedProto = request.headers.get('x-forwarded-proto');
+    const protocol = forwardedProto
+        ? forwardedProto.split(',')[0].trim()
+        : request.nextUrl.protocol === 'https:' ? 'https' : 'http';
 
-        return NextResponse.json({
-            authUrl: ivaoAuthUrl,
-        });
-    } catch (error) {
-        console.error('IVAO OAuth authorize error:', error);
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-    }
+    // Construct redirect URI
+    const redirectUri = `${protocol}://${host}/api/ivao/oauth/callback`;
+
+    console.log('IVAO OAuth authorize:', {
+        redirectUri,
+        host,
+        protocol,
+        redirectPath,
+    });
+
+    const url = new URL(AUTH_URL);
+    url.searchParams.set('response_type', 'code');
+    url.searchParams.set('client_id', process.env.IVAO_CLIENT_ID!);
+    url.searchParams.set('scope', 'profile');
+    url.searchParams.set('redirect_uri', redirectUri);
+    url.searchParams.set('state', `${state}:${redirectPath}`);
+
+    const response = NextResponse.redirect(url.toString(), { status: 302 });
+
+    response.cookies.set({
+        name: STATE_COOKIE,
+        value: state,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 10 * 60,
+    });
+
+    return response;
 }
