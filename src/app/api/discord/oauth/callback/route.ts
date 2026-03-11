@@ -124,6 +124,7 @@ export async function GET(req: NextRequest) {
                         5: process.env.ROLE_ADC_ID || '1481212575470456853',
                         6: process.env.ROLE_APC_ID || '1481212584630947910',
                         7: process.env.ROLE_ACC_ID || '1481212594868977736',
+                        8: process.env.ROLE_SEC_ID || '1481212601588387861',
                         9: process.env.ROLE_SAI_ID || '1481212601588387861',
                         10: process.env.ROLE_CAI_ID || '1481313822210785421',
                     };

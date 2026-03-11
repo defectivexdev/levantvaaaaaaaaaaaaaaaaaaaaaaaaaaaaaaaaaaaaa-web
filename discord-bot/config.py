@@ -20,6 +20,7 @@ ROLES = {
     'ADC': int(os.getenv('ROLE_ADC_ID', '0')),
     'APC': int(os.getenv('ROLE_APC_ID', '0')),
     'ACC': int(os.getenv('ROLE_ACC_ID', '0')),
+    'SEC': int(os.getenv('ROLE_SEC_ID', '0')),
     'SAI': int(os.getenv('ROLE_SAI_ID', '0')),
     'CAI': int(os.getenv('ROLE_CAI_ID', '0')),
     # IVAO Pilot Ratings (Individual)
@@ -48,7 +49,7 @@ ATC_RATINGS = {
     5: {'name': 'ADC', 'role_key': 'ADC'},
     6: {'name': 'APC', 'role_key': 'APC'},
     7: {'name': 'ACC', 'role_key': 'ACC'},
-    8: {'name': 'SEC', 'role_key': None},  # SEC not in individual role list
+    8: {'name': 'SEC', 'role_key': 'SEC'},
     9: {'name': 'SAI', 'role_key': 'SAI'},
     10: {'name': 'CAI', 'role_key': 'CAI'},
 }
