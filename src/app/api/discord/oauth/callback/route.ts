@@ -69,17 +69,28 @@ export async function GET(req: NextRequest) {
         const pilotName = `${pilot.first_name} ${pilot.last_name}`;
         const nickname = `${pilotName} | ${pilotId}`;
 
-        console.log('Starting Discord role assignment...', {
-            guildId,
+        console.log('=== DISCORD BOT INTEGRATION START ===');
+        console.log('Environment check:', {
+            guildId: guildId || 'MISSING',
             hasBotToken: !!botToken,
+            botTokenPrefix: botToken ? botToken.substring(0, 20) + '...' : 'MISSING',
             discordUserId: discordUser.id,
             pilotId,
+            nickname,
         });
 
+        if (!guildId) {
+            console.error('❌ DISCORD_GUILD_ID is not set!');
+        }
+        if (!botToken) {
+            console.error('❌ DISCORD_BOT_TOKEN is not set!');
+        }
+
         if (guildId && botToken) {
+            console.log('✅ Bot credentials found, proceeding with Discord operations...');
             try {
                 // First check if user is already in the server
-                console.log('Checking if user is already in guild...');
+                console.log('Step 1: Checking if user is already in guild...');
                 const getMemberResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
                     headers: {
                         'Authorization': `Bot ${botToken}`,
@@ -87,10 +98,19 @@ export async function GET(req: NextRequest) {
                 });
 
                 let isExistingMember = getMemberResponse.ok;
-                console.log('User already in guild?', isExistingMember);
+                console.log('Get member response:', {
+                    status: getMemberResponse.status,
+                    statusText: getMemberResponse.statusText,
+                    isExistingMember,
+                });
+                
+                if (!getMemberResponse.ok && getMemberResponse.status !== 404) {
+                    const errorText = await getMemberResponse.text();
+                    console.error('❌ Error checking member status:', errorText);
+                }
 
                 if (!isExistingMember) {
-                    console.log('Adding member to guild...');
+                    console.log('Step 2: User not in guild, attempting to add...');
                     const addMemberResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
                         method: 'PUT',
                         headers: {
@@ -113,10 +133,11 @@ export async function GET(req: NextRequest) {
                     // Wait a moment for member to be fully added
                     await new Promise(resolve => setTimeout(resolve, 1500));
                 } else {
-                    console.log('User already in guild, proceeding with role assignment');
+                    console.log('✅ User already in guild, proceeding with role assignment');
                 }
                 
                 // Update nickname to "Pilot Name | PILOT_ID"
+                console.log('Step 3: Updating nickname to:', nickname);
                 const nicknameResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
                     method: 'PATCH',
                     headers: {
@@ -128,11 +149,16 @@ export async function GET(req: NextRequest) {
                     }),
                 });
                 
-                if (nicknameResponse.ok) {
-                    console.log(`Updated nickname for ${discordUser.username} to: ${nickname}`);
+                if (nicknameResponse.ok || nicknameResponse.status === 204) {
+                    console.log(`✅ Updated nickname for ${discordUser.username} to: ${nickname}`);
                 } else {
                     const errorText = await nicknameResponse.text();
-                    console.error(`Failed to update nickname (${nicknameResponse.status}):`, errorText);
+                    console.error(`❌ Failed to update nickname (${nicknameResponse.status}):`, errorText);
+                    console.error('Nickname update error details:', {
+                        status: nicknameResponse.status,
+                        statusText: nicknameResponse.statusText,
+                        error: errorText,
+                    });
                 }
 
                 const levantMemberRoleId = process.env.ROLE_LEVANT_MEMBERS_ID || '1293262463940427869';
@@ -186,24 +212,26 @@ export async function GET(req: NextRequest) {
                     }
                 }
 
+                console.log('Step 4: Assigning roles...');
                 console.log('Roles to assign:', rolesToAssign);
 
                 for (const roleId of rolesToAssign) {
                     try {
-                        console.log('Assigning role:', roleId);
+                        console.log('  → Assigning role:', roleId);
                         const roleResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}/roles/${roleId}`, {
                             method: 'PUT',
                             headers: {
                                 'Authorization': `Bot ${botToken}`,
                             },
                         });
-                        console.log('Role assignment response:', roleResponse.status);
-                        if (!roleResponse.ok) {
+                        if (roleResponse.ok || roleResponse.status === 204) {
+                            console.log(`  ✅ Role ${roleId} assigned successfully`);
+                        } else {
                             const errorText = await roleResponse.text();
-                            console.error(`Failed to assign role ${roleId}:`, errorText);
+                            console.error(`  ❌ Failed to assign role ${roleId} (${roleResponse.status}):`, errorText);
                         }
                     } catch (error) {
-                        console.error(`Failed to assign role ${roleId}:`, error);
+                        console.error(`  ❌ Exception assigning role ${roleId}:`, error);
                     }
                 }
 
@@ -212,9 +240,10 @@ export async function GET(req: NextRequest) {
                     await verification.save();
                 }
 
-                console.log(`Assigned ${rolesToAssign.length} role(s) to ${discordUser.username}`);
+                console.log(`✅ Completed assigning ${rolesToAssign.length} role(s) to ${discordUser.username}`);
                 
                 // Remove unlinked role after successful linking
+                console.log('Step 5: Removing unlinked role...');
                 const unlinkedRoleId = '1481168075876466740';
                 const removeRoleResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}/roles/${unlinkedRoleId}`, {
                     method: 'DELETE',
@@ -224,10 +253,10 @@ export async function GET(req: NextRequest) {
                 });
                 
                 if (removeRoleResponse.ok || removeRoleResponse.status === 204) {
-                    console.log(`Removed unlinked role from ${discordUser.username}`);
+                    console.log(`✅ Removed unlinked role from ${discordUser.username}`);
                 } else {
                     const errorText = await removeRoleResponse.text();
-                    console.error(`Failed to remove unlinked role (${removeRoleResponse.status}):`, errorText);
+                    console.error(`❌ Failed to remove unlinked role (${removeRoleResponse.status}):`, errorText);
                 }
 
                 // Send webhook notification for successful linking
@@ -272,14 +301,29 @@ export async function GET(req: NextRequest) {
                             }],
                         }),
                     });
-                    console.log('Webhook sent, status:', webhookResponse.status);
+                    if (webhookResponse.ok) {
+                        console.log('✅ Webhook notification sent successfully');
+                    } else {
+                        console.log('⚠️ Webhook sent, status:', webhookResponse.status);
+                    }
                 } catch (webhookError) {
                     console.error('Failed to send webhook notification:', webhookError);
                 }
             } catch (error) {
-                console.error('Failed to add member to guild or assign roles:', error);
+                console.error('❌ CRITICAL ERROR in Discord bot operations:', error);
+                if (error instanceof Error) {
+                    console.error('Error stack:', error.stack);
+                }
             }
+        } else {
+            console.error('❌ Skipping Discord bot operations - missing credentials');
+            console.error('Missing:', {
+                guildId: !guildId,
+                botToken: !botToken,
+            });
         }
+
+        console.log('=== DISCORD BOT INTEGRATION END ===');
 
         return NextResponse.redirect(`${process.env.BASE_URL}/portal/profile?discord_linked=success`);
     } catch (error) {
