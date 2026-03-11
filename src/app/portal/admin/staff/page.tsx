@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Plus, Trash2, Shield, Save } from 'lucide-react';
+import { Users, Plus, Trash2, Shield, Edit, X } from 'lucide-react';
 
 interface StaffRole {
     _id: string;
@@ -46,6 +46,7 @@ export default function AdminStaffPage() {
     });
     const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
     const [assigning, setAssigning] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -109,6 +110,7 @@ export default function AdminStaffPage() {
             discord: '' 
         });
         setEditingMemberId(null);
+        setShowEditModal(false);
     };
 
     const handleEdit = (member: StaffMember) => {
@@ -120,7 +122,7 @@ export default function AdminStaffPage() {
             email: member.email || '',
             discord: member.discord || ''
         });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setShowEditModal(true);
     };
 
     const handleDeleteMember = async (id: string) => {
@@ -146,7 +148,7 @@ export default function AdminStaffPage() {
                 <div className="space-y-6">
                     <div className="flex items-center justify-center gap-3 pb-2 border-b border-white/[0.06]">
                         <div className="w-10 h-10 rounded-xl bg-emerald-400/10 flex items-center justify-center border border-emerald-400/20">
-                            {editingMemberId ? <Save className="text-emerald-400" size={20} /> : <Plus className="text-emerald-400" size={20} />}
+                            {editingMemberId ? <Edit className="text-emerald-400" size={20} /> : <Plus className="text-emerald-400" size={20} />}
                         </div>
                         <h2 className="text-xl font-bold text-white tracking-tight">
                             {editingMemberId ? 'Edit Staff Member' : 'Add New Staff'}
@@ -284,10 +286,10 @@ export default function AdminStaffPage() {
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <button onClick={() => handleEdit(member)} className="text-gray-700 hover:text-accent-gold p-3 bg-white/0 hover:bg-accent-gold/10 rounded-2xl transition-all">
-                                        <Save size={20} />
+                                    <button onClick={() => handleEdit(member)} className="text-gray-700 hover:text-blue-400 p-3 bg-white/0 hover:bg-blue-400/10 rounded-2xl transition-all" title="Edit member">
+                                        <Edit size={20} />
                                     </button>
-                                    <button onClick={() => handleDeleteMember(member._id)} className="text-gray-700 hover:text-rose-400 p-3 bg-white/0 hover:bg-rose-400/10 rounded-2xl transition-all">
+                                    <button onClick={() => handleDeleteMember(member._id)} className="text-gray-700 hover:text-rose-400 p-3 bg-white/0 hover:bg-rose-400/10 rounded-2xl transition-all" title="Delete member">
                                         <Trash2 size={20} />
                                     </button>
                                 </div>
@@ -302,6 +304,123 @@ export default function AdminStaffPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Edit Modal */}
+            {showEditModal && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowEditModal(false)}>
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-blue-400/10 flex items-center justify-center border border-blue-400/20">
+                                    <Edit className="text-blue-400" size={20} />
+                                </div>
+                                <h2 className="text-2xl font-bold text-white">Edit Staff Member</h2>
+                            </div>
+                            <button onClick={() => setShowEditModal(false)} className="text-gray-500 hover:text-white p-2 hover:bg-white/5 rounded-xl transition-all">
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleAddOrUpdateStaff} className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Pilot ID</label>
+                                    <input 
+                                        type="text" 
+                                        value={pilotIdInput} 
+                                        className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm font-mono outline-none cursor-not-allowed opacity-50"
+                                        disabled
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Display Name Override</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Optional" 
+                                        value={memberDetails.name} 
+                                        onChange={e => setMemberDetails({...memberDetails, name: e.target.value})}
+                                        className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Role Title</label>
+                                <select 
+                                    value={memberDetails.roleTitle} 
+                                    onChange={e => setMemberDetails({...memberDetails, roleTitle: e.target.value})}
+                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm outline-none focus:border-accent-gold/50 transition-all font-medium appearance-none cursor-pointer"
+                                    required
+                                >
+                                    <option value="" className="text-black">Select Position...</option>
+                                    <optgroup label="Board of Governor" className="text-black">
+                                        <option value="Chief Executive Officer">Chief Executive Officer</option>
+                                        <option value="Chief Operations Officer">Chief Operations Officer</option>
+                                        <option value="Executive Vice President">Executive Vice President</option>
+                                    </optgroup>
+                                    <optgroup label="Director" className="text-black">
+                                        <option value="Operations Director">Operations Director</option>
+                                        <option value="Human Resources Director">Human Resources Director</option>
+                                        <option value="Marketing Director">Marketing Director</option>
+                                        <option value="IT Director">IT Director</option>
+                                        <option value="Events Director">Events Director</option>
+                                    </optgroup>
+                                    <optgroup label="Chief Pilot" className="text-black">
+                                        <option value="Chief Pilot Training">Chief Pilot Training</option>
+                                        <option value="Chief Pilot Recruitment">Chief Pilot Recruitment</option>
+                                        <option value="Senior Advisor">Senior Advisor</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/[0.06]">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Direct Email</label>
+                                    <input 
+                                        type="email" 
+                                        placeholder="staff@levantva.com" 
+                                        value={memberDetails.email} 
+                                        onChange={e => setMemberDetails({...memberDetails, email: e.target.value})}
+                                        className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Discord User ID</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Discord User ID (for avatar)" 
+                                        value={memberDetails.discord} 
+                                        onChange={e => setMemberDetails({...memberDetails, discord: e.target.value})}
+                                        className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-[#5865F2]/50 transition-all placeholder:text-gray-700"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4 pt-4">
+                                <button 
+                                    type="button" 
+                                    onClick={resetForm} 
+                                    className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-widest rounded-2xl transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit"
+                                    disabled={assigning} 
+                                    className="flex-[2] py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 rounded-2xl text-white font-bold text-xs uppercase tracking-widest transition-all shadow-xl shadow-blue-900/20"
+                                >
+                                    {assigning ? 'Updating...' : 'Update Member'}
+                                </button>
+                            </div>
+                        </form>
+                    </motion.div>
+                </div>
+            )}
         </div>
     );
 }

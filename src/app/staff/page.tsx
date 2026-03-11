@@ -65,8 +65,8 @@ export default function StaffPage() {
                     const groups: Record<string, any> = {};
                     
                     data.members.forEach((m: any) => {
-                        const category = m.role?.category || 'Other';
-                        const roleId = m.role?._id;
+                        const category = m.role_id?.category || 'Other';
+                        const roleId = m.role_id?._id;
                         if (!roleId) return;
                         
                         if (!groups[category]) {
@@ -74,7 +74,7 @@ export default function StaffPage() {
                         }
 
                         if (!groups[category].roles[roleId]) {
-                            groups[category].roles[roleId] = { role: m.role, members: [] };
+                            groups[category].roles[roleId] = { role: m.role_id, members: [] };
                         }
                         groups[category].roles[roleId].members.push(m);
                     });
