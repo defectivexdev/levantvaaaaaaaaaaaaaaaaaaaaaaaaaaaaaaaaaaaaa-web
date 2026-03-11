@@ -16,11 +16,28 @@ export async function GET(req: NextRequest) {
 
         const pilotId = Buffer.from(state, 'base64').toString('utf-8');
 
+        // Discover token endpoint from OpenID configuration
+        let tokenEndpoint = `${IVAO_API_URL}/oauth/token`;
+        try {
+            const discoveryUrl = 'https://api.ivao.aero/.well-known/openid-configuration';
+            const discoveryResponse = await fetch(discoveryUrl, { cache: 'no-store' });
+            if (discoveryResponse.ok) {
+                const discovery = await discoveryResponse.json();
+                if (discovery.token_endpoint) {
+                    tokenEndpoint = discovery.token_endpoint;
+                    console.log('Discovered token endpoint:', tokenEndpoint);
+                }
+            }
+        } catch (err) {
+            console.error('Discovery error:', err);
+        }
+
         // Exchange code for access token
-        const tokenResponse = await fetch(`${IVAO_API_URL}/oauth/token`, {
+        const tokenResponse = await fetch(tokenEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json',
             },
             body: new URLSearchParams({
                 client_id: process.env.IVAO_CLIENT_ID!,
@@ -32,7 +49,11 @@ export async function GET(req: NextRequest) {
         });
 
         if (!tokenResponse.ok) {
-            console.error('IVAO token exchange failed:', await tokenResponse.text());
+            const errorText = await tokenResponse.text();
+            console.error('IVAO token exchange failed:', {
+                status: tokenResponse.status,
+                error: errorText,
+            });
             return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=token_exchange_failed`);
         }
 
@@ -43,7 +64,9 @@ export async function GET(req: NextRequest) {
         const userResponse = await fetch(`${IVAO_API_URL}/users/me`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
             },
+            cache: 'no-store',
         });
 
         if (!userResponse.ok) {
@@ -51,7 +74,56 @@ export async function GET(req: NextRequest) {
             return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=user_fetch_failed`);
         }
 
-        const ivaoData = await userResponse.json();
+        const userInfo = await userResponse.json();
+        console.log('IVAO UserInfo received:', {
+            hasId: !!userInfo.id,
+            hasRating: !!userInfo.rating,
+            keys: Object.keys(userInfo),
+        });
+
+        // Extract VID from user info
+        const ivaoVid = userInfo.id?.toString() || userInfo.userId?.toString() || '';
+        
+        if (!ivaoVid) {
+            console.error('No VID found in IVAO response');
+            return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=missing_vid`);
+        }
+
+        // Fetch detailed profile
+        let profileData: any = null;
+        try {
+            const profileResponse = await fetch(`${IVAO_API_URL}/users/${ivaoVid}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    Accept: 'application/json',
+                },
+                cache: 'no-store',
+            });
+            
+            if (profileResponse.ok) {
+                profileData = await profileResponse.json();
+                console.log('IVAO profile fetched:', {
+                    hasData: !!profileData,
+                    keys: profileData ? Object.keys(profileData) : [],
+                });
+            }
+        } catch (err) {
+            console.error('Error fetching IVAO profile:', err);
+        }
+
+        const profile = profileData || userInfo;
+        
+        // Extract ratings
+        const atcRating = profile.rating?.atcRating?.id || profile.atcRating?.id || 1;
+        const pilotRating = profile.rating?.pilotRating?.id || profile.pilotRating?.id || 2;
+        const division = profile.divisionId || profile.division?.id || '';
+
+        console.log('Extracted IVAO data:', {
+            ivaoVid,
+            atcRating,
+            pilotRating,
+            division,
+        });
 
         await connectDB();
 
@@ -59,11 +131,6 @@ export async function GET(req: NextRequest) {
         if (!pilot) {
             return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=pilot_not_found`);
         }
-
-        const ivaoVid = ivaoData.id?.toString() || '';
-        const atcRating = ivaoData.rating?.atcRating?.id || 1;
-        const pilotRating = ivaoData.rating?.pilotRating?.id || 2;
-        const division = ivaoData.divisionId || '';
 
         // Update pilot with IVAO data
         pilot.ivao_vid = ivaoVid;
@@ -96,6 +163,7 @@ export async function GET(req: NextRequest) {
             });
         }
 
+        console.log('IVAO verification successful for pilot:', pilotId);
         return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?ivao_verified=success`);
     } catch (error) {
         console.error('IVAO OAuth callback error:', error);
