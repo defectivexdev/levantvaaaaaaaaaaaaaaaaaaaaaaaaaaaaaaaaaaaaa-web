@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
             },
             body: new URLSearchParams({
                 client_id: process.env.DISCORD_CLIENT_ID!,
-                client_secret: process.env.DISCORD_CLIENT_SECRET!,
+                client_secret: process.env.DISCORD_BOT_SECRET!,
                 grant_type: 'authorization_code',
                 code,
                 redirect_uri: `${process.env.BASE_URL}/api/discord/oauth/callback`,
