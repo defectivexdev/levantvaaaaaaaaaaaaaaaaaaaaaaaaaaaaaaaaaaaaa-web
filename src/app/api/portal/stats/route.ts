@@ -94,7 +94,16 @@ export async function GET() {
             },
         ];
 
-        const res = NextResponse.json({ stats });
+        const res = NextResponse.json({ 
+            stats,
+            debug: {
+                totalFlights,
+                allFlights,
+                pending,
+                rejected,
+                pilotIdQueried: pilotIdToQuery
+            }
+        });
         res.headers.set('Cache-Control', 'private, max-age=15, stale-while-revalidate=30');
         return res;
 
