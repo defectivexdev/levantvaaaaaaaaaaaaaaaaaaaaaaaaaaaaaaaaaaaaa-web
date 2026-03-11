@@ -116,7 +116,7 @@ export async function GET(req: NextRequest) {
                     const atcRating = verification.atc_rating;
                     const pilotRating = verification.pilot_rating;
 
-                    // ATC Rating Roles (individual roles per rating)
+                    // IVAO ATC Rating Roles (individual roles per rating from IVAO API)
                     const atcRoleMap: Record<number, string> = {
                         2: process.env.ROLE_AS1_ID || '1481212423057838181',
                         3: process.env.ROLE_AS2_ID || '1481212461888573453',
@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
                         10: process.env.ROLE_CAI_ID || '1481313822210785421',
                     };
 
-                    // Pilot Rating Roles (individual roles per rating)
+                    // IVAO Pilot Rating Roles (individual roles per rating from IVAO API)
                     const pilotRoleMap: Record<number, string> = {
                         2: process.env.ROLE_FS1_ID || '1481212666340053053',
                         3: process.env.ROLE_FS2_ID || '1481212683293294613',
@@ -141,32 +141,14 @@ export async function GET(req: NextRequest) {
                         10: process.env.ROLE_CFI_ID || '1481313822210785421',
                     };
 
-                    // Assign individual ATC role
+                    // Assign IVAO ATC role based on API data
                     if (atcRating && atcRoleMap[atcRating]) {
                         rolesToAssign.push(atcRoleMap[atcRating]);
                     }
 
-                    // ALSO assign legacy grouped ATC role (5-7 → ADIR, 8-10 → DIR)
-                    if (atcRating >= 5 && atcRating <= 7) {
-                        rolesToAssign.push(process.env.ROLE_ADIR_ID || '1440763539794169939');
-                    } else if (atcRating >= 8 && atcRating <= 10) {
-                        rolesToAssign.push(process.env.ROLE_DIR_ID || '1440763280028336211');
-                    }
-
-                    // Assign individual Pilot role
+                    // Assign IVAO Pilot role based on API data
                     if (pilotRating && pilotRoleMap[pilotRating]) {
                         rolesToAssign.push(pilotRoleMap[pilotRating]);
-                    }
-
-                    // ALSO assign legacy grouped Pilot role (5-6 → AWM, 7-8 → WM, 9 → FM, 10 → AFM)
-                    if (pilotRating === 5 || pilotRating === 6) {
-                        rolesToAssign.push(process.env.ROLE_AWM_ID || '1440765576770224230');
-                    } else if (pilotRating === 7 || pilotRating === 8) {
-                        rolesToAssign.push(process.env.ROLE_WM_ID || '1440764377665110027');
-                    } else if (pilotRating === 9) {
-                        rolesToAssign.push(process.env.ROLE_FM_ID || '1440765742491631747');
-                    } else if (pilotRating === 10) {
-                        rolesToAssign.push(process.env.ROLE_AFM_ID || '1440765823726915625');
                     }
                 }
 

@@ -42,25 +42,25 @@ ROLES = {
 }
 
 ATC_RATINGS = {
-    2: {'name': 'AS1', 'role_key': 'AS1', 'legacy_role': None},
-    3: {'name': 'AS2', 'role_key': 'AS2', 'legacy_role': None},
-    4: {'name': 'AS3', 'role_key': 'AS3', 'legacy_role': None},
-    5: {'name': 'ADC', 'role_key': 'ADC', 'legacy_role': 'ADIR'},
-    6: {'name': 'APC', 'role_key': 'APC', 'legacy_role': 'ADIR'},
-    7: {'name': 'ACC', 'role_key': 'ACC', 'legacy_role': 'ADIR'},
-    8: {'name': 'SEC', 'role_key': None, 'legacy_role': 'DIR'},  # SEC not in individual role list
-    9: {'name': 'SAI', 'role_key': 'SAI', 'legacy_role': 'DIR'},
-    10: {'name': 'CAI', 'role_key': 'CAI', 'legacy_role': 'DIR'},
+    2: {'name': 'AS1', 'role_key': 'AS1'},
+    3: {'name': 'AS2', 'role_key': 'AS2'},
+    4: {'name': 'AS3', 'role_key': 'AS3'},
+    5: {'name': 'ADC', 'role_key': 'ADC'},
+    6: {'name': 'APC', 'role_key': 'APC'},
+    7: {'name': 'ACC', 'role_key': 'ACC'},
+    8: {'name': 'SEC', 'role_key': None},  # SEC not in individual role list
+    9: {'name': 'SAI', 'role_key': 'SAI'},
+    10: {'name': 'CAI', 'role_key': 'CAI'},
 }
 
 PILOT_RATINGS = {
-    2: {'name': 'FS1', 'role_key': 'FS1', 'legacy_role': None},
-    3: {'name': 'FS2', 'role_key': 'FS2', 'legacy_role': None},
-    4: {'name': 'FS3', 'role_key': 'FS3', 'legacy_role': None},
-    5: {'name': 'PP', 'role_key': 'PP', 'legacy_role': 'AWM'},
-    6: {'name': 'SPP', 'role_key': 'SPP', 'legacy_role': 'AWM'},
-    7: {'name': 'CP', 'role_key': 'CP', 'legacy_role': 'WM'},
-    8: {'name': 'ATP', 'role_key': 'ATP', 'legacy_role': 'WM'},
-    9: {'name': 'SFI', 'role_key': 'SFI', 'legacy_role': 'FM'},
-    10: {'name': 'CFI', 'role_key': 'CFI', 'legacy_role': 'AFM'},
+    2: {'name': 'FS1', 'role_key': 'FS1'},
+    3: {'name': 'FS2', 'role_key': 'FS2'},
+    4: {'name': 'FS3', 'role_key': 'FS3'},
+    5: {'name': 'PP', 'role_key': 'PP'},
+    6: {'name': 'SPP', 'role_key': 'SPP'},
+    7: {'name': 'CP', 'role_key': 'CP'},
+    8: {'name': 'ATP', 'role_key': 'ATP'},
+    9: {'name': 'SFI', 'role_key': 'SFI'},
+    10: {'name': 'CFI', 'role_key': 'CFI'},
 }
