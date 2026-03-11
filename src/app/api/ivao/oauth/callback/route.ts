@@ -179,6 +179,9 @@ export async function GET(req: NextRequest) {
         return response;
     } catch (error) {
         console.error('IVAO OAuth callback error:', error);
-        return NextResponse.redirect(`${process.env.BASE_URL}/portal/link-discord?error=server_error`);
+        const host = req.headers.get('host') || req.nextUrl.hostname;
+        const forwardedProto = req.headers.get('x-forwarded-proto');
+        const protocol = forwardedProto ? forwardedProto.split(',')[0].trim() : 'https';
+        return NextResponse.redirect(`${protocol}://${host}/portal/link-discord?error=server_error`);
     }
 }
