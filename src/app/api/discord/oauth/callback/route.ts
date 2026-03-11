@@ -69,8 +69,16 @@ export async function GET(req: NextRequest) {
         const pilotName = `${pilot.first_name} ${pilot.last_name}`;
         const nickname = `${pilotName} | ${pilotId}`;
 
+        console.log('Starting Discord role assignment...', {
+            guildId,
+            hasBotToken: !!botToken,
+            discordUserId: discordUser.id,
+            pilotId,
+        });
+
         if (guildId && botToken) {
             try {
+                console.log('Adding member to guild...');
                 const addMemberResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}`, {
                     method: 'PUT',
                     headers: {
@@ -82,8 +90,12 @@ export async function GET(req: NextRequest) {
                     }),
                 });
 
+                console.log('Add member response status:', addMemberResponse.status);
                 if (addMemberResponse.ok || addMemberResponse.status === 204) {
                     console.log(`Added user ${discordUser.username} to guild`);
+                } else {
+                    const errorText = await addMemberResponse.text();
+                    console.error('Failed to add member:', errorText);
                 }
                 
                 // Wait a moment for member to be fully added
@@ -111,10 +123,14 @@ export async function GET(req: NextRequest) {
                 const levantMemberRoleId = process.env.ROLE_LEVANT_MEMBERS_ID || '1293262463940427869';
                 const rolesToAssign = [levantMemberRoleId];
 
+                console.log('Checking IVAO verification for role assignment...');
                 const verification = await IVAOVerification.findOne({ pilot_id: pilotId });
+                console.log('Verification found:', !!verification, 'IVAO verified:', pilot.ivao_verified);
+                
                 if (verification && pilot.ivao_verified) {
                     const atcRating = verification.atc_rating;
                     const pilotRating = verification.pilot_rating;
+                    console.log('IVAO ratings:', { atcRating, pilotRating });
 
                     // IVAO ATC Rating Roles (individual roles per rating from IVAO API)
                     const atcRoleMap: Record<number, string> = {
@@ -145,22 +161,32 @@ export async function GET(req: NextRequest) {
                     // Assign IVAO ATC role based on API data
                     if (atcRating && atcRoleMap[atcRating]) {
                         rolesToAssign.push(atcRoleMap[atcRating]);
+                        console.log('Added ATC role:', atcRating, atcRoleMap[atcRating]);
                     }
 
                     // Assign IVAO Pilot role based on API data
                     if (pilotRating && pilotRoleMap[pilotRating]) {
                         rolesToAssign.push(pilotRoleMap[pilotRating]);
+                        console.log('Added Pilot role:', pilotRating, pilotRoleMap[pilotRating]);
                     }
                 }
 
+                console.log('Roles to assign:', rolesToAssign);
+
                 for (const roleId of rolesToAssign) {
                     try {
-                        await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}/roles/${roleId}`, {
+                        console.log('Assigning role:', roleId);
+                        const roleResponse = await fetch(`${DISCORD_API_URL}/guilds/${guildId}/members/${discordUser.id}/roles/${roleId}`, {
                             method: 'PUT',
                             headers: {
                                 'Authorization': `Bot ${botToken}`,
                             },
                         });
+                        console.log('Role assignment response:', roleResponse.status);
+                        if (!roleResponse.ok) {
+                            const errorText = await roleResponse.text();
+                            console.error(`Failed to assign role ${roleId}:`, errorText);
+                        }
                     } catch (error) {
                         console.error(`Failed to assign role ${roleId}:`, error);
                     }
@@ -191,6 +217,7 @@ export async function GET(req: NextRequest) {
 
                 // Send webhook notification for successful linking
                 try {
+                    console.log('Sending webhook notification...');
                     const webhookUrl = 'https://discordapp.com/api/webhooks/1481338125111398474/RFiWxLbN8ZxxUQITBEXR9N4-xUxThhzcr1IUsuDARdMKP3bVWAjjugGaqSiPWTqzkzjg';
                     
                     const roleNames: string[] = ['Levant Members'];
