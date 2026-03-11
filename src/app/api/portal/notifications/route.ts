@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/database';
 import Notification from '@/models/Notification';
 import { verifyAuth } from '@/lib/auth';
+import mongoose from 'mongoose';
 
 // GET — Fetch notifications for the logged-in pilot
 export async function GET(request: NextRequest) {
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
     const pilotQuery = {
         $or: [
             { pilot_id: session.pilotId },
-            { pilot_id: session.id }
+            { pilot_id: new mongoose.Types.ObjectId(session.id) }
         ]
     };
 
