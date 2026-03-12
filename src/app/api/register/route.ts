@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
     try {
         await connectDB();
         
-        // Check IP country first (before processing any data)
-        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
+        // Check IP country first (before processing any data) - Railway uses CF headers
+        const ipCountryHeader = request.headers.get('cf-ipcountry') || request.headers.get('x-real-ip-country') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
         
         if (ipCountry) {

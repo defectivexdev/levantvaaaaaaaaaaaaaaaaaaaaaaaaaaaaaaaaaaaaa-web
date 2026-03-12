@@ -80,8 +80,8 @@ export async function getRequestGeolocation(request: NextRequest): Promise<IpGeo
     const ip = getIpAddress(request);
     
     if (!ip || ip === 'Unknown') {
-        // Fallback to headers if IP extraction failed
-        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
+        // Fallback to headers if IP extraction failed (Railway uses CF headers)
+        const ipCountryHeader = request.headers.get('cf-ipcountry') || request.headers.get('x-real-ip-country') || '';
         if (ipCountryHeader) {
             return {
                 ip: 'Unknown',
@@ -95,9 +95,9 @@ export async function getRequestGeolocation(request: NextRequest): Promise<IpGeo
     // Fetch full geolocation data from API
     const geoData = await getIpGeolocation(ip);
     
-    // If API call fails, fallback to headers
+    // If API call fails, fallback to headers (Railway uses CF headers)
     if (!geoData) {
-        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
+        const ipCountryHeader = request.headers.get('cf-ipcountry') || request.headers.get('x-real-ip-country') || '';
         if (ipCountryHeader) {
             return {
                 ip,

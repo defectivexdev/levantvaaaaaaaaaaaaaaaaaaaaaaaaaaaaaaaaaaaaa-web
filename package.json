@@ -1,17 +1,21 @@
 {
   "name": "levant-virtual-airline",
   "version": "1.5.8",
-  "description": "",
+  "description": "Levant Virtual Airlines - Next.js Application",
   "main": "index.js",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p ${PORT:-3000}",
     "lint": "next lint",
     "deploy": "node scripts/release.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["virtual-airline", "nextjs", "railway"],
+  "author": "Levant VA",
   "license": "ISC",
   "dependencies": {
     "@cloudinary/react": "^1.14.3",

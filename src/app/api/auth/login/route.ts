@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
         
         const { email, password, hwid } = await request.json();
 
-        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
+        // Railway uses CF headers, also support Cloudflare and fallback
+        const ipCountryHeader = request.headers.get('cf-ipcountry') || request.headers.get('x-real-ip-country') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
 
         // Check IP against CountryBlacklist first

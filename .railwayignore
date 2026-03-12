@@ -1,0 +1,11 @@
+# Railway ignore file - similar to .gitignore but for Railway deployments
+node_modules/
+.git/
+.next/
+*.log
+.env*.local
+LevantACARS/
+acars-app/
+Releases/
+Publish/
+*.ico

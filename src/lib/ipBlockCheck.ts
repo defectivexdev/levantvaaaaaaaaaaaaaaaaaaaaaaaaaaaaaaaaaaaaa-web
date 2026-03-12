@@ -16,7 +16,8 @@ export async function isIpBlacklisted(
     additionalData?: { pilotId?: string; email?: string }
 ): Promise<boolean> {
     try {
-        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
+        // Railway uses CF headers, also support Cloudflare and fallback
+        const ipCountryHeader = request.headers.get('cf-ipcountry') || request.headers.get('x-real-ip-country') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
         
         if (!ipCountry) {
@@ -59,6 +60,7 @@ export async function isIpBlacklisted(
  * @returns Country code or empty string
  */
 export function getIpCountry(request: NextRequest): string {
-    const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
+    // Railway uses CF headers, also support Cloudflare and fallback
+    const ipCountryHeader = request.headers.get('cf-ipcountry') || request.headers.get('x-real-ip-country') || '';
     return ipCountryHeader.toUpperCase();
 }
