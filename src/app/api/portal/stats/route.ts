@@ -24,6 +24,14 @@ export async function GET() {
             return NextResponse.json({ error: 'Pilot not found' }, { status: 404 });
         }
 
+        console.log('[Stats API] Full pilot data:', {
+            _id: pilot._id,
+            pilot_id: pilot.pilot_id,
+            first_name: pilot.first_name,
+            last_name: pilot.last_name,
+            email: pilot.email
+        });
+
         // Get total completed flights - use indexed fields in optimal order
         const totalFlights = await Flight.countDocuments({
             pilot_id: new mongoose.Types.ObjectId(session.id),
