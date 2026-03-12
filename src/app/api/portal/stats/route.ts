@@ -45,14 +45,16 @@ export async function GET() {
 
         const stats: any[] = [];
 
-        console.log('[Stats API] Returning pilot:', { first_name: pilot.first_name, last_name: pilot.last_name });
+        const pilotData = {
+            first_name: pilot.first_name || 'Pilot',
+            last_name: pilot.last_name || ''
+        };
+
+        console.log('[Stats API] Returning pilot:', pilotData);
         
         const res = NextResponse.json({ 
             stats,
-            pilot: {
-                first_name: pilot.first_name,
-                last_name: pilot.last_name
-            }
+            pilot: pilotData
         });
         res.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
         return res;
