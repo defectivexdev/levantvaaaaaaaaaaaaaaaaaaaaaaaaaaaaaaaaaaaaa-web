@@ -1,31 +1,16 @@
 'use client';
-// Version: 2.0.0 - Cookie-based auth
+
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Check, Loader2, ExternalLink, AlertCircle } from 'lucide-react';
+import { Shield, Loader2, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
-
-interface IVAOVerificationStatus {
-    verified: boolean;
-    ivao_vid: string | null;
-    atc_rating: number | null;
-    pilot_rating: number | null;
-}
-
-const ATC_RATINGS: Record<number, string> = {
-    2: 'AS1', 3: 'AS2', 4: 'AS3', 5: 'ADC', 6: 'APC', 7: 'ACC', 8: 'SEC', 9: 'SAI', 10: 'CAI',
-};
-
-const PILOT_RATINGS: Record<number, string> = {
-    2: 'FS1', 3: 'FS2', 4: 'FS3', 5: 'PP', 6: 'SPP', 7: 'CP', 8: 'ATP', 9: 'SFI', 10: 'CFI',
-};
+import NetworkVerification from '@/components/NetworkVerification';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LinkDiscordPage() {
-    const [ivaoVid, setIvaoVid] = useState('');
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [verifying, setVerifying] = useState(false);
-    const [status, setStatus] = useState<IVAOVerificationStatus | null>(null);
-    const [statusLoading, setStatusLoading] = useState(true);
+    const [discordLinked, setDiscordLinked] = useState(false);
 
     useEffect(() => {
         console.log('=== LinkDiscordPage mounted at', new Date().toISOString(), '===');
