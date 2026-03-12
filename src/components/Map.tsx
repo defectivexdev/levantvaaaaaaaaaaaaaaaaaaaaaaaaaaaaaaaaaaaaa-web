@@ -224,7 +224,7 @@ function SmoothMarkers({ flights }: { flights: MapFlight[] }) {
                                 <div class="text-[10px] font-mono font-bold" style="color:${vsColor}">${vsSign}${n.vs}</div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="grid grid-cols-2 gap-2 text-center">
                             <div>
                                 <div class="text-[7px] text-gray-600 uppercase font-bold">IAS</div>
                                 <div class="text-[9px] font-mono text-gray-400">${n.ias} kt</div>
@@ -232,10 +232,6 @@ function SmoothMarkers({ flights }: { flights: MapFlight[] }) {
                             <div>
                                 <div class="text-[7px] text-gray-600 uppercase font-bold">HDG</div>
                                 <div class="text-[9px] font-mono text-gray-400">${n.hdg}°</div>
-                            </div>
-                            <div>
-                                <div class="text-[7px] text-gray-600 uppercase font-bold">FUEL</div>
-                                <div class="text-[9px] font-mono text-gray-400">${n.fuel ? Math.round(n.fuel) + 'lb' : '—'}</div>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-gray-800/50">
