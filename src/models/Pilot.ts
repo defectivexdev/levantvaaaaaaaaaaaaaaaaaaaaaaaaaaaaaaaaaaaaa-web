@@ -40,6 +40,9 @@ export interface IPilot extends Document {
     ivao_atc_rating?: number;
     ivao_pilot_rating?: number;
     ivao_verified?: boolean;
+    vatsim_rating?: number;
+    vatsim_pilotrating?: number;
+    vatsim_verified?: boolean;
     type_ratings: string[];
     inventory: string[];
     routes_flown: string[];
@@ -88,6 +91,9 @@ const PilotSchema = new Schema<IPilot>({
     ivao_atc_rating: Number,
     ivao_pilot_rating: Number,
     ivao_verified: { type: Boolean, default: false },
+    vatsim_rating: Number,
+    vatsim_pilotrating: Number,
+    vatsim_verified: { type: Boolean, default: false },
     type_ratings: [String],
     inventory: [String],
     routes_flown: [String],

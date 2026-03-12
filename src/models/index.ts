@@ -38,6 +38,8 @@ export { default as MaintenanceLog } from './MaintenanceLog';
 export { default as SecurityConfig } from './SecurityConfig';
 export { default as IVAOVerification } from './IVAOVerification';
 export { type IIVAOVerification } from './IVAOVerification';
+export { default as VATSIMVerification } from './VATSIMVerification';
+export { type IVATSIMVerification } from './VATSIMVerification';
 // Legacy aliases for backward compatibility with API routes
 export { default as PilotModel } from './Pilot';
 export { default as FlightModel } from './Flight';
