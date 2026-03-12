@@ -272,6 +272,12 @@ export async function POST(request: NextRequest) {
             $inc: { total_flights: 1, total_hours: flightTimeMinutes / 60, total_credits: totalRevenue, balance: flightCredits },
             current_location: arrivalIcao, last_activity: new Date(), status: 'Active',
         });
+        
+        // Refetch pilot to get updated hours for rank check
+        const updatedPilot = await Pilot.findById(pilot.id);
+        if (updatedPilot) {
+            Object.assign(pilot, updatedPilot.toObject());
+        }
 
         // Fleet tracking & damage
         let closedBid = await Bid.findOne({ pilot_id: pilot._id, callsign, status: { $in: ['Active', 'InProgress'] } });
