@@ -159,7 +159,7 @@ function SmoothMarkers({ flights }: { flights: MapFlight[] }) {
             if (!marker) {
                 // Create new marker
                 marker = L.marker([targetLat, targetLng], {
-                    icon: createAircraftIcon(n.hdg),
+                    icon: createAircraftIcon(n.hdg, n.phase, n.vs),
                 });
                 marker.addTo(map);
                 markersRef.current.set(n.callsign, marker);
@@ -189,7 +189,7 @@ function SmoothMarkers({ flights }: { flights: MapFlight[] }) {
 
                 prevPositions.current.set(n.callsign, { lat: targetLat, lng: targetLng });
                 // Restore active icon (in case it was stale)
-                marker.setIcon(createAircraftIcon(n.hdg));
+                marker.setIcon(createAircraftIcon(n.hdg, n.phase, n.vs));
             }
 
             // Build popup content
