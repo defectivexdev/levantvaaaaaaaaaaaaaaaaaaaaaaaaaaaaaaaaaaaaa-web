@@ -70,7 +70,7 @@ export default function DashboardPage() {
         const [statsData, pilotsData, reportsData] = await Promise.all([
             safeFetch('/api/portal/stats'),
             safeFetch('/api/portal/new-pilots'),
-            safeFetch('/api/portal/reports/recent'),
+            safeFetch('/api/portal/reports/all-recent?limit=5'),
         ]);
 
         setDashboardData(prev => ({
