@@ -16,8 +16,8 @@ export async function isIpBlacklisted(
     additionalData?: { pilotId?: string; email?: string }
 ): Promise<boolean> {
     try {
-        // Cloudflare provides cf-ipcountry header
-        const ipCountryHeader = request.headers.get('cf-ipcountry') || '';
+        // Vercel provides x-vercel-ip-country header
+        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
         
         if (!ipCountry) {
@@ -60,7 +60,7 @@ export async function isIpBlacklisted(
  * @returns Country code or empty string
  */
 export function getIpCountry(request: NextRequest): string {
-    // Cloudflare provides cf-ipcountry header
-    const ipCountryHeader = request.headers.get('cf-ipcountry') || '';
+    // Vercel provides x-vercel-ip-country header
+    const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
     return ipCountryHeader.toUpperCase();
 }

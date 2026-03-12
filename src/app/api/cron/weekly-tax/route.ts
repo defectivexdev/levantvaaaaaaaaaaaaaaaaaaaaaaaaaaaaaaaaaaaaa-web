@@ -10,7 +10,7 @@ function rand(min: number, max: number) {
 }
 
 // Daily airline operations — fuel & catering purchases
-// Runs at 00:00 UTC via Cloudflare Cron Triggers or external scheduler (e.g., cron-job.org)
+// Runs at 00:00 UTC via Vercel Cron
 export async function GET(request: NextRequest) {
     try {
         await connectDB();

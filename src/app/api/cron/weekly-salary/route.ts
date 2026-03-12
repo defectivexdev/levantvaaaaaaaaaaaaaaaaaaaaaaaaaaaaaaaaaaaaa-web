@@ -20,7 +20,7 @@ function getSalaryKey(rank: string): string {
 }
 
 // Weekly pilot salary payment
-// Runs once per week via Cloudflare Cron Triggers or external scheduler (e.g., every Monday at 00:00 UTC)
+// Runs once per week via Vercel Cron (e.g., every Monday at 00:00 UTC)
 export async function GET(request: NextRequest) {
     try {
         await connectDB();

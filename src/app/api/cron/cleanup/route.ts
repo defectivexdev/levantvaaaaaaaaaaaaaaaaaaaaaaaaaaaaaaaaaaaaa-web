@@ -16,7 +16,7 @@ export const dynamic = 'force-dynamic';
  *    - Resets aircraft status from InFlight → Available
  * 3. Clear chat messages from before today 00:00 UTC
  * 
- * Call this via Cloudflare Cron Triggers, GitHub Actions, or external scheduler (e.g., cron-job.org) every 1-2 minutes.
+ * Call this via Vercel Cron, GitHub Actions, or external pinger every 1-2 minutes.
  */
 export async function GET(req: NextRequest) {
     try {

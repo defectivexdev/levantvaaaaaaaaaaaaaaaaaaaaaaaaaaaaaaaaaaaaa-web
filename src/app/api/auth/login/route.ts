@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
         
         const { email, password, hwid } = await request.json();
 
-        // Cloudflare provides cf-ipcountry header
-        const ipCountryHeader = request.headers.get('cf-ipcountry') || '';
+        // Vercel provides x-vercel-ip-country header
+        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
 
         // Check IP against CountryBlacklist first

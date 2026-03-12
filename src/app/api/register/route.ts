@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
     try {
         await connectDB();
         
-        // Check IP country first (before processing any data) - Cloudflare provides cf-ipcountry
-        const ipCountryHeader = request.headers.get('cf-ipcountry') || '';
+        // Check IP country first (before processing any data) - Vercel provides x-vercel-ip-country
+        const ipCountryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
         
         if (ipCountry) {
