@@ -45,6 +45,8 @@ export async function GET() {
 
         const stats: any[] = [];
 
+        console.log('[Stats API] Returning pilot:', { first_name: pilot.first_name, last_name: pilot.last_name });
+        
         const res = NextResponse.json({ 
             stats,
             pilot: {
@@ -52,7 +54,7 @@ export async function GET() {
                 last_name: pilot.last_name
             }
         });
-        res.headers.set('Cache-Control', 'private, max-age=15, stale-while-revalidate=30');
+        res.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
         return res;
 
     } catch (error: any) {
