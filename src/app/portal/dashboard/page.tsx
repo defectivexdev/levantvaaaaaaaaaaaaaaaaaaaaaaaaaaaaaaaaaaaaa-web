@@ -54,6 +54,7 @@ export default function DashboardPage() {
         recentReports: [] as any[],
         activeFlights: [] as any[],
         dotm: null as any,
+        pilot: null as any,
     });
     const [metars, setMetars] = useState<Array<{icao: string; metar: string; error: boolean}>>([]);
     const [currentFlightPage, setCurrentFlightPage] = useState(0);
@@ -79,6 +80,7 @@ export default function DashboardPage() {
             newestPilots: pilotsData?.pilots || [],
             recentReports: reportsData?.reports || [],
             dotm: statsData?.dotm || null,
+            pilot: statsData?.pilot || null,
         }));
         setLoading(false);
     }, []);
@@ -162,7 +164,9 @@ export default function DashboardPage() {
                 <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl" />
                 <div className="relative flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-white mb-1">Welcome back, Pilot!</h1>
+                        <h1 className="text-2xl font-bold text-white mb-1">
+                            Welcome back, {dashboardData.pilot?.first_name || 'Pilot'}!
+                        </h1>
                         <p className="text-sm text-gray-400">Ready for your next flight?</p>
                     </div>
                     <div className="hidden md:block">

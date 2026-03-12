@@ -181,57 +181,6 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- ── Flight Info Bar ──────────────────────────────────────── -->
-            <Border Grid.Row="0" Background="{StaticResource SurfaceCardBrush}" Padding="24,14">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock FontSize="17" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"
-                                       Text="{Binding FlightNumber, Mode=OneWay}" />
-                            <TextBlock FontSize="17" Foreground="{StaticResource TextSecondaryBrush}" Margin="12,0,0,0">
-                                <Run Text="{Binding DepartureIcao, Mode=OneWay}" />
-                                <Run Text="  →  " Foreground="{StaticResource TextDisabledBrush}" />
-                                <Run Text="{Binding ArrivalIcao, Mode=OneWay}" />
-                            </TextBlock>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                            <Border CornerRadius="6" Padding="10,4" Margin="0,0,8,0"
-                                    Background="{StaticResource SurfaceElevatedBrush}">
-                                <TextBlock Text="{Binding CurrentPhase}" FontSize="10" FontWeight="Bold"
-                                           Foreground="{StaticResource AccentBrush}" />
-                            </Border>
-                            <Border CornerRadius="6" Padding="10,4"
-                                    Background="{StaticResource SurfaceElevatedBrush}">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Clock" Width="12" Height="12"
-                                        Foreground="{StaticResource AccentGoldBrush}" VerticalAlignment="Center" Margin="0,0,4,0" />
-                                    <TextBlock Text="{Binding FlightTime, Mode=OneWay}" FontSize="10" FontWeight="Bold"
-                                               Foreground="{StaticResource AccentGoldBrush}" />
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
-                    </StackPanel>
-
-                    <Button Grid.Column="1" VerticalAlignment="Center" Cursor="Hand"
-                        Command="{Binding SubmitFlightCommand}"
-                        Style="{StaticResource MaterialDesignRaisedButton}"
-                        materialDesign:ButtonAssist.CornerRadius="8"
-                        Background="{StaticResource DangerBrush}" BorderBrush="Transparent"
-                        FontWeight="Bold" FontSize="12" Foreground="White" Height="36">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="AirplaneLanding" Width="16" Height="16"
-                                VerticalAlignment="Center" Margin="0,0,6,0" />
-                            <TextBlock Text="END FLIGHT" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Button>
-                </Grid>
-            </Border>
-
             <!-- ── Main Content ─────────────────────────────────────────── -->
             <Grid Grid.Row="1" Margin="16,12,16,8">
                 <Grid.ColumnDefinitions>
