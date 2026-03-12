@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ success: true, message: 'No balance to deduct', deducted: 0 });
         }
 
-        // Generate random daily purchases
+        // Generate random daily purchases  
         const fuelBarrels = rand(80, 300);
         const fuelPricePerBarrel = rand(45, 85);
         const fuelCost = fuelBarrels * fuelPricePerBarrel;
