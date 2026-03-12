@@ -6,11 +6,26 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Plane } from 'lucide-react';
 
-// SVG aircraft icon with heading rotation — matches DashboardMap style
-const createAircraftIcon = (heading: number) => {
+// SVG aircraft icon with heading rotation and pitch based on phase
+const createAircraftIcon = (heading: number, phase?: string, vs?: number) => {
+    // Determine pitch angle based on flight phase or vertical speed
+    let pitch = 0;
+    if (phase) {
+        const phaseLower = phase.toLowerCase();
+        if (phaseLower.includes('climb') || phaseLower.includes('takeoff') || phaseLower.includes('departure')) {
+            pitch = 15; // Nose up for climb
+        } else if (phaseLower.includes('descent') || phaseLower.includes('approach') || phaseLower.includes('landing')) {
+            pitch = -15; // Nose down for descent
+        }
+    } else if (vs !== undefined) {
+        // Fallback to vertical speed if no phase
+        if (vs > 500) pitch = 15;
+        else if (vs < -500) pitch = -15;
+    }
+    
     return L.divIcon({
         html: `<svg width="28" height="28" viewBox="0 0 256 256" fill="none"
-                style="transform:rotate(${heading}deg);transform-origin:center center;filter:drop-shadow(0 2px 6px rgba(0,163,255,0.4))">
+                style="transform:rotate(${heading}deg) rotateX(${pitch}deg);transform-origin:center center;filter:drop-shadow(0 2px 6px rgba(0,163,255,0.4))">
             <path d="M128 24 L140 108 L208 140 L208 156 L140 136 L140 200 L168 220 L168 232 L128 216 L88 232 L88 220 L116 200 L116 136 L48 156 L48 140 L116 108 Z"
                   fill="#00A3FF" stroke="#0077CC" stroke-width="2" stroke-linejoin="round"/>
         </svg>`,
