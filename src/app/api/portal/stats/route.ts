@@ -28,7 +28,7 @@ export async function GET() {
         const totalFlights = await Flight.countDocuments({
             pilot_id: new mongoose.Types.ObjectId(session.id),
             approved_status: 1
-        }).hint({ pilot_id: 1, approved_status: 1, submitted_at: -1 });
+        });
 
         // Format hours nicely (no decimals for whole numbers)
         const hours = Number(pilot.total_hours) || 0;
