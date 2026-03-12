@@ -2,98 +2,63 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Loader2, ExternalLink } from 'lucide-react';
+import { Shield, Loader2, ExternalLink, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import NetworkVerification from '@/components/NetworkVerification';
-import { useAuth } from '@/contexts/AuthContext';
+import IVAOVerification from '@/components/IVAOVerification';
 
 export default function LinkDiscordPage() {
-    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [discordLinked, setDiscordLinked] = useState(false);
+    const [pilotId, setPilotId] = useState('');
+    const [ivaoVid, setIvaoVid] = useState('');
+    const [ivaoVerified, setIvaoVerified] = useState(false);
+    const [statusLoading, setStatusLoading] = useState(true);
 
     useEffect(() => {
-        console.log('=== LinkDiscordPage mounted at', new Date().toISOString(), '===');
-        fetchStatus();
-        
-        // Check if returning from IVAO OAuth
-        const params = new URLSearchParams(window.location.search);
-        console.log('URL params:', params.toString());
-        if (params.get('ivao_verified') === 'success') {
-            console.log('Returning from IVAO OAuth success');
-            // Refresh status multiple times to ensure DB is updated
-            setTimeout(() => {
-                console.log('Refreshing status (500ms)');
-                fetchStatus();
-            }, 500);
-            setTimeout(() => {
-                console.log('Refreshing status (1500ms)');
-                fetchStatus();
-            }, 1500);
-            setTimeout(() => {
-                console.log('Refreshing status (3000ms)');
-                fetchStatus();
-            }, 3000);
-        }
+        fetchUserData();
     }, []);
 
-    const fetchStatus = async () => {
+    const fetchUserData = async () => {
         try {
-            console.log('Fetching IVAO status...');
-            const res = await fetch('/api/ivao/verify', {
-                credentials: 'include', // Include cookies in request
+            const res = await fetch('/api/auth/me', {
+                credentials: 'include',
             });
 
-            console.log('API response status:', res.status);
             if (res.ok) {
                 const data = await res.json();
-                console.log('IVAO status fetched:', data);
-                console.log('Is verified?', data.verified);
-                console.log('IVAO VID:', data.ivao_vid);
-                setStatus(data);
-                if (data.ivao_vid) {
-                    setIvaoVid(data.ivao_vid);
-                }
-            } else {
-                const errorText = await res.text();
-                console.error('Failed to fetch status:', res.status, errorText);
+                setPilotId(data.user.pilotId);
+                setIvaoVid(data.user.ivao_vid || '');
+                
+                // Check IVAO verification
+                const ivaoRes = await fetch('/api/ivao/verify', { credentials: 'include' });
+                const ivaoData = ivaoRes.ok ? await ivaoRes.json() : { verified: false };
+                
+                setIvaoVerified(ivaoData.verified);
             }
         } catch (error) {
-            console.error('Failed to fetch IVAO status:', error);
+            console.error('Failed to fetch user data:', error);
         } finally {
             setStatusLoading(false);
         }
     };
 
-    const handleVerifyIVAO = async () => {
-        setVerifying(true);
-        // Direct redirect to IVAO OAuth - no need for API call
-        window.location.href = '/api/ivao/oauth/authorize?redirect=/portal/link-discord';
-    };
 
     const handleLinkDiscord = async () => {
-        console.log('handleLinkDiscord called, status:', status);
-        if (!status?.verified) {
-            console.error('IVAO not verified, status:', status);
+        if (!ivaoVerified) {
             toast.error('Please verify your IVAO account first');
             return;
         }
 
         setLoading(true);
         try {
-            console.log('Fetching Discord auth URL...');
             const res = await fetch('/api/discord/verify-link', {
-                credentials: 'include', // Include cookies in request
+                credentials: 'include',
             });
 
             const data = await res.json();
-            console.log('Discord verify-link response:', data);
             
             if (res.ok && data.authUrl) {
-                console.log('Redirecting to Discord:', data.authUrl);
                 window.location.href = data.authUrl;
             } else {
-                console.error('Discord link failed:', data);
                 toast.error(data.error || 'Failed to generate Discord link');
                 setLoading(false);
             }
@@ -129,70 +94,22 @@ export default function LinkDiscordPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="bg-[#0a0a0a] border border-white/[0.04] rounded-xl p-6 mb-6"
+                    className="mb-6"
                 >
                     <div className="flex items-center gap-3 mb-4">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${status?.verified ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
-                            {status?.verified ? <Check className="w-5 h-5" /> : <span className="font-bold">1</span>}
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${ivaoVerified ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                            {ivaoVerified ? <Check className="w-5 h-5" /> : <span className="font-bold">1</span>}
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold text-white">IVAO Verification</h2>
-                            <p className="text-sm text-gray-400">Enter your IVAO VID to verify your account</p>
+                            <p className="text-sm text-gray-400">Verify your IVAO account</p>
                         </div>
                     </div>
 
-                    {status?.verified ? (
-                        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4 flex items-start gap-3">
-                            <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                            <div className="flex-1">
-                                <p className="text-emerald-400 font-medium mb-2">IVAO Account Verified</p>
-                                <div className="grid grid-cols-2 gap-3 text-sm">
-                                    <div>
-                                        <span className="text-gray-400">IVAO VID:</span>
-                                        <span className="text-white ml-2 font-mono">{status.ivao_vid}</span>
-                                    </div>
-                                    {status.atc_rating && (
-                                        <div>
-                                            <span className="text-gray-400">ATC Rating:</span>
-                                            <span className="text-cyan-400 ml-2 font-semibold">{ATC_RATINGS[status.atc_rating] || status.atc_rating}</span>
-                                        </div>
-                                    )}
-                                    {status.pilot_rating && (
-                                        <div>
-                                            <span className="text-gray-400">Pilot Rating:</span>
-                                            <span className="text-cyan-400 ml-2 font-semibold">{PILOT_RATINGS[status.pilot_rating] || status.pilot_rating}</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4">
-                                <p className="text-amber-400 text-sm mb-2 font-medium">IVAO OAuth Authorization</p>
-                                <p className="text-gray-300 text-sm">
-                                    Click the button below to authorize with IVAO. You'll be redirected to IVAO's website to log in and grant access.
-                                </p>
-                            </div>
-                            <button
-                                onClick={handleVerifyIVAO}
-                                disabled={verifying}
-                                className="w-full px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-orange-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                            >
-                                {verifying ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        Redirecting to IVAO...
-                                    </>
-                                ) : (
-                                    <>
-                                        <ExternalLink className="w-5 h-5" />
-                                        Authorize with IVAO
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    )}
+                    <IVAOVerification 
+                        pilotId={pilotId}
+                        currentIvaoVid={ivaoVid}
+                    />
                 </motion.div>
 
                 {/* Step 2: Discord Linking */}
@@ -203,7 +120,7 @@ export default function LinkDiscordPage() {
                     className="bg-[#0a0a0a] border border-white/[0.04] rounded-xl p-6"
                 >
                     <div className="flex items-center gap-3 mb-4">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${status?.verified ? 'bg-cyan-500/20 text-cyan-400' : 'bg-gray-500/20 text-gray-500'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${ivaoVerified ? 'bg-cyan-500/20 text-cyan-400' : 'bg-gray-500/20 text-gray-500'}`}>
                             <span className="font-bold">2</span>
                         </div>
                         <div>
@@ -212,7 +129,7 @@ export default function LinkDiscordPage() {
                         </div>
                     </div>
 
-                    {!status?.verified ? (
+                    {!ivaoVerified ? (
                         <div className="bg-gray-500/10 border border-gray-500/20 rounded-lg p-4 flex items-start gap-3">
                             <AlertCircle className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                             <p className="text-gray-400 text-sm">Please verify your IVAO account first before linking Discord</p>

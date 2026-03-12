@@ -109,7 +109,7 @@ export default function Sidebar() {
         const communityItems = isGroupflightRole
             ? []
             : [
-                { name: 'Link Discord & Network', path: '/portal/link-discord', icon: Shield },
+                { name: 'Link Discord & IVAO', path: '/portal/link-discord', icon: Shield },
                 { name: 'Settings', path: '/portal/settings', icon: Settings },
             ];
         
