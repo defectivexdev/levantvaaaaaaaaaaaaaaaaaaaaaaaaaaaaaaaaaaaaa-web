@@ -50,7 +50,7 @@ After deploying to Vercel:
 3. Enter your Vercel URL: `https://your-app.vercel.app/api/inngest`
 4. Click **"Sync Functions"**
 
-Inngest will discover your 3 scheduled functions automatically!
+Inngest will discover your cleanup function automatically!
 
 ---
 
