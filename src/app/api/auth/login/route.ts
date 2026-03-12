@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
         
         const { email, password, hwid } = await request.json();
 
-        // Railway uses CF headers, also support Cloudflare and fallback
-        const ipCountryHeader = request.headers.get('cf-ipcountry') || request.headers.get('x-real-ip-country') || '';
+        // Cloudflare provides cf-ipcountry header
+        const ipCountryHeader = request.headers.get('cf-ipcountry') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
 
         // Check IP against CountryBlacklist first

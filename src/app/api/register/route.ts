@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
     try {
         await connectDB();
         
-        // Check IP country first (before processing any data) - Railway uses CF headers
-        const ipCountryHeader = request.headers.get('cf-ipcountry') || request.headers.get('x-real-ip-country') || '';
+        // Check IP country first (before processing any data) - Cloudflare provides cf-ipcountry
+        const ipCountryHeader = request.headers.get('cf-ipcountry') || '';
         const ipCountry = ipCountryHeader.toUpperCase();
         
         if (ipCountry) {
