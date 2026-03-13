@@ -37,14 +37,16 @@ const BadgeSchema = new Schema<IBadge>({
         required: true 
     },
     icon: { type: String, required: true },
+    image: { type: String },
     requirement: {
         type: { type: String, required: true },
         value: { type: Schema.Types.Mixed, required: true },
-        condition: String
+        condition: { type: String }
     },
-    points: { type: Number, default: 0 },
-    order: { type: Number, default: 0 },
-    active: { type: Boolean, default: true }
+    points: { type: Number, required: true },
+    order: { type: Number, required: true },
+    active: { type: Boolean, default: true },
+    created_at: { type: Date, default: Date.now }
 }, {
     timestamps: true
 });
