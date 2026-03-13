@@ -77,7 +77,7 @@ export default function PilotCard({ pilotName, pilotId }: PilotCardProps) {
                 {/* Rank Image */}
                 <div className="relative w-20 h-20 flex-shrink-0">
                     <img
-                        src={`/assets/react-ui/img/ranks/${rankInfo.currentRank.id}.png`}
+                        src={rankInfo.currentRank.image}
                         alt={rankInfo.currentRank.name}
                         className="w-full h-full object-contain"
                         onError={(e) => {

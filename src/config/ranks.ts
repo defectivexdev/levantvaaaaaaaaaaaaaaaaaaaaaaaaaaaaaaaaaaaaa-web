@@ -1,133 +1,80 @@
 export interface RankConfig {
-    id: string;
-    name: string;
-    minHours: number;
-    maxHours: number;
-    image: string;
-    order: number;
+    rank_id: number;
+    rank_name: string;
+    required_hours: number;
+    required_flights: number;
+    rank_image: string;
+    description: string;
+    priority_order: number;
 }
-
-const CACHE_VERSION = '2';
 
 export const PILOT_RANKS: RankConfig[] = [
-    {
-        id: 'cadet',
-        name: 'Cadet',
-        minHours: 0,
-        maxHours: 15,
-        image: `/img/ranks/cadet.png?v=${CACHE_VERSION}`,
-        order: 1
-    },
-    {
-        id: 'student_pilot',
-        name: 'Student Pilot',
-        minHours: 15,
-        maxHours: 150,
-        image: `/img/ranks/student_pilots.png?v=${CACHE_VERSION}`,
-        order: 2
-    },
-    {
-        id: 'amateur_pilot',
-        name: 'Amateur Pilot',
-        minHours: 150,
-        maxHours: 300,
-        image: `/img/ranks/amateur_pilots.png?v=${CACHE_VERSION}`,
-        order: 3
-    },
-    {
-        id: 'private_pilot',
-        name: 'Private Pilot',
-        minHours: 300,
-        maxHours: 500,
-        image: `/img/ranks/private_pilot.png?v=${CACHE_VERSION}`,
-        order: 4
-    },
-    {
-        id: 'first_officer',
-        name: 'First Officer',
-        minHours: 500,
-        maxHours: 1000,
-        image: `/img/ranks/first_officer.png?v=${CACHE_VERSION}`,
-        order: 5
-    },
-    {
-        id: 'senior_first_officer',
-        name: 'Senior First Officer',
-        minHours: 1000,
-        maxHours: 2500,
-        image: `/img/ranks/senior_first_officer.png?v=${CACHE_VERSION}`,
-        order: 6
-    },
-    {
-        id: 'captain',
-        name: 'Captain',
-        minHours: 2500,
-        maxHours: 5000,
-        image: `/img/ranks/captain.png?v=${CACHE_VERSION}`,
-        order: 7
-    },
-    {
-        id: 'flight_captain',
-        name: 'Flight Captain',
-        minHours: 5000,
-        maxHours: 7000,
-        image: `/img/ranks/flight_captain.png?v=${CACHE_VERSION}`,
-        order: 8
-    },
-    {
-        id: 'senior_flight_captain',
-        name: 'Senior Flight Captain',
-        minHours: 7000,
-        maxHours: 10000,
-        image: `/img/ranks/senior_flight_captain.png?v=${CACHE_VERSION}`,
-        order: 9
-    },
-    {
-        id: 'commercial_captain',
-        name: 'Commercial Captain',
-        minHours: 10000,
-        maxHours: 20000,
-        image: `/img/ranks/commercial_captain.png?v=${CACHE_VERSION}`,
-        order: 10
-    },
-    {
-        id: 'instructor',
-        name: 'instructor',
-        minHours: 20000,
-        maxHours: Infinity,
-        image: `/img/ranks/instructor.png?v=${CACHE_VERSION}`,
-        order: 11
-    }
-];
+    { rank_id: 1, rank_name: 'Cadet', required_hours: 0, required_flights: 0, rank_image: '/img/ranks/cadet.png', description: 'Beginner pilot in training.', priority_order: 1 },
+    { rank_id: 2, rank_name: 'Student Pilot', required_hours: 15, required_flights: 5, rank_image: '/img/ranks/student_pilots.png', description: 'Student pilot continuing education.', priority_order: 2 },
+    { rank_id: 3, rank_name: 'Amateur Pilot', required_hours: 150, required_flights: 25, rank_image: '/img/ranks/amateur_pilots.png', description: 'Amateur pilot with moderate experience.', priority_order: 3 },
+    { rank_id: 4, rank_name: 'Private Pilot', required_hours: 300, required_flights: 50, rank_image: '/img/ranks/private_pilot.png', description: 'Licensed private pilot.', priority_order: 4 },
+    { rank_id: 5, rank_name: 'First Officer', required_hours: 500, required_flights: 100, rank_image: '/img/ranks/first_officer.png', description: 'Professional First Officer.', priority_order: 5 },
+    { rank_id: 6, rank_name: 'Senior First Officer', required_hours: 1000, required_flights: 200, rank_image: '/img/ranks/senior_first_officer.png', description: 'Highly experienced Senior First Officer.', priority_order: 6 },
+    { rank_id: 7, rank_name: 'Captain', required_hours: 2500, required_flights: 500, rank_image: '/img/ranks/captain.png', description: 'Airline Captain.', priority_order: 7 },
+    { rank_id: 8, rank_name: 'Flight Captain', required_hours: 5000, required_flights: 1000, rank_image: '/img/ranks/flight_captain.png', description: 'Distinguished Flight Captain.', priority_order: 8 },
+    { rank_id: 9, rank_name: 'Senior Flight Captain', required_hours: 7000, required_flights: 1500, rank_image: '/img/ranks/senior_flight_captain.png', description: 'Veteran Senior Flight Captain.', priority_order: 9 },
+    { rank_id: 10, rank_name: 'Commercial Captain', required_hours: 10000, required_flights: 2000, rank_image: '/img/ranks/commercial_captain.png', description: 'Elite Commercial Captain.', priority_order: 10 },
+    { rank_id: 11, rank_name: 'Instructor', required_hours: 20000, required_flights: 4000, rank_image: '/img/ranks/instructor.png', description: 'Master Instructor Pilot.', priority_order: 11 }
+].sort((a, b) => a.required_hours - b.required_hours);
 
 export function getRankByHours(totalHours: number): RankConfig {
+    let currentRank = PILOT_RANKS[0];
     for (const rank of PILOT_RANKS) {
-        if (totalHours >= rank.minHours && totalHours < rank.maxHours) {
-            return rank;
+        if (totalHours >= rank.required_hours) {
+            currentRank = rank;
+        } else {
+            break;
         }
     }
-    return PILOT_RANKS[PILOT_RANKS.length - 1];
+    return currentRank;
 }
 
-export function getNextRank(currentRank: string): RankConfig | null {
-    const currentIndex = PILOT_RANKS.findIndex(r => r.id === currentRank);
+export function getRankByFlights(totalFlights: number): RankConfig {
+    let currentRank = PILOT_RANKS[0];
+    for (const rank of PILOT_RANKS) {
+        if (totalFlights >= rank.required_flights) {
+            currentRank = rank;
+        } else {
+            break;
+        }
+    }
+    return currentRank;
+}
+
+export function calculatePilotRank(totalHours: number, totalFlights: number): RankConfig {
+    const rankByHours = getRankByHours(totalHours);
+    const rankByFlights = getRankByFlights(totalFlights);
+    
+    // Choose the highest rank between hours and flights (using priority_order)
+    return rankByHours.priority_order > rankByFlights.priority_order ? rankByHours : rankByFlights;
+}
+
+export function getNextRank(currentRankId: number): RankConfig | null {
+    const currentIndex = PILOT_RANKS.findIndex(r => r.rank_id === currentRankId);
     if (currentIndex === -1 || currentIndex === PILOT_RANKS.length - 1) {
         return null;
     }
     return PILOT_RANKS[currentIndex + 1];
 }
 
-export function getRankProgress(totalHours: number): { current: RankConfig; next: RankConfig | null; progress: number } {
-    const current = getRankByHours(totalHours);
-    const next = getNextRank(current.id);
-    
+export function getRankProgress(totalHours: number, totalFlights: number): { current: RankConfig; next: RankConfig | null; progress: number } {
+    const current = calculatePilotRank(totalHours, totalFlights);
+    const next = getNextRank(current.rank_id);
+
     if (!next) {
         return { current, next: null, progress: 100 };
     }
-    
-    const hoursInCurrentRank = totalHours - current.minHours;
-    const hoursNeededForNext = next.minHours - current.minHours;
-    const progress = Math.min((hoursInCurrentRank / hoursNeededForNext) * 100, 100);
-    
-    return { current, next, progress };
+
+    // Calculate progress based on the requirement that is closest to completion
+    const hoursProgress = Math.min(((totalHours - current.required_hours) / (next.required_hours - current.required_hours)) * 100, 100);
+    const flightsProgress = Math.min(((totalFlights - current.required_flights) / (next.required_flights - current.required_flights)) * 100, 100);
+
+    const progress = Math.max(hoursProgress || 0, flightsProgress || 0);
+
+    return { current, next, progress: Math.max(0, Math.min(100, progress)) };
 }
