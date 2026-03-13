@@ -71,7 +71,9 @@ export default function RankDisplay({ showProgress = true, compact = false }: Ra
     if (!rankInfo) return null;
 
     const getTierColor = (tier: string) => {
-        switch (tier) {
+        if (!tier) return 'from-gray-400 to-gray-600';
+        const tierLower = tier.toLowerCase();
+        switch (tierLower) {
             case 'bronze': return 'from-orange-600 to-orange-800';
             case 'silver': return 'from-gray-400 to-gray-600';
             case 'gold': return 'from-yellow-500 to-yellow-700';

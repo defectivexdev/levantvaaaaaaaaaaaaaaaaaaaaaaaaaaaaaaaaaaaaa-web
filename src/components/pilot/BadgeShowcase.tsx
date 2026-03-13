@@ -10,6 +10,7 @@ interface Badge {
     category: string;
     tier: 'bronze' | 'silver' | 'gold' | 'diamond';
     icon: string;
+    image?: string;
     points: number;
     earned?: boolean;
     earned_at?: Date;
@@ -36,17 +37,26 @@ export default function BadgeShowcase({ showProgress = false, limit }: BadgeShow
             const res = await fetch(url);
             if (res.ok) {
                 const data = await res.json();
-                setBadges(data.badges);
+                setBadges(data.badges || []);
+            } else if (res.status === 401) {
+                console.log('Not authenticated - badges require login');
+                setBadges([]);
+            } else {
+                console.error('Failed to fetch badges:', res.status);
+                setBadges([]);
             }
         } catch (error) {
             console.error('Failed to fetch badges:', error);
+            setBadges([]);
         } finally {
             setLoading(false);
         }
     };
 
     const getTierColor = (tier: string) => {
-        switch (tier) {
+        if (!tier) return 'bg-gray-500';
+        const tierLower = tier.toLowerCase();
+        switch (tierLower) {
             case 'bronze': return 'bg-gradient-to-br from-orange-600 to-orange-800';
             case 'silver': return 'bg-gradient-to-br from-gray-400 to-gray-600';
             case 'gold': return 'bg-gradient-to-br from-yellow-500 to-yellow-700';
