@@ -57,7 +57,7 @@ async function checkBadgeRequirement(
 
     switch (type) {
         case 'total_flights':
-            return pilot.total_flights >= value;
+            return (pilot.total_flights || 0) >= value;
 
         case 'total_hours':
             return totalHours >= value;

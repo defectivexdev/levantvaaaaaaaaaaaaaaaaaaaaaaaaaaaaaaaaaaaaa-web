@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface INotification extends Document {
     pilot_id: string;
-    type: 'pirep_approved' | 'pirep_rejected' | 'award' | 'event' | 'system' | 'tour';
+    type: 'pirep_approved' | 'pirep_rejected' | 'award' | 'event' | 'system' | 'tour' | 'badge_earned';
     title: string;
     message: string;
     link?: string;
