@@ -38,7 +38,8 @@ jobs:
       - name: Copy React build to wwwroot
         shell: pwsh
         run: |
-          Copy-Item -Path "LevantACARS/react-ui/dist/*" -Destination "LevantACARS/LevantACARS/wwwroot/" -Recurse -Force
+          if (!(Test-Path "LevantACARS/LevantACARS/wwwroot")) { New-Item -ItemType Directory -Force -Path "LevantACARS/LevantACARS/wwwroot" }
+          Copy-Item -Path "LevantACARS/react-ui/dist\*" -Destination "LevantACARS/LevantACARS/wwwroot" -Recurse -Force
           
       - name: Restore .NET dependencies
         working-directory: LevantACARS
