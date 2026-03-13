@@ -91,7 +91,7 @@ export default function LinkScreen({ auth, connection: _connection }: Props) {
           {/* Login Button or Device Code */}
           {auth.deviceCode ? (
             <div className="flex flex-col items-center gap-3 w-full">
-              <div className="w-full py-3 rounded-xl bg-dark-800 border border-white/5 flex items-center justify-center">
+              <div className="w-full py-3 rounded-xl bg-panel/50 border border-white/5 flex items-center justify-center">
                 <span className="font-mono text-xl font-bold tracking-[6px] text-accent-gold char-stagger">
                   {auth.deviceCode.split('').map((c, i) => <span key={i}>{c}</span>)}
                 </span>

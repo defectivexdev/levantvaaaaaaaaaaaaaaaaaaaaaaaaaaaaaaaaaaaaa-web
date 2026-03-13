@@ -22,7 +22,7 @@ export default function AirportInfoPanel({ icao, type }: Props) {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-[#0a0a0a] rounded-xl border border-white/[0.04]">
+      <div className="flex flex-col items-center justify-center p-8 bg-[#0a0a0a] rounded-xl border border-white/5">
         <Loader2 className="w-6 h-6 animate-spin text-cyan-400 mb-2" />
         <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Fetching AirportDB...</span>
       </div>
@@ -31,7 +31,7 @@ export default function AirportInfoPanel({ icao, type }: Props) {
 
   if (!data) {
     return (
-      <div className="p-8 bg-[#0a0a0a] rounded-xl border border-white/[0.04] text-center">
+      <div className="p-8 bg-[#0a0a0a] rounded-xl border border-white/5 text-center">
         <MapPin className="w-8 h-8 text-gray-700 mx-auto mb-2" />
         <p className="text-xs text-gray-500 font-mono tracking-wider">No detailed data found for {icao}</p>
       </div>
@@ -39,8 +39,8 @@ export default function AirportInfoPanel({ icao, type }: Props) {
   }
 
   return (
-    <div className="bg-[#0a0a0a] rounded-xl border border-white/[0.04] overflow-hidden flex flex-col h-full max-h-[500px]">
-      <div className="px-4 py-3 border-b border-white/[0.04] flex items-center justify-between shrink-0 bg-white/[0.02]">
+    <div className="bg-[#0a0a0a] rounded-xl border border-white/5 overflow-hidden flex flex-col h-full max-h-[500px]">
+      <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between shrink-0 bg-white/[0.02]">
         <div className="flex items-center gap-2.5">
           <div className={`p-1.5 rounded-lg ${type === 'departure' ? 'bg-cyan-500/10 text-cyan-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
             {type === 'departure' ? <PlaneTakeoff size={14} /> : <PlaneLanding size={14} />}

@@ -358,8 +358,8 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
         </div>
 
         {/* Traffic List Sidebar */}
-        <div className="w-[220px] flex flex-col bg-[#080c14] rounded-xl border border-white/[0.06] overflow-hidden shrink-0">
-          <div className="px-3 py-2 border-b border-white/[0.04]">
+        <div className="w-[220px] flex flex-col bg-[#080c14] rounded-xl border border-white/5 overflow-hidden shrink-0">
+          <div className="px-3 py-2 border-b border-white/5">
             <div className="text-xs font-bold text-accent-gold/60 uppercase tracking-[0.2em]">Live Flights</div>
           </div>
           <div className="flex-1 overflow-y-auto">
@@ -386,7 +386,7 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
                       />
                     </div>
                   ) : (
-                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center shrink-0 bg-dark-800">
+                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center shrink-0 bg-panel/50">
                       <Users size={14} className="text-gray-500" />
                     </div>
                   )}

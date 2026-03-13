@@ -30,11 +30,11 @@ export function AnimatedTooltip({ items }: { items: TooltipItem[] }) {
                 transition={{ duration: 0.15, ease: 'easeOut' }}
                 className="absolute -top-14 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap"
               >
-                <div className="bg-dark-800 border border-white/10 rounded-lg px-3 py-1.5 shadow-xl backdrop-blur-md">
+                <div className="bg-panel/50 border border-white/10 rounded-lg px-3 py-1.5 shadow-xl backdrop-blur-md">
                   <p className="text-xs font-bold text-white">{item.name}</p>
                   <p className="text-[10px] font-mono text-accent-gold/70 tracking-wider">{item.designation}</p>
                 </div>
-                <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-dark-800 border-b border-r border-white/10 rotate-45" />
+                <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-panel/50 border-b border-r border-white/10 rotate-45" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -64,7 +64,7 @@ export function AnimatedTooltip({ items }: { items: TooltipItem[] }) {
                 'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200',
                 hoveredIdx === item.id
                   ? 'border-2 border-accent-gold/60 bg-accent-gold/10 text-accent-gold scale-105'
-                  : 'border-2 border-white/10 bg-dark-800 text-accent-gold/70',
+                  : 'border-2 border-white/10 bg-panel/50 text-accent-gold/70',
               )}
             >
               {item.name.split(' ').map(n => n[0]).join('').slice(0, 2)}

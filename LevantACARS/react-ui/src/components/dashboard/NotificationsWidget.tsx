@@ -42,8 +42,8 @@ export default function NotificationsWidget() {
     };
 
     return (
-        <div className="glass-panel rounded-xl border border-white/[0.06] overflow-hidden">
-            <div className="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between">
+        <div className="glass-panel rounded-xl border border-white/5 overflow-hidden">
+            <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <Bell className="w-4 h-4 text-accent-gold" />
                     <h3 className="text-sm font-bold text-white uppercase tracking-wider">Notifications</h3>

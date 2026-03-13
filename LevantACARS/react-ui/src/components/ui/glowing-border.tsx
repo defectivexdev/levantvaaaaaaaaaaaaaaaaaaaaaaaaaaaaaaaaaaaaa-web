@@ -30,7 +30,7 @@ export function GlowCard({
     <motion.div
       style={{ border, boxShadow }}
       className={cn(
-        "rounded-xl bg-dark-900/60 backdrop-blur-md relative overflow-hidden",
+        "rounded-xl bg-panel/60 backdrop-blur-md relative overflow-hidden",
         className,
       )}
     >

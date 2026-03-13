@@ -1,62 +1,71 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {
-      colors: {
-        dark: {
-          950: '#0A192F',
-          900: '#0d1f38',
-          800: '#112240',
-          700: '#1d3461',
+module.exports = {
+    content: [
+        './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+        './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+        './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    ],
+    theme: {
+        extend: {
+            colors: {
+                background: '#0b0f19',
+                panel: '#121826',
+                primary: {
+                    DEFAULT: '#1d4ed8',
+                    50: '#f0f9ff',
+                    100: '#e0f2fe',
+                    200: '#bae6fd',
+                    300: '#7dd3fc',
+                    400: '#38bdf8',
+                    500: '#0ea5e9',
+                    600: '#0284c7',
+                    700: '#0369a1',
+                    800: '#075985',
+                    900: '#0c4a6e',
+                },
+                secondary: {
+                    DEFAULT: '#22c55e',
+                },
+                text: {
+                    DEFAULT: '#e5e7eb',
+                },
+                accent: {
+                    gold: '#D4AF37',
+                    bronze: '#CD7F32',
+                },
+                dark: {
+                    900: '#0b0f19',
+                    800: '#121826',
+                    700: '#1e293b',
+                    600: '#334155',
+                    500: '#475569',
+                }
+            },
+            fontFamily: {
+                sans: ['var(--font-winky)', 'var(--font-manrope)', 'Sour Gummy', 'system-ui', 'sans-serif'],
+                display: ['var(--font-shadows)', 'cursive', 'sans-serif'],
+                manrope: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+            },
+            animation: {
+                'fade-in': 'fadeIn 0.5s ease-in-out',
+                'slide-up': 'slideUp 0.5s ease-out',
+                'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+                fadeIn: {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
+                slideUp: {
+                    '0%': { opacity: '0', transform: 'translateY(20px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
+            },
+            rotate: {
+                '120': '120deg',
+                '240': '240deg',
+            },
         },
-        accent: {
-          gold: '#C5A059',
-          bronze: '#a07d3a',
-          cyan: '#22d3ee',
-          rose: '#f43f5e',
-          emerald: '#2DCE89',
-          amber: '#fbbf24',
-        },
-      },
-      fontFamily: {
-        sans: ['Winky Sans', 'Manrope', 'Sour Gummy', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'Consolas', 'monospace'],
-        display: ['Shadows Into Light Two', 'cursive', 'sans-serif'],
-      },
-      fontSize: {
-        'telemetry-label': ['0.625rem', { lineHeight: '1', letterSpacing: '0.2em', fontWeight: '700' }],
-        'telemetry-value': ['1.875rem', { lineHeight: '1', fontWeight: '500' }],
-        'telemetry-unit': ['0.625rem', { lineHeight: '1', letterSpacing: '0.1em', fontWeight: '600' }],
-      },
-      animation: {
-        'beam': 'beam 8s linear infinite',
-        'meteor': 'meteor 4s linear infinite',
-        'border-spin': 'border-spin 4s linear infinite',
-        'text-reveal': 'text-reveal 0.5s ease forwards',
-      },
-      keyframes: {
-        beam: {
-          '0%': { transform: 'translateY(-100%)' },
-          '100%': { transform: 'translateY(100%)' },
-        },
-        meteor: {
-          '0%': { transform: 'rotate(215deg) translateX(0)', opacity: 1 },
-          '70%': { opacity: 1 },
-          '100%': { transform: 'rotate(215deg) translateX(-500px)', opacity: 0 },
-        },
-        'border-spin': {
-          '100%': { transform: 'rotate(360deg)' },
-        },
-        'text-reveal': {
-          '0%': { opacity: 0, filter: 'blur(8px)' },
-          '100%': { opacity: 1, filter: 'blur(0px)' },
-        },
-      },
     },
-  },
-  plugins: [],
-  future: {
-    hoverOnlyWhenSupported: true,
-  },
-};
+    plugins: [],
+}

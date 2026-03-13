@@ -102,10 +102,10 @@ export default function App() {
         </div>
 
         {/* ── Content Area - Enhanced Beautiful Design ─────────────────────────────── */}
-        <div className="flex-1 flex flex-col min-w-0 bg-dark-900 rounded-2xl relative overflow-hidden border border-white/[0.08] shadow-2xl shadow-black/50" style={{ background: 'linear-gradient(135deg, rgba(13, 31, 56, 0.98) 0%, rgba(10, 25, 47, 0.95) 100%)' }}>
+        <div className="flex-1 flex flex-col min-w-0 bg-panel rounded-2xl relative overflow-hidden border border-white/10 shadow-2xl shadow-black/50" style={{ background: 'linear-gradient(135deg, rgba(13, 31, 56, 0.98) 0%, rgba(10, 25, 47, 0.95) 100%)' }}>
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent-gold/5 via-transparent to-cyan-500/5 pointer-events-none" />
           {/* Header - Enhanced Beautiful Design */}
-          <header className="h-16 flex justify-between items-center px-6 border-b border-white/[0.08] shrink-0 bg-gradient-to-r from-white/[0.02] via-accent-gold/[0.01] to-transparent backdrop-blur-sm relative z-10">
+          <header className="h-16 flex justify-between items-center px-6 border-b border-white/10 shrink-0 bg-gradient-to-r from-white/[0.02] via-accent-gold/[0.01] to-transparent backdrop-blur-sm relative z-10">
             {/* Left: View Title */}
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-xl bg-gradient-to-br from-accent-gold/25 via-accent-gold/15 to-accent-gold/5 border border-accent-gold/40 shadow-xl shadow-accent-gold/20">
@@ -166,7 +166,7 @@ function TelemetryFooter({ telemetry, flight, connection, qnhAltitude }: { telem
   const alt = qnhAltitude ?? Math.round(telemetry.altitude);
 
   return (
-    <div className="shrink-0 h-12 flex items-center justify-between px-6 gap-6 mx-3 mb-3 rounded-xl border border-white/[0.08] backdrop-blur-sm" style={{ background: 'linear-gradient(90deg, rgba(10, 25, 47, 0.95) 0%, rgba(13, 31, 56, 0.9) 100%)' }}>
+    <div className="shrink-0 h-12 flex items-center justify-between px-6 gap-6 mx-3 mb-3 rounded-xl border border-white/10 backdrop-blur-sm" style={{ background: 'linear-gradient(90deg, rgba(10, 25, 47, 0.95) 0%, rgba(13, 31, 56, 0.9) 100%)' }}>
       {/* Connection status */}
       <div className="flex items-center gap-2">
         <div className={`h-2 w-2 rounded-full shadow-lg ${connection.simConnected ? 'bg-emerald-400 shadow-emerald-400/50 animate-pulse' : 'bg-rose-500 shadow-rose-500/50 animate-pulse'}`} />
@@ -308,7 +308,7 @@ function DashboardView({
       {score && <LandingSummary score={score} flight={flight} />}
 
       {/* Activity Log */}
-      <div className="rounded-xl bg-dark-900/40 backdrop-blur-md border border-white/[0.04] overflow-hidden shrink-0" style={{ height: '200px' }}>
+      <div className="rounded-xl bg-panel/40 backdrop-blur-md border border-white/5 overflow-hidden shrink-0" style={{ height: '200px' }}>
         <FlightLogs activityLog={activityLog} exceedanceLog={exceedanceLog} />
       </div>
     </div>

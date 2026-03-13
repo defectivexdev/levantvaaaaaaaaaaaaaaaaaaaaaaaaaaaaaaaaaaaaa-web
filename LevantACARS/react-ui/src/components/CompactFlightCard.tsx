@@ -34,15 +34,15 @@ function CompactFlightCard({ bid, telemetry }: Props) {
 
       {/* Telemetry Grid */}
       <div className="grid grid-cols-3 gap-2">
-        <div className="flex flex-col items-center py-1.5 px-2 rounded-lg bg-dark-950/50 border border-white/[0.04]">
+        <div className="flex flex-col items-center py-1.5 px-2 rounded-lg bg-dark-950/50 border border-white/5">
           <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Flight</span>
           <span className="text-xs font-mono font-bold text-accent-gold">{bid.flightNumber || '—'}</span>
         </div>
-        <div className="flex flex-col items-center py-1.5 px-2 rounded-lg bg-dark-950/50 border border-white/[0.04]">
+        <div className="flex flex-col items-center py-1.5 px-2 rounded-lg bg-dark-950/50 border border-white/5">
           <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Speed</span>
           <span className="text-xs font-mono font-bold text-white">{telemetry.groundSpeed} kts</span>
         </div>
-        <div className="flex flex-col items-center py-1.5 px-2 rounded-lg bg-dark-950/50 border border-white/[0.04]">
+        <div className="flex flex-col items-center py-1.5 px-2 rounded-lg bg-dark-950/50 border border-white/5">
           <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Heading</span>
           <span className="text-xs font-mono font-bold text-white">{String(Math.round(telemetry.heading)).padStart(3, '0')}°</span>
         </div>

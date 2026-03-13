@@ -37,7 +37,7 @@ export default function FlightStatusPanel({
     };
 
     return (
-        <div className="glass-panel rounded-xl p-5 border border-white/[0.06]">
+        <div className="glass-panel rounded-xl p-5 border border-white/5">
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     <Radio className="w-4 h-4 text-accent-gold" />
@@ -69,7 +69,7 @@ export default function FlightStatusPanel({
 
                     {/* Route */}
                     {departure && arrival && (
-                        <div className="pt-3 border-t border-white/[0.06]">
+                        <div className="pt-3 border-t border-white/5">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-1.5">
                                     <MapPin className="w-3 h-3 text-accent" />

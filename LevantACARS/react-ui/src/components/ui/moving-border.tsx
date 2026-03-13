@@ -37,7 +37,7 @@ export function MovingBorder({
         style={{ background, borderRadius }}
       />
       <div
-        className={cn('relative z-10 bg-dark-900 backdrop-blur-md', className)}
+        className={cn('relative z-10 bg-panel backdrop-blur-md', className)}
         style={{ borderRadius }}
       >
         {children}

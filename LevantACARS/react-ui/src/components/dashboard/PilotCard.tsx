@@ -72,7 +72,7 @@ export default function PilotCard({ pilotName, pilotId }: PilotCardProps) {
     if (!rankInfo) return null;
 
     return (
-        <div className="glass-panel rounded-xl p-6 border border-white/[0.06]">
+        <div className="glass-panel rounded-xl p-6 border border-white/5">
             <div className="flex items-start gap-4">
                 {/* Rank Image */}
                 <div className="relative w-20 h-20 flex-shrink-0">
@@ -112,7 +112,7 @@ export default function PilotCard({ pilotName, pilotId }: PilotCardProps) {
 
             {/* Progress Bar */}
             {rankInfo.nextRank && (
-                <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                <div className="mt-4 pt-4 border-t border-white/5">
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-1.5">
                             <TrendingUp className="w-3 h-3 text-accent" />
@@ -137,7 +137,7 @@ export default function PilotCard({ pilotName, pilotId }: PilotCardProps) {
             )}
 
             {!rankInfo.nextRank && (
-                <div className="mt-4 pt-4 border-t border-white/[0.06]">
+                <div className="mt-4 pt-4 border-t border-white/5">
                     <div className="flex items-center gap-2 text-accent-gold">
                         <span className="text-lg">🏆</span>
                         <p className="text-[11px] font-medium">Maximum rank achieved!</p>

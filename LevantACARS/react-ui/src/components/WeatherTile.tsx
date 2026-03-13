@@ -94,7 +94,7 @@ export default function WeatherTile({ icao, label, onQnhUpdate }: Props) {
 
       {/* Raw METAR */}
       {metar && (
-        <div className="mt-1.5 px-1.5 py-1 rounded-md bg-dark-950/50 border border-white/[0.04]">
+        <div className="mt-1.5 px-1.5 py-1 rounded-md bg-dark-950/50 border border-white/5">
           <p className="text-[8px] font-mono leading-snug text-slate-400 break-all">{metar.raw}</p>
         </div>
       )}
@@ -109,7 +109,7 @@ export default function WeatherTile({ icao, label, onQnhUpdate }: Props) {
             {showTaf ? '▼ Hide TAF' : '▶ Show TAF'}
           </button>
           {showTaf && (
-            <div className="mt-1 px-1.5 py-1 rounded-md bg-dark-950/50 border border-white/[0.04]">
+            <div className="mt-1 px-1.5 py-1 rounded-md bg-dark-950/50 border border-white/5">
               <p className="text-[8px] font-mono leading-snug text-slate-500 break-all">{taf.raw}</p>
             </div>
           )}

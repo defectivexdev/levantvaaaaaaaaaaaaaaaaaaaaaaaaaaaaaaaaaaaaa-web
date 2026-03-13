@@ -144,9 +144,9 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0a0a] rounded-xl border border-white/[0.04] overflow-hidden">
+    <div className="flex flex-col h-full bg-[#0a0a0a] rounded-xl border border-white/5 overflow-hidden">
       {/* Header */}
-      <div className="shrink-0 bg-white/[0.02] border-b border-white/[0.04] px-4 py-3">
+      <div className="shrink-0 bg-white/[0.02] border-b border-white/5 px-4 py-3">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2 text-cyan-400 font-bold">
             <Plane size={16} />
@@ -204,7 +204,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
         ) : (
           <div className="space-y-4">
             {/* Route Header */}
-            <div className="bg-white/[0.02] border border-white/[0.04] rounded-lg p-4">
+            <div className="bg-white/[0.02] border border-white/5 rounded-lg p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <MapPin size={16} className="text-cyan-400" />
@@ -222,7 +222,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
                   <MapPin size={16} className="text-emerald-400" />
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-3 pt-3 border-t border-white/[0.04]">
+              <div className="grid grid-cols-3 gap-3 pt-3 border-t border-white/5">
                 <div>
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Callsign</div>
                   <div className="text-sm font-mono text-white">{flightPlan.callsign}</div>
@@ -240,14 +240,14 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
 
             {/* Flight Details */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white/[0.02] border border-white/[0.04] rounded-lg p-3">
+              <div className="bg-white/[0.02] border border-white/5 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock size={14} className="text-cyan-400" />
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider">Flight Time</div>
                 </div>
                 <div className="text-lg font-mono text-white">{Math.floor(flightPlan.flightTime / 60)}h {Math.round(flightPlan.flightTime % 60)}m</div>
               </div>
-              <div className="bg-white/[0.02] border border-white/[0.04] rounded-lg p-3">
+              <div className="bg-white/[0.02] border border-white/5 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-2">
                   <RouteIcon size={14} className="text-cyan-400" />
                   <div className="text-[10px] text-gray-500 uppercase tracking-wider">Distance</div>
@@ -257,7 +257,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
             </div>
 
             {/* Fuel */}
-            <div className="bg-white/[0.02] border border-white/[0.04] rounded-lg p-4">
+            <div className="bg-white/[0.02] border border-white/5 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Fuel size={14} className="text-amber-400" />
                 <div className="text-xs text-gray-400 uppercase tracking-wider font-bold">Fuel Plan</div>
@@ -279,7 +279,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
             </div>
 
             {/* Weights */}
-            <div className="bg-white/[0.02] border border-white/[0.04] rounded-lg p-4">
+            <div className="bg-white/[0.02] border border-white/5 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Weight size={14} className="text-purple-400" />
                 <div className="text-xs text-gray-400 uppercase tracking-wider font-bold">Weights</div>
@@ -297,7 +297,7 @@ export default function DispatchPanel({ auth, bid }: DispatchPanelProps) {
             </div>
 
             {/* Route */}
-            <div className="bg-white/[0.02] border border-white/[0.04] rounded-lg p-4">
+            <div className="bg-white/[0.02] border border-white/5 rounded-lg p-4">
               <div className="text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">Route</div>
               <div className="text-xs font-mono text-white leading-relaxed break-all">{flightPlan.route}</div>
             </div>

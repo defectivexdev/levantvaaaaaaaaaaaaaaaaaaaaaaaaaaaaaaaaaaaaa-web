@@ -171,7 +171,7 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
     <div className="glass-card rounded-xl relative overflow-hidden border border-white/5">
       {active ? (
         <div className="p-0">
-          <div className="bg-dark-900/40 border border-white/5 rounded-xl flex flex-col relative overflow-hidden m-2">
+          <div className="bg-panel/40 border border-white/5 rounded-xl flex flex-col relative overflow-hidden m-2">
             {/* Decorative bg text */}
             <div className="absolute -right-8 top-4 text-[6rem] font-display font-bold text-white/[0.02] leading-none pointer-events-none select-none">
               {flight.flightNumber}
@@ -224,7 +224,7 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
             </div>
 
             {/* Flight Metrics Row */}
-            <div className="grid grid-cols-3 gap-px mx-4 mb-2 rounded-lg overflow-hidden border border-white/[0.04] min-w-0">
+            <div className="grid grid-cols-3 gap-px mx-4 mb-2 rounded-lg overflow-hidden border border-white/5 min-w-0">
               <MetricCell icon={<Timer size={9} />} label="FLT TIME" value={flight.flightTime} />
               <MetricCell icon={<Route size={9} />} label="DISTANCE" value={`${Math.round(flight.distanceNm)} nm`} />
               <MetricCell icon={<Shield size={9} />} label="COMFORT" value={`${flight.comfortScore}%`} color={flight.comfortScore >= 90 ? 'text-emerald-400' : flight.comfortScore >= 70 ? 'text-amber-400' : 'text-rose-400'} />
@@ -253,7 +253,7 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
         </div>
       ) : hasBid ? (
         <div className="p-0">
-          <div className="bg-dark-900/40 border border-white/5 rounded-xl flex flex-col relative overflow-hidden m-2">
+          <div className="bg-panel/40 border border-white/5 rounded-xl flex flex-col relative overflow-hidden m-2">
             {/* Header: countdown timer only */}
             {remaining && (
               <div className="flex items-center justify-end px-4 pt-3 pb-1">
@@ -315,7 +315,7 @@ export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid,
             </div>
 
             {/* Bid details row */}
-            <div className="grid grid-cols-3 gap-px mx-4 mb-2 rounded-lg overflow-hidden border border-white/[0.04]">
+            <div className="grid grid-cols-3 gap-px mx-4 mb-2 rounded-lg overflow-hidden border border-white/5">
               {bid!.aircraftType && (
                 <div className="bg-dark-950/50 py-1.5 px-2 flex flex-col items-center gap-0.5">
                   <div className="flex items-center gap-1 text-gray-600">

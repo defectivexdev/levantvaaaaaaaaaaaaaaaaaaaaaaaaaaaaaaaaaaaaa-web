@@ -76,7 +76,7 @@ function FlightHistoryPanel({ pilotId }: Props) {
             {flights.map((f, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg bg-dark-950/40 border border-white/[0.04] hover:border-white/[0.08] transition-colors"
+                className="flex items-center gap-3 px-4 py-3 rounded-lg bg-dark-950/40 border border-white/5 hover:border-white/10 transition-colors"
               >
                 {/* Callsign */}
                 <div className="w-20 shrink-0">

@@ -160,7 +160,7 @@ export default function ChatPanel({ pilotId, pilotName }: Props) {
                 className={`group flex gap-2 py-1.5 px-2 rounded-lg transition-colors ${isOwn ? 'bg-accent-gold/[0.03]' : 'hover:bg-white/[0.02]'}`}
               >
                 {/* Avatar */}
-                <div className="w-7 h-7 rounded-lg bg-dark-800 border border-white/10 flex items-center justify-center text-[9px] font-bold text-accent-gold shrink-0 mt-0.5">
+                <div className="w-7 h-7 rounded-lg bg-panel/50 border border-white/10 flex items-center justify-center text-[9px] font-bold text-accent-gold shrink-0 mt-0.5">
                   {msg.pilot_name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                 </div>
 

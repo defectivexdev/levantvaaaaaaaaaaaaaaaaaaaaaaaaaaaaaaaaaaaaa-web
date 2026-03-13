@@ -43,7 +43,7 @@ export function HoverBorderGradient({
       onMouseLeave={() => setHovered(false)}
       onClick={disabled ? undefined : onClick}
       className={cn(
-        'relative rounded-xl bg-dark-900/80 backdrop-blur-md px-6 py-3',
+        'relative rounded-xl bg-panel/80 backdrop-blur-md px-6 py-3',
         'font-bold text-xs tracking-wider uppercase',
         'cursor-pointer transition-all duration-300',
         'flex items-center justify-center gap-2',

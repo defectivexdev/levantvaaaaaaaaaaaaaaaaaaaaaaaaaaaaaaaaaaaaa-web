@@ -32,7 +32,7 @@ export function WobbleCard({
         transition: 'transform 0.2s ease-out',
       }}
       className={cn(
-        'rounded-xl border border-white/5 bg-dark-900/60 backdrop-blur-md relative overflow-hidden',
+        'rounded-xl border border-white/5 bg-panel/60 backdrop-blur-md relative overflow-hidden',
         containerClassName,
       )}
     >
