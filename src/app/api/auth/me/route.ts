@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
         // Fetch additional user data from database
         await connectDB();
-        const pilot = await Pilot.findById(session.id).select('simbrief_id pilot_id desired_callsign balance inventory total_hours transfer_hours hoppie_code sim_mode weight_unit ivao_vid');
+        const pilot = await Pilot.findById(session.id).select('simbrief_id pilot_id desired_callsign balance inventory total_hours transfer_hours hoppie_code sim_mode weight_unit ivao_vid rank');
 
         return NextResponse.json({
             user: {
@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
                 totalHours: (pilot?.total_hours || 0) + (pilot?.transfer_hours || 0),
                 balance: pilot?.balance || 0,
                 inventory: pilot?.inventory || [],
+                rank: (pilot as any)?.rank || 'Cadet',
             }
         });
     } catch (error) {
