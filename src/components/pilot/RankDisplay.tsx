@@ -47,6 +47,11 @@ export default function RankDisplay({ showProgress = true, compact = false }: Ra
             if (res.ok) {
                 const data = await res.json();
                 setRankInfo(data);
+            } else if (res.status === 401) {
+                console.log('Not authenticated - rank info requires login');
+                setRankInfo(null);
+            } else {
+                console.error('Failed to fetch rank info:', res.status);
             }
         } catch (error) {
             console.error('Failed to fetch rank info:', error);
