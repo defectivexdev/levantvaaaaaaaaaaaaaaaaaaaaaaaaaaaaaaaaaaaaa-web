@@ -7,6 +7,7 @@ export interface BadgeDefinition {
     category: BadgeCategory;
     tier: BadgeTier;
     icon: string;
+    image?: string; // Path to badge image in /img/awards/
     requirement: {
         type: string;
         value: number | string;
@@ -25,6 +26,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'flight_count',
         tier: 'bronze',
         icon: '✈️',
+        image: '5flight.png',
         requirement: { type: 'total_flights', value: 1 },
         points: 10,
         order: 1
@@ -36,6 +38,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'flight_count',
         tier: 'bronze',
         icon: '🛫',
+        image: '5flight.png',
         requirement: { type: 'total_flights', value: 5 },
         points: 25,
         order: 2
@@ -47,6 +50,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'flight_count',
         tier: 'silver',
         icon: '🛬',
+        image: 'fl_25flight.png',
         requirement: { type: 'total_flights', value: 25 },
         points: 50,
         order: 3
@@ -57,7 +61,8 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         description: 'Complete 50 flights',
         category: 'flight_count',
         tier: 'gold',
-        icon: '✈️',
+        icon: '🛩️',
+        image: '50flight.png',
         requirement: { type: 'total_flights', value: 50 },
         points: 100,
         order: 4
@@ -68,9 +73,10 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         description: 'Complete 300 flights',
         category: 'flight_count',
         tier: 'diamond',
-        icon: '💎',
+        icon: '�',
+        image: '300flight.png',
         requirement: { type: 'total_flights', value: 300 },
-        points: 500,
+        points: 300,
         order: 5
     },
 
@@ -82,9 +88,10 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'hours',
         tier: 'silver',
         icon: '⏱️',
+        image: '300hours.png',
         requirement: { type: 'total_hours', value: 300 },
-        points: 150,
-        order: 10
+        points: 75,
+        order: 6
     },
     {
         badge_id: 'hours_1000',
@@ -92,10 +99,11 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         description: 'Accumulate 1000 flight hours',
         category: 'hours',
         tier: 'gold',
-        icon: '⏰',
+        icon: '⌚',
+        image: '1000hours.png',
         requirement: { type: 'total_hours', value: 1000 },
-        points: 300,
-        order: 11
+        points: 150,
+        order: 7
     },
     {
         badge_id: 'master_aviator',
@@ -113,13 +121,14 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     {
         badge_id: 'butter_landing',
         name: 'Butter Landing',
-        description: 'Land with -50 to -150 fpm',
+        description: 'Land with -100 fpm or better',
         category: 'landing',
         tier: 'bronze',
         icon: '🧈',
-        requirement: { type: 'landing_rate', value: '-50_-150' },
-        points: 20,
-        order: 20
+        image: 'butterlanding.png',
+        requirement: { type: 'landing_rate', value: -100, condition: 'better_than' },
+        points: 25,
+        order: 11
     },
     {
         badge_id: 'butter_king',
@@ -128,6 +137,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'landing',
         tier: 'gold',
         icon: '👑',
+        image: 'butterking.png',
         requirement: { type: 'butter_landings', value: 10 },
         points: 200,
         order: 21
@@ -135,13 +145,14 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     {
         badge_id: 'firm_landing',
         name: 'Firm Landing',
-        description: 'Land with -500+ fpm and survive',
+        description: 'Land with -200 to -300 fpm (firm but safe)',
         category: 'landing',
         tier: 'bronze',
-        icon: '💥',
-        requirement: { type: 'landing_rate', value: '-500+' },
-        points: 10,
-        order: 22
+        icon: '�',
+        image: 'firmlanding.png',
+        requirement: { type: 'landing_rate', value: -200, condition: 'range' },
+        points: 15,
+        order: 13
     },
     {
         badge_id: 'crosswind_landing',
@@ -150,9 +161,10 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'landing',
         tier: 'silver',
         icon: '🌬️',
+        image: 'crosswindlanding.png',
         requirement: { type: 'crosswind', value: 20 },
         points: 75,
-        order: 23
+        order: 47
     },
     {
         badge_id: 'blind_landing',
@@ -161,6 +173,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'landing',
         tier: 'gold',
         icon: '🌫️',
+        image: 'blindlanding.png',
         requirement: { type: 'visibility', value: '0.5' },
         points: 150,
         order: 24
@@ -172,6 +185,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'landing',
         tier: 'gold',
         icon: '⛈️',
+        image: 'stormlanding.png',
         requirement: { type: 'weather', value: 'storm' },
         points: 150,
         order: 25
@@ -185,6 +199,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'special',
         tier: 'diamond',
         icon: '🌍',
+        image: 'longhaul.png',
         requirement: { type: 'flight_duration', value: 19 },
         points: 500,
         order: 30
@@ -196,6 +211,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'special',
         tier: 'gold',
         icon: '🛫',
+        image: 'ultralonghaul.png',
         requirement: { type: 'flight_duration', value: 15 },
         points: 300,
         order: 31
@@ -207,6 +223,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'special',
         tier: 'silver',
         icon: '⭐',
+        image: 'perfectflight.png',
         requirement: { type: 'landing_rate', value: '-50_-150' },
         points: 100,
         order: 32
@@ -218,6 +235,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'special',
         tier: 'diamond',
         icon: '🦾',
+        image: 'ironpilot.png',
         requirement: { type: 'daily_hours', value: 24 },
         points: 750,
         order: 33
@@ -229,6 +247,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'special',
         tier: 'diamond',
         icon: '🌐',
+        image: 'aroundtheworld.png',
         requirement: { type: 'route_series', value: 'global' },
         points: 1000,
         order: 34
@@ -242,6 +261,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'location',
         tier: 'gold',
         icon: '🏔️',
+        image: 'madeiralanding.png',
         requirement: { type: 'airport', value: 'LPMA' },
         points: 200,
         order: 40
@@ -253,6 +273,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'location',
         tier: 'silver',
         icon: '🏙️',
+        image: 'heathrowlanding.png',
         requirement: { type: 'airport', value: 'EGLL' },
         points: 100,
         order: 41
@@ -264,6 +285,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'location',
         tier: 'gold',
         icon: '🗺️',
+        image: 'worldtraveler.png',
         requirement: { type: 'unique_countries', value: 25 },
         points: 300,
         order: 42
@@ -275,6 +297,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'location',
         tier: 'diamond',
         icon: '🌏',
+        image: 'continentalpilot.png',
         requirement: { type: 'continents', value: 6 },
         points: 500,
         order: 43
@@ -286,6 +309,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'location',
         tier: 'silver',
         icon: '🏝️',
+        image: 'islandhopper.png',
         requirement: { type: 'island_airports', value: 10 },
         points: 150,
         order: 44
@@ -297,6 +321,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'location',
         tier: 'gold',
         icon: '⛰️',
+        image: 'mountainpilot.png',
         requirement: { type: 'mountain_airports', value: 5 },
         points: 200,
         order: 45
@@ -308,6 +333,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'location',
         tier: 'diamond',
         icon: '🧊',
+        image: 'polarexplorer.png',
         requirement: { type: 'latitude', value: 70 },
         points: 400,
         order: 46
@@ -319,6 +345,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         category: 'location',
         tier: 'silver',
         icon: '🛬',
+        image: 'shortrunway.png',
         requirement: { type: 'runway_length', value: 2000 },
         points: 100,
         order: 47
@@ -326,15 +353,16 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
 
     // Time-based Badges
     {
-        badge_id: 'red_eye_15',
-        name: 'Red Eye Specialist',
-        description: 'Complete 15 night flights',
+        badge_id: 'red_eye_specialist_1',
+        name: 'Red Eye Specialist I',
+        description: 'Complete 15 flights between 00:00-06:00 local time',
         category: 'time',
         tier: 'silver',
         icon: '🌙',
+        image: 'redeye15flight.png',
         requirement: { type: 'night_flights', value: 15 },
-        points: 100,
-        order: 50
+        points: 50,
+        order: 34
     },
     {
         badge_id: 'red_eye_25',

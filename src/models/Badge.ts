@@ -10,6 +10,7 @@ export interface IBadge extends Document {
     category: BadgeCategory;
     tier: BadgeTier;
     icon: string;
+    image?: string;
     requirement: {
         type: string;
         value: number | string;
@@ -18,6 +19,7 @@ export interface IBadge extends Document {
     points: number;
     order: number;
     active: boolean;
+    created_at: Date;
 }
 
 const BadgeSchema = new Schema<IBadge>({

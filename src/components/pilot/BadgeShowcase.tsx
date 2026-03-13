@@ -130,8 +130,27 @@ export default function BadgeShowcase({ showProgress = false, limit }: BadgeShow
                                 : 'opacity-40 grayscale'
                         }`}
                     >
-                        <div className={`${getTierColor(badge.tier)} rounded-lg p-4 text-center transition-transform hover:scale-105`}>
-                            <div className="text-3xl mb-2">{badge.icon}</div>
+                        <div className={`${getTierColor(badge.tier)} rounded-lg p-4 text-center transition-transform hover:scale-105 relative`}>
+                            {badge.image ? (
+                                <img 
+                                    src={`/img/awards/${badge.image}`}
+                                    alt={badge.name}
+                                    className="w-16 h-16 mx-auto object-contain"
+                                    onError={(e) => {
+                                        // Fallback to icon if image fails to load
+                                        (e.target as HTMLImageElement).style.display = 'none';
+                                        const parent = (e.target as HTMLElement).parentElement;
+                                        if (parent) {
+                                            const iconDiv = document.createElement('div');
+                                            iconDiv.className = 'text-3xl mb-2';
+                                            iconDiv.textContent = badge.icon;
+                                            parent.appendChild(iconDiv);
+                                        }
+                                    }}
+                                />
+                            ) : (
+                                <div className="text-3xl mb-2">{badge.icon}</div>
+                            )}
                             {!badge.earned && (
                                 <Lock className="w-4 h-4 text-white/60 absolute top-2 right-2" />
                             )}
