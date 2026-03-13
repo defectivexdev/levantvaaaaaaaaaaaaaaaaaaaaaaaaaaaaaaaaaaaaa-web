@@ -100,7 +100,7 @@ export async function PUT(request: NextRequest) {
 
         // Build update object (exclude password) and track changes
         for (const [key, value] of Object.entries(updates)) {
-            if (key === 'password') continue; // Never allow password update via this endpoint
+            if (key === 'password' || key === 'rank') continue; // Never allow password update; rank is auto-calculated
             const dbField = fieldMapping[key];
             if (dbField && value !== undefined) {
                 const oldValue = (user as any)[dbField];
@@ -114,6 +114,20 @@ export async function PUT(request: NextRequest) {
         // Special handling for role
         if (updates.role) {
             updateData.is_admin = updates.role === 'Admin';
+        }
+
+        // Auto-calculate rank based on hours
+        const newTotalHours = (updateData.total_hours !== undefined ? updateData.total_hours : (user.total_hours || 0));
+        const newTransferHours = (updateData.transfer_hours !== undefined ? updateData.transfer_hours : (user.transfer_hours || 0));
+        const combinedHours = newTotalHours + newTransferHours;
+        
+        // Dynamic import of rank config since this is a server route
+        const { getRankByHours } = await import('@/config/ranks');
+        const calculatedRank = getRankByHours(combinedHours).name;
+        
+        if (calculatedRank !== user.rank) {
+            updateData.rank = calculatedRank;
+            changes.push(`rank: ${user.rank} → ${calculatedRank}`);
         }
 
         if (Object.keys(updateData).length === 0) {

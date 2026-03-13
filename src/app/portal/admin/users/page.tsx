@@ -522,10 +522,20 @@ export default function AdminUsersPage() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className={labelClass}>Rank</label>
-                                        <select value={editForm.rank || ''} onChange={e => setEditForm({ ...editForm, rank: e.target.value })} className={selectClass}>
-                                            {ranks.map(r => <option key={r} value={r}>{r}</option>)}
-                                        </select>
+                                        <label className={`${labelClass} flex items-center gap-1.5`} title="Rank is automatically calculated based on total hours">
+                                            <Lock size={10} className="text-gray-600" />
+                                            Rank
+                                        </label>
+                                        <div className="relative">
+                                            <select 
+                                                value={editForm.rank || ''} 
+                                                disabled 
+                                                className={`${selectClass} bg-[#050505] text-gray-400 cursor-not-allowed opacity-60`}
+                                            >
+                                                {ranks.map(r => <option key={r} value={r}>{r}</option>)}
+                                            </select>
+                                            <Lock size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-700" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
