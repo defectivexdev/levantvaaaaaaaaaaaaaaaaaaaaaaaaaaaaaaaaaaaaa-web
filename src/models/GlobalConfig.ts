@@ -10,7 +10,20 @@ export interface IGlobalConfig extends Document {
     cargo_price_per_lb_nm: number;
     fuel_price_per_lb: number;
     base_landing_fee: number;
-    pilot_pay_rate: number;
+    // Rank Pay Rates (per hour)
+    rank_pay_rates: {
+        cadet: number;
+        student_pilot: number;
+        amateur_pilot: number;
+        private_pilot: number;
+        first_officer: number;
+        senior_first_officer: number;
+        captain: number;
+        flight_captain: number;
+        senior_flight_captain: number;
+        commercial_captain: number;
+        instructor: number;
+    };
     // Damage Thresholds
     hard_landing_threshold: number;
     severe_damage_threshold: number;
@@ -20,15 +33,6 @@ export interface IGlobalConfig extends Document {
     grounded_health_threshold: number;
     // Store → Airline Cr
     store_to_airline_percent: number;
-    // Pilot Salary
-    salary_enabled: boolean;
-    salary_cadet: number;
-    salary_second_officer: number;
-    salary_first_officer: number;
-    salary_senior_first_officer: number;
-    salary_captain: number;
-    salary_senior_captain: number;
-    salary_check_airman: number;
     // Credit Bonuses (Flight Performance)
     cr_base_flight: number;
     cr_greaser_bonus: number;
@@ -65,7 +69,35 @@ const GlobalConfigSchema = new Schema<IGlobalConfig>({
     cargo_price_per_lb_nm: { type: Number, default: 0.002 },
     fuel_price_per_lb: { type: Number, default: 0.65 },
     base_landing_fee: { type: Number, default: 250 },
-    pilot_pay_rate: { type: Number, default: 2500 },
+    // Rank Pay Rates (per hour)
+    rank_pay_rates: {
+        type: {
+            cadet: { type: Number, default: 25 },
+            student_pilot: { type: Number, default: 35 },
+            amateur_pilot: { type: Number, default: 50 },
+            private_pilot: { type: Number, default: 75 },
+            first_officer: { type: Number, default: 100 },
+            senior_first_officer: { type: Number, default: 150 },
+            captain: { type: Number, default: 200 },
+            flight_captain: { type: Number, default: 250 },
+            senior_flight_captain: { type: Number, default: 300 },
+            commercial_captain: { type: Number, default: 400 },
+            instructor: { type: Number, default: 500 }
+        },
+        default: {
+            cadet: 25,
+            student_pilot: 35,
+            amateur_pilot: 50,
+            private_pilot: 75,
+            first_officer: 100,
+            senior_first_officer: 150,
+            captain: 200,
+            flight_captain: 250,
+            senior_flight_captain: 300,
+            commercial_captain: 400,
+            instructor: 500
+        }
+    },
     // Damage Thresholds
     hard_landing_threshold: { type: Number, default: -400 },
     severe_damage_threshold: { type: Number, default: -700 },
@@ -75,15 +107,6 @@ const GlobalConfigSchema = new Schema<IGlobalConfig>({
     grounded_health_threshold: { type: Number, default: 20 },
     // Store → Airline Cr
     store_to_airline_percent: { type: Number, default: 100 },
-    // Pilot Salary (weekly payment in virtual currency)
-    salary_enabled: { type: Boolean, default: true },
-    salary_cadet: { type: Number, default: 500 },
-    salary_second_officer: { type: Number, default: 1000 },
-    salary_first_officer: { type: Number, default: 1500 },
-    salary_senior_first_officer: { type: Number, default: 2000 },
-    salary_captain: { type: Number, default: 3000 },
-    salary_senior_captain: { type: Number, default: 4000 },
-    salary_check_airman: { type: Number, default: 5000 },
     // Credit Bonuses (Flight Performance)
     cr_base_flight: { type: Number, default: 100 },
     cr_greaser_bonus: { type: Number, default: 50 },
