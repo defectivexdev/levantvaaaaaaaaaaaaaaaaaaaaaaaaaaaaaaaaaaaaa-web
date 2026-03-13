@@ -14,7 +14,6 @@ interface Pilot {
     first_name: string;
     last_name: string;
     email: string;
-    rank: string;
     country: string;
     timezone: string;
     ivao_vid?: string;
@@ -54,35 +53,6 @@ interface PilotBadge {
     earned_at: string;
 }
 
-const RANKS = [
-    { name: 'Cadet', hours: 0 },
-    { name: 'Second Officer', hours: 25 },
-    { name: 'First Officer', hours: 50 },
-    { name: 'Senior First Officer', hours: 100 },
-    { name: 'Captain', hours: 250 },
-    { name: 'Senior Captain', hours: 500 },
-    { name: 'Check Airman', hours: 1000 },
-];
-
-function getRankProgress(hours: number) {
-    let currentRank = RANKS[0];
-    let nextRank = RANKS[1];
-    
-    for (let i = 0; i < RANKS.length; i++) {
-        if (hours >= RANKS[i].hours) {
-            currentRank = RANKS[i];
-            nextRank = RANKS[i + 1] || RANKS[i];
-        }
-    }
-    
-    if (currentRank === nextRank) return { currentRank, nextRank, progress: 100 };
-    
-    const progressInRank = hours - currentRank.hours;
-    const hoursNeeded = nextRank.hours - currentRank.hours;
-    const progress = Math.min((progressInRank / hoursNeeded) * 100, 100);
-    
-    return { currentRank, nextRank, progress };
-}
 
 export default function ProfilePage() {
     const [pilot, setPilot] = useState<Pilot | null>(null);
@@ -119,7 +89,6 @@ export default function ProfilePage() {
     useEffect(() => {
         fetchPilotData();
         
-        // Poll for updates every 30 seconds to catch rank changes
         const pollInterval = setInterval(() => {
             fetchPilotData();
         }, 30000);
@@ -281,7 +250,6 @@ export default function ProfilePage() {
     }
 
     const totalHours = pilot.total_hours + (pilot.transfer_hours || 0);
-    const { currentRank, nextRank, progress } = getRankProgress(totalHours);
     const landingQuality = pilot.average_landing === 0 ? 'neutral' : 
                           Math.abs(pilot.average_landing) < 100 ? 'butter' : 
                           Math.abs(pilot.average_landing) < 200 ? 'good' : 'hard';
@@ -382,28 +350,6 @@ export default function ProfilePage() {
                             )}
                         </div>
 
-                        {/* Rank Progress */}
-                        <div className="bg-[#0a0a0a] rounded-xl p-4 border border-white/[0.04]">
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                    <Shield className="w-4 h-4 text-amber-500" />
-                                    <span className="text-xs font-semibold text-white">{currentRank.name}</span>
-                                </div>
-                                <span className="text-xs text-gray-500">Next: {nextRank.name}</span>
-                            </div>
-                            <div className="relative h-2 bg-black/50 rounded-full overflow-hidden mb-1">
-                                <motion.div 
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${progress}%` }}
-                                    transition={{ duration: 1, ease: "easeOut" }}
-                                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-600 to-amber-500 rounded-full"
-                                />
-                            </div>
-                            <div className="flex justify-between text-[10px] text-gray-500">
-                                <span>{totalHours.toFixed(1)}h</span>
-                                <span>{nextRank.hours}h</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </motion.div>

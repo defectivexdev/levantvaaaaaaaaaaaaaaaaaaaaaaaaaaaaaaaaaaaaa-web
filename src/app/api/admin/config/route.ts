@@ -37,7 +37,7 @@ export async function PUT(request: NextRequest) {
 
         // Whitelist allowed fields
         const allowedFields = [
-            'fuel_tax_percent', 'penalty_multiplier', 'repair_rate_per_percent',
+            'fuel_tax_percent', 'penalty_multiplier',
             'ticket_price_per_nm', 'cargo_price_per_lb_nm', 'fuel_price_per_lb',
             'base_landing_fee', 'pilot_pay_rate',
             'hard_landing_threshold', 'severe_damage_threshold',
@@ -55,7 +55,7 @@ export async function PUT(request: NextRequest) {
             // Group Flight Credits
             'cr_group_flight_participation',
             // Fleet
-            'repair_hours_per_percent', 'location_based_fleet'
+            'location_based_fleet'
         ];
 
         const sanitized: Record<string, any> = {};

@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 interface ConfigValues {
     fuel_tax_percent: number;
     penalty_multiplier: number;
-    repair_rate_per_percent: number;
     ticket_price_per_nm: number;
     cargo_price_per_lb_nm: number;
     fuel_price_per_lb: number;
@@ -48,14 +47,12 @@ interface ConfigValues {
     // Group Flight Credits
     cr_group_flight_participation: number;
     // Fleet
-    repair_hours_per_percent: number;
     location_based_fleet: number;
 }
 
 const defaultConfig: ConfigValues = {
     fuel_tax_percent: 10,
     penalty_multiplier: 5,
-    repair_rate_per_percent: 100,
     ticket_price_per_nm: 0.8,
     cargo_price_per_lb_nm: 0.002,
     fuel_price_per_lb: 0.65,
@@ -96,7 +93,6 @@ const defaultConfig: ConfigValues = {
     // Group Flight Credits
     cr_group_flight_participation: 50,
     // Fleet
-    repair_hours_per_percent: 2,
     location_based_fleet: 1,
 };
 
@@ -113,7 +109,6 @@ interface FieldDef {
 const economyFields: FieldDef[] = [
     { key: 'fuel_tax_percent', label: 'Fuel Tax', unit: '%', step: 1, min: 0, max: 100, description: 'Percentage of gross income taken as fuel tax → Vault' },
     { key: 'penalty_multiplier', label: 'Penalty Multiplier', unit: 'Cr/pt', step: 1, min: 0, max: 100, description: 'penaltyAmount = (100 - flightScore) × this value' },
-    { key: 'repair_rate_per_percent', label: 'Maintenance Rate', unit: 'Cr/1%', step: 10, min: 1, max: 10000, description: 'Cost in Cr to repair 1% of airframe health' },
     { key: 'store_to_airline_percent', label: 'Store → Vault', unit: '%', step: 5, min: 0, max: 100, description: 'Percentage of store purchases transferred to Airline Vault' },
 ];
 
@@ -379,22 +374,6 @@ export default function AdminSettingsPage() {
                         </span>
                     </div>
                     <p className="text-[9px] text-gray-600 px-1">When enabled, pilots must book aircraft from the airport where it last landed. Encourages tours and realistic operations.</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {([
-                            { key: 'repair_hours_per_percent' as keyof ConfigValues, label: 'Repair Time', desc: 'Real hours per 1% damage to repair an aircraft' },
-                            { key: 'repair_rate_per_percent' as keyof ConfigValues, label: 'Repair Cost', desc: 'Credits per 1% damage for manual repair' },
-                        ]).map(field => {
-                            const changed = config[field.key] !== original[field.key];
-                            return (
-                                <div key={field.key} className={`p-4 rounded-xl border transition-all ${changed ? 'border-sky-500/30 bg-sky-500/[0.03]' : 'border-white/[0.06] bg-white/[0.01] hover:border-white/10'}`}>
-                                    <label className="text-xs font-bold text-gray-300 mb-2 block">{field.label}</label>
-                                    <input type="number" value={config[field.key]} onChange={e => handleChange(field.key, parseFloat(e.target.value) || 0)} step={1} min={0}
-                                        className="w-full bg-black/40 border border-white/[0.08] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-sky-500/50 focus:outline-none transition-colors" />
-                                    <p className="text-[9px] text-gray-600 mt-1.5">{field.desc}</p>
-                                </div>
-                            );
-                        })}
-                    </div>
                 </div>
             </div>
 
@@ -409,13 +388,7 @@ export default function AdminSettingsPage() {
                     <div><span className="text-rose-400">penaltyAmount</span> = (100 - flightScore) × <span className="text-white">{config.penalty_multiplier}</span></div>
                     <div><span className="text-emerald-400">netPilotPay</span> = max(0, grossIncome - fuelTaxAmount - penaltyAmount)</div>
                     <div className="pt-3 border-t border-white/[0.06] mt-3">
-                        <span className="text-amber-400">repairCost</span> = damagePercent × <span className="text-white">{config.repair_rate_per_percent}</span> Cr
-                    </div>
-                    <div className="pt-3 border-t border-white/[0.06] mt-3">
                         <span className="text-blue-400">bonusCredits</span> = ({config.cr_base_flight} + landingBonus + bonuses + penalties) × multiplier
-                    </div>
-                    <div className="pt-3 border-t border-white/[0.06] mt-3">
-                        <span className="text-sky-400">repairTime</span> = damagePercent × <span className="text-white">{config.repair_hours_per_percent}</span> hours
                     </div>
                     <div className="bg-white/[0.02] p-3 rounded-lg mt-2 border border-white/[0.06]">
                         <span className="text-gray-500">Example:</span> Greaser landing + new route + first flight = ({config.cr_base_flight} + {config.cr_greaser_bonus} + {config.cr_new_route_bonus}) × {config.cr_first_flight_multiplier} = <span className="text-blue-400 font-bold">{Math.round((config.cr_base_flight + config.cr_greaser_bonus + config.cr_new_route_bonus) * config.cr_first_flight_multiplier)} CR</span>

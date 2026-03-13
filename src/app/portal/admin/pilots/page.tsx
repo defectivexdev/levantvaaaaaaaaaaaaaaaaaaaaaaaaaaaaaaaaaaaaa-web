@@ -25,7 +25,6 @@ interface Pilot {
     email: string;
     role: 'Pilot' | 'Admin';
     status: 'Pending' | 'Active' | 'Inactive' | 'Blacklist';
-    rank: string;
     totalHours: number;
     totalFlights: number;
     totalCredits: number;
@@ -63,7 +62,6 @@ export default function AdminPilotsPage() {
     useEffect(() => {
         fetchPilots();
         
-        // Poll for updates every 60 seconds to catch rank changes
         const pollInterval = setInterval(() => {
             fetchPilots();
         }, 60000);
@@ -163,7 +161,7 @@ export default function AdminPilotsPage() {
                             <thead className="bg-[#111]/50">
                                 <tr className="text-left text-gray-500 text-xs uppercase tracking-widest border-b border-white/[0.06]">
                                     <th className="p-4">Pilot</th>
-                                    <th className="p-4">Rank & Stats</th>
+                                    <th className="p-4">Stats</th>
                                     <th className="p-4">Role</th>
                                     <th className="p-4">Status</th>
                                     <th className="p-4">Last Activity</th>
@@ -186,8 +184,7 @@ export default function AdminPilotsPage() {
                                             </div>
                                         </td>
                                         <td className="p-4">
-                                            <span className="text-gray-300 text-sm">{pilot.rank}</span>
-                                            <div className="flex gap-3 mt-1">
+                                            <div className="flex gap-3">
                                                 <span className="text-[10px] text-gray-400 capitalize">{Math.round(pilot.totalHours)}h / {pilot.totalFlights} flights</span>
                                             </div>
                                         </td>

@@ -12,7 +12,6 @@ interface LeaderboardPilot {
     hours: number;
     flights: number;
     credits?: number;
-    pilotRank: string;
     avatarUrl?: string;
     isLanding?: boolean;
     isCredits?: boolean;
@@ -144,7 +143,6 @@ function LeaderboardContent() {
                                             </div>
                                             <p className="text-white font-bold truncate">{top3[0].name}</p>
                                             <p className="text-accent-gold font-mono text-[10px] mt-0.5">{top3[0].pilotId}</p>
-                                            <p className="text-gray-400 text-xs mt-1">{top3[0].pilotRank}</p>
                                             <div className="mt-3 pt-3 border-t border-white/[0.06]">
                                                 <p className="text-accent-gold font-bold font-mono text-2xl">
                                                     {top3[0].isCredits ? `${(top3[0].credits || 0).toLocaleString()} CR` : top3[0].isLanding ? `${top3[0].hours.toFixed(0)} fpm` : formatHours(top3[0].hours)}
@@ -204,7 +202,6 @@ function LeaderboardContent() {
                                                 <p className="text-white font-semibold text-sm truncate">{pilot.name}</p>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-accent-gold font-mono text-[10px]">{pilot.pilotId}</span>
-                                                    <span className="text-gray-400 text-[10px]">{pilot.pilotRank}</span>
                                                 </div>
                                             </div>
                                             <div className="text-right shrink-0">

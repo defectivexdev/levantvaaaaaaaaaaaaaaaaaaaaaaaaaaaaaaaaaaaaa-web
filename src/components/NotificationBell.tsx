@@ -17,7 +17,6 @@ interface Notification {
 const typeIcons: Record<string, typeof Bell> = {
     pirep_approved: FileText,
     pirep_rejected: FileText,
-    rank_up: TrendingUp,
     award: Award,
     event: Calendar,
     tour: Calendar,
@@ -27,7 +26,6 @@ const typeIcons: Record<string, typeof Bell> = {
 const typeColors: Record<string, string> = {
     pirep_approved: 'text-green-400',
     pirep_rejected: 'text-red-400',
-    rank_up: 'text-amber-400',
     award: 'text-purple-400',
     event: 'text-blue-400',
     tour: 'text-cyan-400',

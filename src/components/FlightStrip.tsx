@@ -26,7 +26,6 @@ interface StripData {
     fuel_used: number;
     pilot_name: string;
     pilot_id: string;
-    pilot_rank: string;
     date: string;
     credits_earned: number;
 }
@@ -150,7 +149,7 @@ export default function FlightStrip({ flightId, onClose }: FlightStripProps) {
             {/* Footer */}
             <div className="px-6 py-3 border-t border-white/[0.06] flex items-center justify-between bg-black/20">
                 <div className="text-[10px] text-gray-500">
-                    <span className="text-gray-400 font-bold">{strip.pilot_name}</span> · {strip.pilot_rank} · {strip.aircraft_type} · {strip.distance}nm
+                    <span className="text-gray-400 font-bold">{strip.pilot_name}</span> · {strip.aircraft_type} · {strip.distance}nm
                 </div>
                 <div className="text-accent-gold font-bold text-xs">+{strip.credits_earned} Cr</div>
             </div>

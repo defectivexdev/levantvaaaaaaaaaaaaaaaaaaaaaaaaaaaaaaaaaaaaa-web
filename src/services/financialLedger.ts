@@ -109,8 +109,8 @@ export class PayrollEngine {
      * Calculate pilot salary
      * Formula: Net_Salary = Flight_Hours × Hourly_Rate
      */
-    calculatePilotSalary(flight_hours: number, pilot_rank: string): number {
-        const hourly_rate = this.settings.pilot_pay_rates[pilot_rank] || 25;
+    calculatePilotSalary(flight_hours: number): number {
+        const hourly_rate = this.settings.pilot_pay_rates?.['Captain'] || 50;
         return flight_hours * hourly_rate;
     }
 }
@@ -146,8 +146,7 @@ export class FinancialLedgerService {
 
         // Calculate pilot salary
         const pilot_salary = this.payrollEngine.calculatePilotSalary(
-            revenueParams.flight_duration,
-            pilotRank
+            revenueParams.flight_duration
         );
 
         // Calculate net profit and pilot earnings
