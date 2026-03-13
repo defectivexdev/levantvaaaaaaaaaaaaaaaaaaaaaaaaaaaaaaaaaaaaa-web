@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -23,20 +24,149 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
-      - name: Install Dependencies
+      - name: Install Web Dependencies
         run: npm ci --legacy-peer-deps
 
       - name: TypeScript Check
         run: npx tsc --noEmit
 
+  build-acars:
+    name: Build ACARS Client
+    runs-on: windows-latest
+    needs: validate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: LevantACARS/react-ui/package-lock.json
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Install React UI dependencies
+        working-directory: LevantACARS/react-ui
+        run: npm install --legacy-peer-deps
+
+      - name: Build React UI
+        working-directory: LevantACARS/react-ui
+        run: npm run build
+
+      - name: Copy React build to wwwroot
+        shell: pwsh
+        run: |
+          if (Test-Path "LevantACARS/LevantACARS/wwwroot") { Remove-Item -Path "LevantACARS/LevantACARS/wwwroot" -Recurse -Force }
+          Copy-Item -Path "LevantACARS/react-ui/dist" -Destination "LevantACARS/LevantACARS/wwwroot" -Recurse -Force
+
+      - name: Copy favicon.ico from React UI
+        shell: pwsh
+        run: |
+          $source = "LevantACARS/react-ui/public/img/favicon.ico"
+          $dest = "LevantACARS/LevantACARS/Assets/favicon.ico"
+          if (Test-Path $source) {
+            New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
+            Copy-Item $source $dest -Force
+            Write-Host "Copied favicon.ico from React UI to Assets folder"
+          } else {
+            Write-Host "Warning: favicon.ico not found at $source, skipping copy"
+          }
+
+      - name: Restore NuGet packages
+        run: nuget restore LevantACARS/LevantACARS.sln
+
+      - name: Build .NET Release
+        working-directory: LevantACARS
+        run: dotnet build LevantACARS.sln --configuration Release --no-restore
+
+      - name: Publish .NET Application
+        run: dotnet publish LevantACARS/LevantACARS/LevantACARS.csproj -c Release -r win-x64 --self-contained -o LevantACARS/installer/publish
+
+      - name: Create default config.json template
+        shell: pwsh
+        run: |
+          $config = @{
+            api_base_url = "${{ secrets.BASE_URL }}/api/acars"
+            app_key = "${{ secrets.APP_KEY }}"
+            va_api_key = "LEVANTVIRTUALAIRLINE_WEBI_ACARS"
+            api_timeout = 15
+            ivao_client_id = "${{ secrets.IVAO_CLIENT_ID }}"
+            ivao_client_secret = "${{ secrets.IVAO_CLIENT_SECRET }}"
+            poll_interval_ms = 200
+            heartbeat_interval_ms = 30000
+            telemetry_buffer_interval = 4
+            position_update_interval = 5
+            discord_client_id = "${{ secrets.DISCORD_CLIENT_ID }}"
+            cloudinary_cloud_name = "${{ secrets.CLOUDINARY_CLOUD_NAME }}"
+            airportdb_api_token = "${{ secrets.AIRPORTDB }}"
+            log_level = "Information"
+            auth_token = $null
+            pilot_id = $null
+            pilot_name = $null
+            pilot_rank = $null
+            pilot_avatar = $null
+            pilot_hours = 0
+            pilot_xp = 0
+            weight_unit = "lbs"
+          }
+          $configJson = $config | ConvertTo-Json -Depth 10
+          $configJson | Set-Content "LevantACARS/LevantACARS/config.default.json"
+
+      - name: Setup WiX Toolset v3
+        run: |
+          choco install wixtoolset -y
+          echo "C:\Program Files (x86)\WiX Toolset v3.11\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Build MSI Installer
+        run: |
+          cd LevantACARS/installer
+
+          # Harvest all published files
+          heat.exe dir publish -cg PublishedFiles -gg -sfrag -srd -dr INSTALLDIR -nologo -sw5150 -sw5151 -out HarvestedFiles.wxs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          # Compile WiX sources
+          candle.exe -ext WixUIExtension -ext WixUtilExtension Package.wxs HarvestedFiles.wxs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          # Link into MSI
+          light.exe -ext WixUIExtension -ext WixUtilExtension -sval -b publish Package.wixobj HarvestedFiles.wixobj -o "LevantACARS-Build.msi"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Create ZIP archive
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "LevantACARS/installer/publish/*" -DestinationPath "LevantACARS-Build.zip"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: LevantACARS-Artifacts
+          path: |
+            LevantACARS/installer/LevantACARS-Build.msi
+            LevantACARS-Build.zip
+
   release:
     name: Semantic Release
     runs-on: ubuntu-latest
-    needs: validate
+    needs: [validate, build-acars]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -47,15 +177,42 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install Dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Semantic Release
+      - name: Download ACARS Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: LevantACARS-Artifacts
+          path: release-artifacts
+
+      - name: Rename Artifacts with Version
+        id: semantic
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
-        run: npx semantic-release
+          GITHUB_TOKEN: ${{ secrets.GH_PAT_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          # Run semantic-release
+          npx semantic-release > release_output.txt
+          cat release_output.txt
+          
+          # Extract version from semantic-release output or check git tag
+          version=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [[ -n "$version" ]] && grep -q "Published release" release_output.txt; then
+            echo "new_release_published=true" >> $GITHUB_OUTPUT
+            echo "new_release_version=${version}" >> $GITHUB_OUTPUT
+            
+            # Rename artifacts with the new version
+            mv release-artifacts/LevantACARS-Build.msi "release-artifacts/LevantACARS-${version}.msi"
+            mv release-artifacts/LevantACARS-Build.zip "release-artifacts/LevantACARS-${version}.zip"
+            
+            # Upload the versioned assets to the release
+            gh release upload $version "release-artifacts/LevantACARS-${version}.msi" "release-artifacts/LevantACARS-${version}.zip"
+          else
+            echo "new_release_published=false" >> $GITHUB_OUTPUT
+          fi
 
   deploy-preview:
     name: Vercel Preview Deployment
@@ -69,7 +226,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -100,7 +257,7 @@ jobs:
   deploy-production:
     name: Vercel Production Deployment
     runs-on: ubuntu-latest
-    needs: [validate, release]
+    needs: [validate, build-acars, release]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Repository
@@ -109,7 +266,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
