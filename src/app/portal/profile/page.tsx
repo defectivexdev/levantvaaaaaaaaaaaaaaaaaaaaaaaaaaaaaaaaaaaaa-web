@@ -8,6 +8,8 @@ import {
     ChevronRight, Trophy, Medal, Camera, Loader2, Trash2, X, Award, MapPin, Star, Activity
 } from 'lucide-react';
 import { toast } from 'sonner';
+import RankDisplay from '@/components/pilot/RankDisplay';
+import BadgeShowcase from '@/components/pilot/BadgeShowcase';
 
 interface Pilot {
     pilot_id: string;
@@ -380,9 +382,27 @@ export default function ProfilePage() {
                 ))}
             </div>
 
+            {/* Rank Display */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+            >
+                <RankDisplay showProgress={true} />
+            </motion.div>
+
+            {/* Badge Showcase */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+            >
+                <BadgeShowcase showProgress={true} />
+            </motion.div>
+
             {/* Main Content Grid */}
             <div className="grid lg:grid-cols-3 gap-6">
-                {/* Left Column - Pilot Details & Badges */}
+                {/* Left Column - Pilot Details */}
                 <div className="space-y-6">
                     {/* Pilot Details */}
                     <motion.div 
@@ -420,51 +440,6 @@ export default function ProfilePage() {
                         </div>
                     </motion.div>
 
-                    {/* Badges */}
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="bg-[#0a0a0a] border border-white/[0.04] rounded-xl overflow-hidden"
-                    >
-                        <div className="px-4 py-3 border-b border-white/[0.04] flex items-center gap-2">
-                            <Trophy className="w-4 h-4 text-amber-500" />
-                            <h2 className="text-sm font-semibold text-white">Badges</h2>
-                            <span className="ml-auto text-xs text-gray-500">{pilotBadges.length}</span>
-                        </div>
-                        <div className="p-4">
-                            {pilotBadges.length > 0 ? (
-                                <div className="grid grid-cols-3 gap-2">
-                                    {pilotBadges.map((badge) => (
-                                        <div 
-                                            key={badge._id} 
-                                            className="bg-black/30 rounded-lg p-2 flex flex-col items-center border border-white/[0.04] hover:border-amber-500/30 transition-all cursor-pointer group"
-                                        >
-                                            {badge.award_id?.imageUrl ? (
-                                                <img 
-                                                    src={`/img/badge/${badge.award_id.imageUrl}`}
-                                                    alt={badge.award_id?.name || 'Badge'}
-                                                    className="w-10 h-10 object-contain mb-1 group-hover:scale-110 transition-transform"
-                                                />
-                                            ) : (
-                                                <div className="w-10 h-10 bg-amber-500/10 rounded-full flex items-center justify-center mb-1">
-                                                    <Medal className="w-5 h-5 text-amber-500" />
-                                                </div>
-                                            )}
-                                            <span className="text-[9px] text-gray-400 text-center truncate w-full">
-                                                {badge.award_id?.name || 'Badge'}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-8">
-                                    <Trophy className="w-10 h-10 text-gray-700 mx-auto mb-2" />
-                                    <p className="text-gray-500 text-xs">No badges yet</p>
-                                </div>
-                            )}
-                        </div>
-                    </motion.div>
                 </div>
 
                 {/* Right Column - Recent Flights */}

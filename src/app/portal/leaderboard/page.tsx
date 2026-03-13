@@ -4,6 +4,8 @@ import { useState, useEffect, Suspense } from 'react';
 import { Trophy, Loader2, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
+import TierBadge from '@/components/pilot/TierBadge';
+import Image from 'next/image';
 
 interface LeaderboardPilot {
     rank: number;
@@ -53,6 +55,13 @@ function LeaderboardContent() {
         const hours = Math.floor(decimalHours);
         const minutes = Math.round((decimalHours - hours) * 60);
         return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+    };
+
+    const getTierByHours = (hours: number): 'bronze' | 'silver' | 'gold' | 'diamond' => {
+        if (hours < 150) return 'bronze';
+        if (hours < 1000) return 'silver';
+        if (hours < 5000) return 'gold';
+        return 'diamond';
     };
 
     return (

@@ -6,6 +6,7 @@ import { MapPin, Clock, CreditCard, Plane, Award, Users, ChevronRight, Medal, Tr
 import Link from 'next/link';
 import AwardCelebration from '@/components/AwardCelebration';
 import { motion, AnimatePresence } from 'framer-motion';
+import RankDisplay from '@/components/pilot/RankDisplay';
 
 const DashboardMap = dynamic<any>(() => import('@/components/DashboardMap'), { 
     loading: () => <div className="h-96 flex items-center justify-center text-gray-600 text-sm">Loading Map...</div>,
@@ -222,6 +223,11 @@ export default function DashboardPage() {
                     })}
                 </div>
             )}
+
+            {/* Rank Display */}
+            <motion.div variants={itemVariants}>
+                <RankDisplay showProgress={true} compact={false} />
+            </motion.div>
 
             {/* Main Content Grid */}
             <div className="grid lg:grid-cols-3 gap-6">
