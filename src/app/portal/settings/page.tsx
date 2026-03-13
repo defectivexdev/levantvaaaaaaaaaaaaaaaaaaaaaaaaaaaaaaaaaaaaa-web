@@ -33,7 +33,6 @@ export default function SettingsPage() {
     const [hoppieCode, setHoppieCode] = useState('');
     const [simMode, setSimMode] = useState<'fsuipc' | 'xpuipc'>('fsuipc');
     const [weightUnit, setWeightUnit] = useState<'lbs' | 'kgs'>('lbs');
-    const [vatsimId, setVatsimId] = useState('');
     const [ivaoId, setIvaoId] = useState('');
     const [country, setCountry] = useState('');
     const [countries, setCountries] = useState<Array<{code: string; name: string; flag: string}>>([]);
@@ -66,7 +65,6 @@ export default function SettingsPage() {
                     if (data.user.hoppieCode) setHoppieCode(data.user.hoppieCode);
                     if (data.user.simMode) setSimMode(data.user.simMode);
                     if (data.user.weightUnit) setWeightUnit(data.user.weightUnit);
-                    if (data.user.vatsim_cid) setVatsimId(data.user.vatsim_cid);
                     if (data.user.ivao_vid) setIvaoId(data.user.ivao_vid);
                     if (data.user.country) setCountry(data.user.country);
                 }
@@ -105,7 +103,7 @@ export default function SettingsPage() {
             const requests = [
                 fetch('/api/settings/simbrief', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ simbriefId }) }),
                 fetch('/api/settings/acars', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hoppieCode, simMode, weightUnit }) }),
-                fetch('/api/settings/network-ids', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vatsimId, ivaoId }) }),
+                fetch('/api/settings/network-ids', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ivaoId }) }),
             ];
             
             // Only save country if it has a value
@@ -255,15 +253,9 @@ export default function SettingsPage() {
                                 </div>
                             )}
                         </div>
-                        <div className="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1.5">VATSIM CID</label>
-                                <input type="text" value={vatsimId} onChange={e => setVatsimId(e.target.value)} placeholder="" className={inputCls} />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1.5">IVAO VID</label>
-                                <input type="text" value={ivaoId} onChange={e => setIvaoId(e.target.value)} placeholder="" className={inputCls} />
-                            </div>
+                        <div>
+                            <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1.5">IVAO VID</label>
+                            <input type="text" value={ivaoId} onChange={e => setIvaoId(e.target.value)} placeholder="" className={inputCls} />
                         </div>
                     </div>
 

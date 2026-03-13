@@ -3,7 +3,6 @@ import { verifyAuth } from '@/lib/auth';
 import connectDB from '@/lib/database';
 import Pilot from '@/models/Pilot';
 import Flight from '@/models/Flight';
-import { checkAndUpgradeRank } from '@/lib/ranks';
 import mongoose from 'mongoose';
 
 export async function GET() {
@@ -14,9 +13,6 @@ export async function GET() {
 
     try {
         await connectDB();
-
-        // Check for rank promotion before loading stats
-        await checkAndUpgradeRank(session.id);
 
         const pilot = await Pilot.findById(session.id).lean();
 

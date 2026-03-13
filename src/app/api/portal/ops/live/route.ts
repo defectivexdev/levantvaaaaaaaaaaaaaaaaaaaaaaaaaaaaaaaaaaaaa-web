@@ -8,7 +8,6 @@ import Fleet from '@/models/Fleet';
 // Merged Live Ops Route
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
-    const network = searchParams.get('network'); // 'vatsim' | null
 
     try {
         await connectDB();
@@ -71,32 +70,13 @@ export async function GET(request: NextRequest) {
             network: 'LEVANT'
         }));
 
-        let finalFlights = [...mappedInternal];
-
-        // 2. Fetch Network Traffic if requested
-        if (network && network !== 'off') {
-            const baseUrl = request.nextUrl.origin;
-            try {
-                const endpoint = `${baseUrl}/api/network/vatsim`;
-
-                const netRes = await fetch(endpoint, { cache: 'no-store' });
-                const netData = await netRes.json();
-                
-                if (netData.pilots) {
-                    finalFlights = [...finalFlights, ...netData.pilots];
-                }
-            } catch (err) {
-                console.error(`Failed to fetch ${network} traffic:`, err);
-            }
-        }
-
         return NextResponse.json({ 
             success: true, 
-            flights: finalFlights,
+            flights: mappedInternal,
             stats: {
-                total: finalFlights.length,
+                total: mappedInternal.length,
                 levant: mappedInternal.length,
-                network: finalFlights.length - mappedInternal.length
+                network: 0
             }
         });
 

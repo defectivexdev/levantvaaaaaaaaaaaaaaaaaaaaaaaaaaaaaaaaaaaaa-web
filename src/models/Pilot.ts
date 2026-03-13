@@ -29,7 +29,6 @@ export interface IPilot extends Document {
     balance: number;
     home_base: string;
     last_jumpseat?: Date;
-    vatsim_cid?: string;
     ivao_vid?: string;
     hwid?: string;
     hoppie_code?: string;
@@ -40,9 +39,6 @@ export interface IPilot extends Document {
     ivao_atc_rating?: number;
     ivao_pilot_rating?: number;
     ivao_verified?: boolean;
-    vatsim_rating?: number;
-    vatsim_pilotrating?: number;
-    vatsim_verified?: boolean;
     type_ratings: string[];
     inventory: string[];
     routes_flown: string[];
@@ -80,7 +76,6 @@ const PilotSchema = new Schema<IPilot>({
     balance: { type: Number, default: 0 },
     home_base: { type: String, default: 'OJAI' },
     last_jumpseat: Date,
-    vatsim_cid: String,
     ivao_vid: String,
     hwid: String,
     hoppie_code: String,
@@ -91,9 +86,6 @@ const PilotSchema = new Schema<IPilot>({
     ivao_atc_rating: Number,
     ivao_pilot_rating: Number,
     ivao_verified: { type: Boolean, default: false },
-    vatsim_rating: Number,
-    vatsim_pilotrating: Number,
-    vatsim_verified: { type: Boolean, default: false },
     type_ratings: [String],
     inventory: [String],
     routes_flown: [String],

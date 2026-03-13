@@ -55,7 +55,7 @@ export default function HandbookPage() {
                         <h4 className="text-white font-bold mb-3">General Rules</h4>
                         <ul className="grid gap-2">
                             {[
-                                'Pilots must maintain a professional conduct on VATSIM.',
+                                'Pilots must maintain a professional conduct on flight networks.',
                                 'Flight time must be recorded using the Levant ACARS tracker.',
                                 'Simulated time must be real-time unless specifically allowed.',
                                 'Direct-to shortcuts are allowed but must be realistic.'
@@ -132,7 +132,7 @@ export default function HandbookPage() {
                     <div className="flex gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
                         <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                         <p className="text-xs text-gray-400">
-                            Failing to communicate on networks like VATSIM can lead to suspension from the VA.
+                            Failing to communicate on flight networks can lead to suspension from the VA.
                         </p>
                     </div>
                 </div>

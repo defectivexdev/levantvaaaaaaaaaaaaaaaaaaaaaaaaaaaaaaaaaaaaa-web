@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/database';
 import Fleet from '@/models/Fleet';
-import AirlineFinance from '@/models/AirlineFinance';
 import { getConfig, corsHeaders } from '@/lib/acars/helpers';
 
 export const dynamic = 'force-dynamic';
@@ -25,15 +24,12 @@ export async function POST(request: NextRequest) {
         }
 
         const config = await getConfig();
-        const airlineFinance = await AirlineFinance.findOne();
         const groundedThreshold = config.grounded_health_threshold;
         const isGrounded = aircraft.condition < groundedThreshold;
-        const repairNeeded = 100 - aircraft.condition;
-        const estimatedRepairCost = Math.round(repairNeeded * config.repair_rate_per_percent);
 
-        if (isGrounded && aircraft.status !== 'Grounded' && aircraft.status !== 'Maintenance') {
+        if (isGrounded && aircraft.status !== 'Grounded') {
             aircraft.status = 'Grounded';
-            aircraft.grounded_reason = `Health below ${groundedThreshold}%: requires maintenance`;
+            aircraft.grounded_reason = `Health below ${groundedThreshold}%`;
             await aircraft.save();
         }
 
@@ -42,9 +38,6 @@ export async function POST(request: NextRequest) {
             status: aircraft.status,
             grounded: isGrounded,
             groundedReason: isGrounded ? (aircraft.grounded_reason || `Aircraft health ${aircraft.condition}% is below ${groundedThreshold}% threshold`) : null,
-            estimatedRepairCost,
-            repairRatePerPercent: config.repair_rate_per_percent,
-            airlineFunds: airlineFinance?.balance ?? 0,
             totalHours: aircraft.total_hours,
             flightCount: aircraft.flight_count,
             lastService: aircraft.last_service,

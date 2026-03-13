@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { Loader2 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function PortalLayout({
     children,

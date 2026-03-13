@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Shield, Loader2, Lock, Mail, Plane } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function AdminLoginPage() {
     const router = useRouter();

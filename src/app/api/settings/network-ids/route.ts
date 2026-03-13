@@ -9,12 +9,11 @@ export async function POST(request: NextRequest) {
     try {
         await connectDB();
 
-        const { vatsimId, ivaoId } = await request.json();
+        const { ivaoId } = await request.json();
 
         const pilot = await PilotModel.findByIdAndUpdate(
             session.id,
             { 
-                vatsim_cid: vatsimId,
                 ivao_vid: ivaoId
             },
             { new: true }

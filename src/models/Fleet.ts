@@ -6,7 +6,7 @@ export interface IFleet extends Document {
     name?: string;
     livery?: string;
     current_location: string;
-    status: 'Available' | 'InFlight' | 'Maintenance' | 'Grounded' | 'Retired';
+    status: 'Available' | 'InFlight' | 'Grounded' | 'Retired';
     condition: number;
     total_hours: number;
     flight_count: number;
@@ -27,7 +27,7 @@ const FleetSchema = new Schema<IFleet>({
     name: String,
     livery: String,
     current_location: { type: String, default: 'OJAI' },
-    status: { type: String, enum: ['Available', 'InFlight', 'Maintenance', 'Grounded', 'Retired'], default: 'Available', index: true },
+    status: { type: String, enum: ['Available', 'InFlight', 'Grounded', 'Retired'], default: 'Available', index: true },
     condition: { type: Number, default: 100, min: 0, max: 100 },
     total_hours: { type: Number, default: 0 },
     flight_count: { type: Number, default: 0 },

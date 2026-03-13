@@ -3,7 +3,6 @@ import { verifyAuth } from '@/lib/auth';
 import connectDB from '@/lib/database';
 import { PilotModel } from '@/models';
 import { sendAccountActivatedEmail, sendAccountInactiveEmail, sendProfileEditedEmail, sendPasswordResetEmail } from '@/lib/email';
-import { checkAndUpgradeRank } from '@/lib/ranks';
 import { v4 as uuidv4 } from 'uuid';
 import PasswordReset from '@/models/PasswordReset';
 
@@ -134,11 +133,6 @@ export async function PUT(request: NextRequest) {
                 // Account marked inactive
                 await sendAccountInactiveEmail(user.email, user.pilot_id, user.first_name);
             }
-        }
-
-        // Auto-check for rank promotion if hours/flights changed
-        if (updates.totalHours || updates.transferHours || updates.totalFlights) {
-            await checkAndUpgradeRank(userId);
         }
 
         // Send profile edit notification if there were changes

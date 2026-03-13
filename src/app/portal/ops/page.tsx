@@ -24,11 +24,9 @@ const DashboardMap = dynamic(() => import('@/components/DashboardMap'), { ssr: f
 export default function OpsCenterPage() {
     const [flights, setFlights] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [networkFilter, setNetworkFilter] = useState<'off' | 'vatsim'>('off');
     const [stats, setStats] = useState({
         airborne: 0,
         preflight: 0,
-        vatsim: 0
     });
     const [delays, setDelays] = useState<any[]>([]);
     const [wings, setWings] = useState<any[]>([]);
@@ -97,7 +95,7 @@ export default function OpsCenterPage() {
         fetchFlights();
         const interval = setInterval(fetchFlights, 15000); // Poll every 15s
         return () => clearInterval(interval);
-    }, [networkFilter]); // Re-fetch when filter changes
+    }, []); // Re-fetch on mount
 
     const fetchFlights = async () => {
         try {
@@ -138,17 +136,9 @@ export default function OpsCenterPage() {
 
             // Fallback to portal ops/live endpoint
             if (allFlights.length === 0) {
-                const res = await fetch(`/api/portal/ops/live?network=${networkFilter}`);
+                const res = await fetch(`/api/portal/ops/live?network=off`);
                 const data = await res.json();
                 if (data.flights) allFlights = data.flights;
-            } else if (networkFilter === 'vatsim') {
-                // If we got ACARS flights, still fetch VATSIM overlay
-                const res = await fetch(`/api/portal/ops/live?network=vatsim`);
-                const data = await res.json();
-                if (data.flights) {
-                    const vatsimOnly = data.flights.filter((f: any) => f.network !== 'LEVANT');
-                    allFlights = [...allFlights, ...vatsimOnly];
-                }
             }
 
             setFlights(allFlights);
@@ -161,7 +151,6 @@ export default function OpsCenterPage() {
             setStats({
                 airborne,
                 preflight,
-                vatsim: networkFilter === 'vatsim' ? allFlights.filter((f: any) => f.network !== 'LEVANT').length : 0
             });
         } catch (err) {
             console.error('Error fetching live ops:', err);
@@ -197,7 +186,7 @@ export default function OpsCenterPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
                     <MiniStat label="Airborne" value={stats.airborne} icon={<Navigation className="text-blue-400" />} />
                     <MiniStat label="Dispatching" value={stats.preflight} icon={<Clock className="text-yellow-400" />} />
-                    <MiniStat label="Network Traffic" value={stats.vatsim} icon={<Wifi className="text-emerald-400" />} />
+                    <MiniStat label="Total Flights" value={flights.length} icon={<Wifi className="text-emerald-400" />} />
                     <MiniStat label="Network Avg" value="99.9%" icon={<Signal className="text-purple-400" />} />
                 </div>
             </div>
@@ -279,22 +268,6 @@ export default function OpsCenterPage() {
                         <div className="flex items-center gap-4">
                             {/* Network Toggles */}
                             <div className="flex bg-white/5 rounded-lg p-1 border border-white/[0.08]">
-                                <button 
-                                    onClick={() => setNetworkFilter('off')}
-                                    className={`px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest transition-all ${
-                                        networkFilter === 'off' ? 'bg-accent-gold text-black shadow-lg' : 'text-gray-500 hover:text-white'
-                                    }`}
-                                >
-                                    LEVANT Only
-                                </button>
-                                <button 
-                                    onClick={() => setNetworkFilter('vatsim')}
-                                    className={`px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest transition-all ${
-                                        networkFilter === 'vatsim' ? 'bg-emerald-500 text-black shadow-lg' : 'text-gray-500 hover:text-white'
-                                    }`}
-                                >
-                                    VATSIM
-                                </button>
                             </div>
                         </div>
                     </div>

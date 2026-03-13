@@ -4,7 +4,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import SecurityProtector from '@/components/SecurityProtector';
 import { Toaster } from 'sonner';
-import { AuthProvider } from '@/context/AuthContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 const winkySans = localFont({
     src: [

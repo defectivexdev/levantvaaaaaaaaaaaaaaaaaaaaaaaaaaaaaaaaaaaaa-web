@@ -88,9 +88,6 @@ public sealed class FlightManager : IDisposable
     public event Action<FlightPhase, FlightPhase>? OnPhaseChanged;
     public event Action<List<Exceedance>>? OnExceedancesDetected;
     public event Action<ScoringEngine.ScoreResult>? OnFlightScored;
-#pragma warning disable CS0067
-    public event Action<ScoringEngine.RankCheckResult>? OnRankPromotion;
-#pragma warning restore CS0067
     public event Action<bool>? OnConnectionChanged;
     public event Action<string>? OnFlightEvent;
     public event Action<double, double, double, int>? OnTouchdown; // lat, lon, landingRate, groundSpeed

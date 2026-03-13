@@ -3,7 +3,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IChatMessage extends Document {
     pilot_id: string;
     pilot_name: string;
-    pilot_rank: string;
     content: string;
     edited: boolean;
     deleted: boolean;
@@ -14,7 +13,6 @@ export interface IChatMessage extends Document {
 const ChatMessageSchema = new Schema<IChatMessage>({
     pilot_id: { type: String, required: true, index: true },
     pilot_name: { type: String, required: true },
-    pilot_rank: { type: String, default: 'Cadet' },
     content: { type: String, required: true },
     edited: { type: Boolean, default: false },
     deleted: { type: Boolean, default: false },

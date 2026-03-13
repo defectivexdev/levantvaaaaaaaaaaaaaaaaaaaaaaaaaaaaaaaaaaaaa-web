@@ -70,12 +70,11 @@ export class ExpenseEngine {
 
     /**
      * Calculate flight expenses
-     * Includes: Fuel, Landing Fees, Maintenance (based on G-force/landing hardness)
+     * Includes: Fuel, Landing Fees
      */
     calculateFlightExpenses(params: ExpenseCalculationParams): {
         fuel_cost: number;
         landing_fee: number;
-        maintenance_cost: number;
         aircraft_rental: number;
         total_expenses: number;
     } {
@@ -85,36 +84,14 @@ export class ExpenseEngine {
         // Landing fee (based on airport size)
         const landing_fee = this.settings.landing_fees[params.landing_airport_size];
 
-        // Maintenance cost (based on G-force and landing rate)
-        let maintenance_cost = this.settings.maintenance_base_cost;
-
-        // Additional cost for excessive G-force
-        if (params.max_g_force > 1.5) {
-            const excessG = params.max_g_force - 1.5;
-            maintenance_cost += excessG * this.settings.maintenance_per_g_force;
-        }
-
-        // Penalty for hard landing
-        if (Math.abs(params.landing_rate) > 600) {
-            maintenance_cost += this.settings.maintenance_hard_landing_penalty;
-        } else if (Math.abs(params.landing_rate) > 400) {
-            maintenance_cost += this.settings.maintenance_hard_landing_penalty * 0.5;
-        }
-
-        // Reduced maintenance for perfect flights
-        if (params.flight_score >= 95) {
-            maintenance_cost *= 0.8; // 20% discount for excellent performance
-        }
-
         // Aircraft rental (if applicable)
         const aircraft_rental = (params.aircraft_rental_rate || 0) * params.flight_duration;
 
-        const total_expenses = fuel_cost + landing_fee + maintenance_cost + aircraft_rental;
+        const total_expenses = fuel_cost + landing_fee + aircraft_rental;
 
         return {
             fuel_cost,
             landing_fee,
-            maintenance_cost,
             aircraft_rental,
             total_expenses,
         };
@@ -307,22 +284,6 @@ export class FinancialLedgerService {
             runningBalance -= financials.landing_fee;
         }
 
-        if (financials.maintenance_cost > 0) {
-            transactions.push(
-                this.createTransaction(
-                    pilotId,
-                    TransactionType.MAINTENANCE,
-                    TransactionCategory.EXPENSE,
-                    -financials.maintenance_cost,
-                    runningBalance,
-                    'Maintenance and wear',
-                    { maintenance_cost: financials.maintenance_cost },
-                    flightId
-                )
-            );
-            runningBalance -= financials.maintenance_cost;
-        }
-
         // Payroll transaction
         if (financials.pilot_salary > 0) {
             transactions.push(
@@ -411,7 +372,6 @@ export function getTransactionIcon(type: TransactionType): string {
         [TransactionType.EVENT_REWARD]: '🏆',
         [TransactionType.FUEL_COST]: '⛽',
         [TransactionType.LANDING_FEE]: '🛬',
-        [TransactionType.MAINTENANCE]: '🔧',
         [TransactionType.AIRCRAFT_RENTAL]: '🛩️',
         [TransactionType.PILOT_SALARY]: '💰',
         [TransactionType.ADJUSTMENT]: '⚙️',

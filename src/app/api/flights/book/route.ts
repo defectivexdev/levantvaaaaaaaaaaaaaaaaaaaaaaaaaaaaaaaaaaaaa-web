@@ -70,10 +70,6 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ error: 'Aircraft not found.' }, { status: 404 });
             }
 
-            if (aircraft.status === 'Maintenance') {
-                return NextResponse.json({ error: `Aircraft ${aircraft_registration} is currently in maintenance.` }, { status: 400 });
-            }
-
             if (aircraft.status === 'InFlight') {
                 return NextResponse.json({ error: `Aircraft ${aircraft_registration} is currently in use.` }, { status: 400 });
             }

@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { MapPin, Clock, CreditCard, Plane, Award, Users, ChevronRight, Medal, TrendingUp, Activity, Zap, Star } from 'lucide-react';
 import Link from 'next/link';
-import RankBadge from '@/components/RankBadge';
 import AwardCelebration from '@/components/AwardCelebration';
 import { motion, AnimatePresence } from 'framer-motion';
 

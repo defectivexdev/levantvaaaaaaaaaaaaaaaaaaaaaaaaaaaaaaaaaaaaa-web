@@ -15,11 +15,9 @@ import Event from '@/models/Event';
 import DestinationOfTheMonth from '@/models/DestinationOfTheMonth';
 import AirlineFinance from '@/models/AirlineFinance';
 import FinanceLog from '@/models/FinanceLog';
-import MaintenanceLog from '@/models/MaintenanceLog';
 import PilotAward from '@/models/PilotAward';
 import { notifyLanding, notifyModeration } from '@/lib/discord';
 import { triggerFlightEnded } from '@/lib/pusher';
-import { checkAndUpgradeRank } from '@/lib/ranks';
 import { checkAndGrantAwards } from '@/lib/awards';
 import { calculateFlightCredits, awardFlightCredits } from '@/lib/xp';
 import { findPilot, getConfig, corsHeaders } from '@/lib/acars/helpers';
@@ -129,8 +127,7 @@ export async function POST(request: NextRequest) {
         const costFuel = Math.round(fuelUsed * config.fuel_price_per_lb);
         const costLanding = config.base_landing_fee + Math.round(distanceNm * 0.1);
         const costPilot = Math.round((flightTimeMinutes / 60) * config.pilot_pay_rate);
-        const costMaintenance = Math.round(distanceNm * 0.5);
-        const totalExpenses = costFuel + costLanding + costPilot + costMaintenance;
+        const totalExpenses = costFuel + costLanding + costPilot;
         const flightPoints = score || 100;
         const fuelTaxAmount = Math.round(totalRevenue * (config.fuel_tax_percent / 100));
         const penaltyAmount = Math.round((100 - flightPoints) * config.penalty_multiplier);
@@ -219,7 +216,7 @@ export async function POST(request: NextRequest) {
             acars_version: resolvedAcarsVersion, submitted_at: new Date(),
             revenue_passenger: revenuePax, revenue_cargo: revenueCargo,
             expense_fuel: costFuel, expense_airport: costLanding,
-            expense_pilot: costPilot, expense_maintenance: costMaintenance,
+            expense_pilot: costPilot,
             real_profit: netProfit,
             passenger_rating: Math.max(1, Math.min(5, Math.ceil((score || 100) / 20))),
             passenger_review: generatePassengerReview(landingRate, score || 100),
@@ -258,7 +255,6 @@ export async function POST(request: NextRequest) {
             { amount: -costFuel, type: 'Fuel Cost', description: `Fuel for ${callsign}`, reference_id: newFlight._id, pilot_id: pilot._id },
             { amount: -costLanding, type: 'Landing Fee', description: `Landing Fees at ${arrivalIcao}`, reference_id: newFlight._id, pilot_id: pilot._id },
             { amount: -costPilot, type: 'Pilot Pay', description: `Pilot Salary for ${pilot.first_name} ${pilot.last_name}`, reference_id: newFlight._id, pilot_id: pilot._id },
-            { amount: -costMaintenance, type: 'Maintenance', description: `Wear & Tear for ${aircraftType}`, reference_id: newFlight._id, pilot_id: pilot._id },
             { amount: totalDeductions, type: 'FLIGHT_REVENUE_SPLIT', description: `Vault deposit: FuelTax ${fuelTaxAmount} Cr + Penalties ${penaltyAmount} Cr from ${callsign}`, reference_id: newFlight._id, pilot_id: pilot._id },
         ]);
         airlineFinance.balance += netProfit + totalDeductions;
@@ -316,40 +312,11 @@ export async function POST(request: NextRequest) {
             if (specificAircraft.condition < groundedThreshold) {
                 specificAircraft.status = 'Grounded';
                 specificAircraft.grounded_reason = `Health dropped to ${specificAircraft.condition.toFixed(1)}% after flight ${callsign}`;
-            } else if (specificAircraft.condition < 40) {
-                specificAircraft.status = 'Maintenance';
             } else {
                 specificAircraft.status = 'Available';
             }
             await specificAircraft.save();
             aircraftHealthAfter = specificAircraft.condition;
-            if (damage > 0.5) {
-                await MaintenanceLog.create({
-                    aircraft_registration: specificAircraft.registration,
-                    type: damage >= 50 ? 'DAMAGE_HARD_LANDING' : 'DAMAGE_FLIGHT',
-                    health_before: healthBefore, health_after: specificAircraft.condition,
-                    cost_cr: 0, description: `Flight ${callsign}: ${damage.toFixed(1)}% damage (LR: ${landingRate} fpm)`,
-                    flight_id: newFlight._id, pilot_id: pilot._id,
-                });
-            }
-        }
-
-        // Repair timer for hard landings
-        if (specificAircraft && landingRate < -600) {
-            try {
-                const damagePercent = Math.abs(landingRate + 400) * 0.05;
-                const repairHours = Math.ceil(damagePercent * (config.repair_hours_per_percent || 2));
-                const repairUntil = new Date(Date.now() + repairHours * 60 * 60 * 1000);
-                specificAircraft.status = 'Maintenance';
-                specificAircraft.repair_until = repairUntil;
-                specificAircraft.damaged_at = new Date();
-                specificAircraft.damaged_by_pilot = pilot.pilot_id;
-                specificAircraft.damaged_by_flight = newFlight._id?.toString();
-                specificAircraft.grounded_reason = `Hard landing ${landingRate} fpm — Under repair until ${repairUntil.toISOString().slice(0, 16)}Z`;
-                await specificAircraft.save();
-            } catch (repairErr) {
-                console.error('Repair timer error (non-fatal):', repairErr);
-            }
         }
 
         let tourMessage = '';
@@ -478,8 +445,7 @@ export async function POST(request: NextRequest) {
             console.error('[PIREP] Landing notification failed:', landingErr);
         }
 
-        // Rank & awards check
-        const newRank = await checkAndUpgradeRank(pilot.id.toString());
+        // Awards check
         const newlyGrantedAwards = await checkAndGrantAwards(pilot.id.toString());
 
         // Bonus credits
@@ -503,13 +469,12 @@ export async function POST(request: NextRequest) {
         if (butterBonus > 0) message += ` (Includes ${butterBonus} Butter Bonus!)`;
         if (tourMessage) message += tourMessage;
         if (eventMessage) message += eventMessage;
-        if (newRank) message += ` PROMOTION: ${newRank}!`;
 
         return NextResponse.json({
             success: true, message,
             creditsEarned: flightCredits, bonusCredits: creditBreakdown?.total || 0,
             creditsBreakdown: creditBreakdown?.details || [],
-            newRank, newlyGrantedAwards, aircraftHealth: aircraftHealthAfter,
+            newlyGrantedAwards, aircraftHealth: aircraftHealthAfter,
             revenueBreakdown: { grossRevenue: totalRevenue, fuelTax: fuelTaxAmount, penaltyFines: penaltyAmount, totalDeductions, netPilotPay, dotmBonus, butterBonus, totalEarned: flightCredits },
         }, { headers: corsHeaders() });
 

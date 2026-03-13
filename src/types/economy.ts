@@ -18,7 +18,6 @@ export enum TransactionType {
     // Expenses
     FUEL_COST = 'fuel_cost',
     LANDING_FEE = 'landing_fee',
-    MAINTENANCE = 'maintenance',
     AIRCRAFT_RENTAL = 'aircraft_rental',
     
     // Payroll
@@ -97,7 +96,6 @@ export interface FlightFinancials {
     // Expenses
     fuel_cost: number;           // Fuel burned × Fuel price
     landing_fee: number;         // Based on airport size
-    maintenance_cost: number;    // Based on G-force/landing hardness
     aircraft_rental: number;     // If applicable
     total_expenses: number;
     
@@ -169,11 +167,6 @@ export interface EconomicSettings {
         hub: number;
     };
     
-    // Maintenance costs
-    maintenance_base_cost: number;
-    maintenance_per_g_force: number;        // Additional cost per G above 1.5
-    maintenance_hard_landing_penalty: number;
-    
     // Aircraft rental (if applicable)
     aircraft_rental_per_hour: number;
     
@@ -202,10 +195,6 @@ export const DEFAULT_ECONOMIC_SETTINGS: EconomicSettings = {
         large: 300,
         hub: 500,
     },
-    
-    maintenance_base_cost: 100,
-    maintenance_per_g_force: 50,
-    maintenance_hard_landing_penalty: 200,
     
     aircraft_rental_per_hour: 0,
     

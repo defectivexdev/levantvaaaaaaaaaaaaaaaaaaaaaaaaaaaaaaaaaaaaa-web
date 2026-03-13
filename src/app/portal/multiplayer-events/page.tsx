@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Calendar, Users, MapPin, Clock, Plane, Trophy, Loader2, UserPlus, UserMinus, CheckCircle } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface GroupFlight {
     _id: string;

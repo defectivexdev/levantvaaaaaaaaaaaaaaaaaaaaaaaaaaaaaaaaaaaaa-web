@@ -16,7 +16,6 @@ import {
     Loader2,
     Filter
 } from 'lucide-react';
-import RankBadge from '@/components/RankBadge';
 
 interface Pilot {
     id: string;
@@ -187,7 +186,7 @@ export default function AdminPilotsPage() {
                                             </div>
                                         </td>
                                         <td className="p-4">
-                                            <RankBadge rank={pilot.rank} size="sm" showText />
+                                            <span className="text-gray-300 text-sm">{pilot.rank}</span>
                                             <div className="flex gap-3 mt-1">
                                                 <span className="text-[10px] text-gray-400 capitalize">{Math.round(pilot.totalHours)}h / {pilot.totalFlights} flights</span>
                                             </div>

@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
 
 async function fetchMetar(icao: string): Promise<string> {
     try {
-        const res = await fetch(`https://metar.vatsim.net/metar.php?id=${icao}`, { cache: 'no-store' });
+        const res = await fetch(`https://aviationweather.gov/api/data/metar?ids=${icao}&format=raw`, { cache: 'no-store' });
         if (res.ok) {
             const text = await res.text();
             return text.trim() || `No METAR for ${icao}`;

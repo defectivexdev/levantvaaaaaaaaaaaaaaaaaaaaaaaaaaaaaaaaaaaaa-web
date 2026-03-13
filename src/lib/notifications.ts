@@ -2,7 +2,7 @@ import Notification from '@/models/Notification';
 import connectDB from '@/lib/database';
 import mongoose from 'mongoose';
 
-type NotificationType = 'pirep_approved' | 'pirep_rejected' | 'rank_up' | 'award' | 'event' | 'system' | 'tour';
+type NotificationType = 'pirep_approved' | 'pirep_rejected' | 'award' | 'event' | 'system' | 'tour';
 
 interface CreateNotificationParams {
     pilotId: string | mongoose.Types.ObjectId;

@@ -13,7 +13,7 @@ export default function HangarPage() {
             { registration: 'OD-LVT', type: 'A320', location: 'OJAI', condition: 98, status: 'Available', hours: 450 },
             { registration: 'OD-ZEU', type: 'A320', location: 'OSDI', condition: 100, status: 'Available', hours: 12 },
             { registration: 'OD-HER', type: 'A321', location: 'ORBI', condition: 85, status: 'InFlight', hours: 1200 },
-            { registration: 'OD-POS', type: 'B738', location: 'OMDB', condition: 38, status: 'Maintenance', hours: 3400 },
+            { registration: 'OD-POS', type: 'B738', location: 'OMDB', condition: 38, status: 'Grounded', hours: 3400 },
         ];
         
         setTimeout(() => {
@@ -33,7 +33,7 @@ export default function HangarPage() {
              <div className="flex items-end justify-between">
                 <div>
                      <h1 className="text-2xl font-bold text-white">Fleet Hangar</h1>
-                     <p className="text-gray-500 text-xs mt-0.5">Manage airframe health and maintenance</p>
+                     <p className="text-gray-500 text-xs mt-0.5">Manage airframe health</p>
                 </div>
                 <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-xl px-4 py-2">
                     <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold block">Fleet</span>
@@ -43,10 +43,10 @@ export default function HangarPage() {
 
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                  {fleet.map((plane) => (
-                     <div key={plane.registration} className={`bg-[#0a0a0a] border rounded-2xl p-5 relative overflow-hidden group ${plane.status === 'Maintenance' ? 'border-red-500/20' : 'border-white/[0.06]'}`}>
-                         {plane.status === 'Maintenance' && (
+                     <div key={plane.registration} className={`bg-[#0a0a0a] border rounded-2xl p-5 relative overflow-hidden group ${plane.status === 'Grounded' ? 'border-red-500/20' : 'border-white/[0.06]'}`}>
+                         {plane.status === 'Grounded' && (
                              <div className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg animate-pulse">
-                                 MAINTENANCE REQUIRED
+                                 GROUNDED
                              </div>
                          )}
 
@@ -86,9 +86,9 @@ export default function HangarPage() {
                                  </div>
                              </div>
                              
-                             {plane.status === 'Maintenance' ? (
+                             {plane.status === 'Grounded' ? (
                                  <button className="w-full py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 font-bold rounded-lg transition-all flex items-center justify-center gap-2">
-                                     <AlertTriangle size={16} /> Order Repairs
+                                     <AlertTriangle size={16} /> Aircraft Grounded
                                  </button>
                              ) : (
                                  <div className="flex items-center gap-2 text-emerald-500 text-xs font-bold justify-center py-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">

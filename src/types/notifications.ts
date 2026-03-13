@@ -54,7 +54,6 @@ export enum EmailNotificationType {
     // Administrative
     ADMIN_MESSAGE = 'admin_message',
     SYSTEM_ANNOUNCEMENT = 'system_announcement',
-    MAINTENANCE_NOTICE = 'maintenance_notice',
 }
 
 export enum EmailPriority {

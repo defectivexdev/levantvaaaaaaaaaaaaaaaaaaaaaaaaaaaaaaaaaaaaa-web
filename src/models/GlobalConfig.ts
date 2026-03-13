@@ -5,7 +5,6 @@ export interface IGlobalConfig extends Document {
     // Economy Rates
     fuel_tax_percent: number;
     penalty_multiplier: number;
-    repair_rate_per_percent: number;
     // Revenue Rates
     ticket_price_per_nm: number;
     cargo_price_per_lb_nm: number;
@@ -50,8 +49,6 @@ export interface IGlobalConfig extends Document {
     cr_taxi_speed_limit: number;
     // Group Flight Credits
     cr_group_flight_participation: number;
-    // Fleet Repair
-    repair_hours_per_percent: number;
     location_based_fleet: boolean;
     // Timestamps
     updated_at: Date;
@@ -63,7 +60,6 @@ const GlobalConfigSchema = new Schema<IGlobalConfig>({
     // Economy Rates
     fuel_tax_percent: { type: Number, default: 10 },
     penalty_multiplier: { type: Number, default: 5 },
-    repair_rate_per_percent: { type: Number, default: 100 },
     // Revenue Rates
     ticket_price_per_nm: { type: Number, default: 0.8 },
     cargo_price_per_lb_nm: { type: Number, default: 0.002 },
@@ -108,8 +104,6 @@ const GlobalConfigSchema = new Schema<IGlobalConfig>({
     cr_taxi_speed_limit: { type: Number, default: 30 },
     // Group Flight Credits
     cr_group_flight_participation: { type: Number, default: 50 },
-    // Fleet Repair
-    repair_hours_per_percent: { type: Number, default: 2 },
     location_based_fleet: { type: Boolean, default: true },
     // Timestamps
     updated_at: { type: Date, default: Date.now },

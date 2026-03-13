@@ -147,39 +147,4 @@ public sealed class ScoringEngine
         );
     }
 
-    // ─── Rank Promotion Check ───────────────────────────────────────────────
-
-    public sealed record RankCheckResult(
-        string CurrentRank,
-        string? NewRank,
-        bool Promoted,
-        int? NextRankXp,
-        int XpToNext
-    );
-
-    public static RankCheckResult CheckRankPromotion(int currentXp, string currentRank)
-    {
-        string qualifiedRank = RankConfig.Thresholds[0].Rank;
-        foreach (var (rank, xpRequired) in RankConfig.Thresholds)
-        {
-            if (currentXp >= xpRequired)
-                qualifiedRank = rank;
-        }
-
-        bool promoted = qualifiedRank != currentRank;
-        string? newRank = promoted ? qualifiedRank : null;
-
-        int currentIdx = Array.FindIndex(RankConfig.Thresholds, t => t.Rank == (newRank ?? currentRank));
-        int? nextRankXp = currentIdx < RankConfig.Thresholds.Length - 1
-            ? RankConfig.Thresholds[currentIdx + 1].XpRequired
-            : null;
-
-        return new RankCheckResult(
-            CurrentRank: newRank ?? currentRank,
-            NewRank: newRank,
-            Promoted: promoted,
-            NextRankXp: nextRankXp,
-            XpToNext: nextRankXp.HasValue ? Math.Max(0, nextRankXp.Value - currentXp) : 0
-        );
-    }
 }
