@@ -86,11 +86,10 @@ export default function RankDisplay({ showProgress = true, compact = false }: Ra
         return (
             <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12">
-                    <Image
+                    <img
                         src={rankInfo.currentRank.image}
                         alt={rankInfo.currentRank.name}
-                        fill
-                        className="object-contain"
+                        className="w-full h-full object-contain"
                     />
                 </div>
                 <div>
@@ -113,11 +112,10 @@ export default function RankDisplay({ showProgress = true, compact = false }: Ra
             <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
                     <div className="relative w-20 h-20">
-                        <Image
+                        <img
                             src={rankInfo.currentRank.image}
                             alt={rankInfo.currentRank.name}
-                            fill
-                            className="object-contain"
+                            className="w-full h-full object-contain"
                         />
                     </div>
                     <div>
