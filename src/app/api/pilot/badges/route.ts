@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/database';
-import { getPilotBadges, getBadgeProgress } from '@/services/badgeService';
+import { getPilotBadges, getBadgeProgress, checkAndAwardBadges } from '@/services/badgeService';
 import { jwtVerify } from 'jose';
 
 export async function GET(request: NextRequest) {
@@ -18,6 +18,9 @@ export async function GET(request: NextRequest) {
         }
 
         await connectDB();
+
+        // Check and award any missing badges first (e.g. from transferred hours or retroactive badges)
+        await checkAndAwardBadges(payload.id as string);
 
         const { searchParams } = new URL(request.url);
         const includeProgress = searchParams.get('progress') === 'true';
