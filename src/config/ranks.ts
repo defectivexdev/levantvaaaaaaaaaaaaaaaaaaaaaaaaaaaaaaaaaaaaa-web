@@ -7,13 +7,15 @@ export interface RankConfig {
     order: number;
 }
 
+const CACHE_VERSION = '2';
+
 export const PILOT_RANKS: RankConfig[] = [
     {
         id: 'cadet',
         name: 'Cadet',
         minHours: 0,
         maxHours: 15,
-        image: '/img/ranks/cadet.png',
+        image: `/img/ranks/cadet.png?v=${CACHE_VERSION}`,
         order: 1
     },
     {
@@ -21,7 +23,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Student Pilot',
         minHours: 15,
         maxHours: 150,
-        image: '/img/ranks/student_pilots.png',
+        image: `/img/ranks/student_pilots.png?v=${CACHE_VERSION}`,
         order: 2
     },
     {
@@ -29,7 +31,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Amateur Pilot',
         minHours: 150,
         maxHours: 300,
-        image: '/img/ranks/amature_pilots.png',
+        image: `/img/ranks/amature_pilots.png?v=${CACHE_VERSION}`,
         order: 3
     },
     {
@@ -37,7 +39,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Private Pilot',
         minHours: 300,
         maxHours: 500,
-        image: '/img/ranks/pp_pilots.png',
+        image: `/img/ranks/pp_pilots.png?v=${CACHE_VERSION}`,
         order: 4
     },
     {
@@ -45,7 +47,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'First Officer',
         minHours: 500,
         maxHours: 1000,
-        image: '/img/ranks/first_officers.png',
+        image: `/img/ranks/first_officers.png?v=${CACHE_VERSION}`,
         order: 5
     },
     {
@@ -53,7 +55,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Senior First Officer',
         minHours: 1000,
         maxHours: 2500,
-        image: '/img/ranks/senior_firstofficer.png',
+        image: `/img/ranks/senior_firstofficer.png?v=${CACHE_VERSION}`,
         order: 6
     },
     {
@@ -61,7 +63,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Captain',
         minHours: 2500,
         maxHours: 5000,
-        image: '/img/ranks/captain.png',
+        image: `/img/ranks/captain.png?v=${CACHE_VERSION}`,
         order: 7
     },
     {
@@ -69,7 +71,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Flight Captain',
         minHours: 5000,
         maxHours: 7000,
-        image: '/img/ranks/flight_cap.png',
+        image: `/img/ranks/flight_cap.png?v=${CACHE_VERSION}`,
         order: 8
     },
     {
@@ -77,7 +79,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Senior Flight Captain',
         minHours: 7000,
         maxHours: 10000,
-        image: '/img/ranks/senior_flightcaps.png',
+        image: `/img/ranks/senior_flightcaps.png?v=${CACHE_VERSION}`,
         order: 9
     },
     {
@@ -85,7 +87,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Commercial Captain',
         minHours: 10000,
         maxHours: 20000,
-        image: '/img/ranks/CommerCap.png',
+        image: `/img/ranks/CommerCap.png?v=${CACHE_VERSION}`,
         order: 10
     },
     {
@@ -93,7 +95,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Instructor',
         minHours: 20000,
         maxHours: Infinity,
-        image: '/img/ranks/Instructor.png',
+        image: `/img/ranks/Instructor.png?v=${CACHE_VERSION}`,
         order: 11
     }
 ];
