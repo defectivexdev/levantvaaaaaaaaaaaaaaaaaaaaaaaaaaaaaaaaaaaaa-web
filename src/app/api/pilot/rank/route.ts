@@ -31,8 +31,9 @@ export async function GET(request: NextRequest) {
         const tier = getTierByHours(rankInfo.totalHours);
 
         return NextResponse.json({
-            rank: rankInfo.currentRank,
+            currentRank: rankInfo.currentRank,
             nextRank: rankInfo.nextRank,
+            totalHours: rankInfo.totalHours,
             progress: rankInfo.progress,
             hoursToNext: rankInfo.hoursToNext,
             tier: {
