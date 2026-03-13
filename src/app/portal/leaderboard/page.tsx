@@ -208,10 +208,11 @@ function LeaderboardContent() {
                                                 </div>
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-white font-semibold text-sm truncate">{pilot.name}</p>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-accent-gold font-mono text-[10px]">{pilot.pilotId}</span>
+                                                    <p className="text-white font-semibold text-sm truncate">{pilot.name}</p>
+                                                    <TierBadge tier={getTierByHours(pilot.hours)} size="sm" />
                                                 </div>
+                                                <p className="text-gray-500 font-mono text-[10px]">{pilot.pilotId}</p>
                                             </div>
                                             <div className="text-right shrink-0">
                                                 {pilot.isCredits ? (
