@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/database';
 import { getPilotRankInfo, getTierByHours, getTierBadge, getTierName } from '@/services/rankService';
-import { verifyAuth } from '@/lib/auth';
+import { jwtVerify } from 'jose';
 
 export async function GET(request: NextRequest) {
     try {
-        const session = await verifyAuth();
-        if (!session) {
+        const token = request.cookies.get('lva_session')?.value;
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET || '');
+        const { payload } = await jwtVerify(token, secret);
+
+        if (!payload.id) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         await connectDB();
 
-        const rankInfo = await getPilotRankInfo(session.id);
+        const rankInfo = await getPilotRankInfo(payload.id as string);
         if (!rankInfo) {
             return NextResponse.json({ error: 'Failed to get rank info' }, { status: 500 });
         }
