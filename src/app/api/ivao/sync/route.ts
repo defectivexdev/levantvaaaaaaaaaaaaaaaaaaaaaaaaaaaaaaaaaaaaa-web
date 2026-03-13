@@ -7,7 +7,9 @@ export const dynamic = 'force-dynamic';
 // POST - Sync user's IVAO profile and update ratings
 export async function POST(req: NextRequest) {
     try {
-        const token = req.headers.get('authorization')?.split(' ')[1];
+        const headerToken = req.headers.get('authorization')?.split(' ')[1];
+        const cookieToken = req.cookies.get('lva_session')?.value;
+        const token = headerToken || cookieToken;
         if (!token) {
             return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
         }
@@ -117,7 +119,9 @@ export async function POST(req: NextRequest) {
 // GET - Get user's IVAO sync status
 export async function GET(req: NextRequest) {
     try {
-        const token = req.headers.get('authorization')?.split(' ')[1];
+        const headerToken = req.headers.get('authorization')?.split(' ')[1];
+        const cookieToken = req.cookies.get('lva_session')?.value;
+        const token = headerToken || cookieToken;
         if (!token) {
             return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
         }

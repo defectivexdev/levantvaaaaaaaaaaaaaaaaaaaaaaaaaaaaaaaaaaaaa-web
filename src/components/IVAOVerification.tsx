@@ -95,18 +95,25 @@ export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerifi
         const toastId = toast.loading('Syncing IVAO data...');
 
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                toast.error('Not authenticated', { id: toastId });
-                return;
-            }
-
-            const res = await fetch('/api/ivao/sync', {
+            let res = await fetch('/api/ivao/sync', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
+                credentials: 'include',
             });
+
+            if (res.status === 401) {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    toast.error('Not authenticated', { id: toastId });
+                    return;
+                }
+
+                res = await fetch('/api/ivao/sync', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+            }
 
             const data = await res.json();
 
@@ -128,17 +135,22 @@ export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerifi
         setDiscordLinking(true);
 
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                toast.error('Not authenticated');
-                return;
-            }
-
-            const res = await fetch('/api/discord/verify-link', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
+            let res = await fetch('/api/discord/verify-link', {
+                credentials: 'include',
             });
+
+            if (res.status === 401) {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    toast.error('Not authenticated');
+                    return;
+                }
+                res = await fetch('/api/discord/verify-link', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+            }
 
             const data = await res.json();
 
