@@ -20,18 +20,6 @@ export interface BadgeDefinition {
 export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     // Flight Count Badges
     {
-        badge_id: 'first_solo',
-        name: 'First Solo Flight',
-        description: 'Complete your first flight',
-        category: 'flight_count',
-        tier: 'bronze',
-        icon: '✈️',
-        image: '5flight.png',
-        requirement: { type: 'total_flights', value: 1 },
-        points: 10,
-        order: 1
-    },
-    {
         badge_id: 'flights_5',
         name: '5 Flights',
         description: 'Complete 5 flights',
@@ -104,17 +92,6 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         requirement: { type: 'total_hours', value: 1000 },
         points: 150,
         order: 7
-    },
-    {
-        badge_id: 'master_aviator',
-        name: 'Master Aviator',
-        description: '5000 hours + 2000 flights',
-        category: 'hours',
-        tier: 'diamond',
-        icon: '👨‍✈️',
-        requirement: { type: 'combined', value: '5000h_2000f' },
-        points: 1000,
-        order: 12
     },
 
     // Landing Badges
@@ -364,146 +341,14 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
         points: 50,
         order: 34
     },
-    {
-        badge_id: 'red_eye_25',
-        name: 'Red Eye Master',
-        description: 'Complete 25 night flights',
-        category: 'time',
-        tier: 'gold',
-        icon: '🌃',
-        requirement: { type: 'night_flights', value: 25 },
-        points: 200,
-        order: 51
-    },
-    {
-        badge_id: 'sunrise_pilot',
-        name: 'Sunrise Pilot',
-        description: 'Takeoff between 0500–0700 local 10 times',
-        category: 'time',
-        tier: 'bronze',
-        icon: '🌅',
-        requirement: { type: 'sunrise_takeoffs', value: 10 },
-        points: 75,
-        order: 52
-    },
-    {
-        badge_id: 'midnight_flyer',
-        name: 'Midnight Flyer',
-        description: '20 flights departing after 2300',
-        category: 'time',
-        tier: 'silver',
-        icon: '🌌',
-        requirement: { type: 'midnight_flights', value: 20 },
-        points: 100,
-        order: 53
-    },
 
     // Aircraft Badges
-    {
-        badge_id: 'a350_specialist',
-        name: 'A350 Specialist',
-        description: 'Complete 20 flights on A350',
-        category: 'aircraft',
-        tier: 'silver',
-        icon: '✈️',
-        requirement: { type: 'aircraft_flights', value: 'A350_20' },
-        points: 150,
-        order: 60
-    },
 
     // Domestic/International
-    {
-        badge_id: 'domestic_specialist',
-        name: 'Domestic Specialist',
-        description: 'Complete 50 domestic flights',
-        category: 'flight_count',
-        tier: 'silver',
-        icon: '🏠',
-        requirement: { type: 'domestic_flights', value: 50 },
-        points: 100,
-        order: 70
-    },
-    {
-        badge_id: 'international_pilot',
-        name: 'International Pilot',
-        description: 'Complete 100 international flights',
-        category: 'flight_count',
-        tier: 'gold',
-        icon: '🌍',
-        requirement: { type: 'international_flights', value: 100 },
-        points: 250,
-        order: 71
-    },
 
     // Network Badges
-    {
-        badge_id: 'atc_friendly',
-        name: 'ATC Friendly',
-        description: '20 flights on VATSIM/IVAO with ATC',
-        category: 'network',
-        tier: 'gold',
-        icon: '📡',
-        requirement: { type: 'network_flights', value: 20 },
-        points: 200,
-        order: 80
-    },
 
     // Event Badges
-    {
-        badge_id: 'event_pilot',
-        name: 'Event Pilot',
-        description: 'Participate in 5 VA events',
-        category: 'event',
-        tier: 'silver',
-        icon: '🎉',
-        requirement: { type: 'events', value: 5 },
-        points: 150,
-        order: 90
-    },
-    {
-        badge_id: 'charity_flight',
-        name: 'Charity Flight',
-        description: 'Complete a special charity event flight',
-        category: 'event',
-        tier: 'gold',
-        icon: '❤️',
-        requirement: { type: 'charity_event', value: 1 },
-        points: 200,
-        order: 91
-    },
-    {
-        badge_id: 'founding_pilot',
-        name: 'Founding Pilot',
-        description: 'Early VA member',
-        category: 'event',
-        tier: 'diamond',
-        icon: '🏆',
-        requirement: { type: 'founding_member', value: 1 },
-        points: 500,
-        order: 92
-    },
-    {
-        badge_id: 'storm_chaser',
-        name: 'Storm Chaser',
-        description: 'Land in storm conditions',
-        category: 'landing',
-        tier: 'gold',
-        icon: '🌪️',
-        requirement: { type: 'storm_landing', value: 1 },
-        points: 200,
-        order: 93
-    },
-    {
-        badge_id: 'heavy_landing_recovery',
-        name: 'Heavy Landing Recovery',
-        description: 'Land safely after severe turbulence',
-        category: 'landing',
-        tier: 'silver',
-        icon: '🎢',
-        requirement: { type: 'turbulence_landing', value: 1 },
-        points: 100,
-        order: 94
-    }
 ];
 
 export function getBadgesByCategory(category: BadgeCategory): BadgeDefinition[] {
