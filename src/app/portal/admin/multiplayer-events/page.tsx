@@ -265,7 +265,7 @@ export default function AdminMultiplayerEventsPage() {
                                 type="datetime-local"
                                 value={formData.startTime}
                                 onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white"
+                                className="w-full bg-panel/50 border border-white/10 rounded-lg px-4 py-2 text-white"
                                 required
                             />
                             <p className="text-xs text-gray-500 mt-1">Enter time in UTC/Zulu timezone</p>
@@ -281,7 +281,7 @@ export default function AdminMultiplayerEventsPage() {
                                     setFormData({ ...formData, departureIcao: icao });
                                     if (icao.length === 4) fetchAirportName(icao, 'departure');
                                 }}
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white uppercase"
+                                className="w-full bg-panel/50 border border-white/10 rounded-lg px-4 py-2 text-white uppercase"
                                 maxLength={4}
                                 required
                             />
@@ -303,7 +303,7 @@ export default function AdminMultiplayerEventsPage() {
                                     setFormData({ ...formData, arrivalIcao: icao });
                                     if (icao.length === 4) fetchAirportName(icao, 'arrival');
                                 }}
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white uppercase"
+                                className="w-full bg-panel/50 border border-white/10 rounded-lg px-4 py-2 text-white uppercase"
                                 maxLength={4}
                                 required
                             />
@@ -321,7 +321,7 @@ export default function AdminMultiplayerEventsPage() {
                                 type="text"
                                 value={formData.route}
                                 onChange={(e) => setFormData({ ...formData, route: e.target.value })}
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white"
+                                className="w-full bg-panel/50 border border-white/10 rounded-lg px-4 py-2 text-white"
                             />
                         </div>
 
@@ -331,7 +331,7 @@ export default function AdminMultiplayerEventsPage() {
                                 type="text"
                                 value={formData.aircraft}
                                 onChange={(e) => setFormData({ ...formData, aircraft: e.target.value })}
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white"
+                                className="w-full bg-panel/50 border border-white/10 rounded-lg px-4 py-2 text-white"
                                 placeholder="e.g., A320, B737"
                             />
                         </div>
@@ -342,7 +342,7 @@ export default function AdminMultiplayerEventsPage() {
                                 type="text"
                                 value={formData.estimatedFlightTime}
                                 onChange={(e) => setFormData({ ...formData, estimatedFlightTime: e.target.value })}
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white"
+                                className="w-full bg-panel/50 border border-white/10 rounded-lg px-4 py-2 text-white"
                                 placeholder="e.g., 3:00 H"
                             />
                         </div>
@@ -353,7 +353,7 @@ export default function AdminMultiplayerEventsPage() {
                                 type="number"
                                 value={formData.reminderMinutes}
                                 onChange={(e) => setFormData({ ...formData, reminderMinutes: e.target.value })}
-                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white"
+                                className="w-full bg-panel/50 border border-white/10 rounded-lg px-4 py-2 text-white"
                                 placeholder="15"
                             />
                         </div>

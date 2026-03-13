@@ -78,7 +78,7 @@ export default function PirepDetailPage() {
                     }`}>
                         {rpt.approved_status === 1 ? 'Accepted' : rpt.approved_status === 2 ? 'Rejected' : 'Pending Review'}
                     </span>
-                    <span className="text-gray-500 font-mono text-sm px-3 py-1.5 bg-white/5 rounded-lg border border-white/[0.08] uppercase tracking-widest">
+                    <span className="text-gray-500 font-mono text-sm px-3 py-1.5 bg-white/5 rounded-lg border border-white/10 uppercase tracking-widest">
                         {rpt.callsign || id}
                     </span>
                 </div>
@@ -115,11 +115,11 @@ export default function PirepDetailPage() {
 
                         {/* Economy/Score Summary */}
                         <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
-                            <div className="bg-white/5 p-4 rounded-2xl border border-white/[0.06] text-center min-w-[140px]">
+                            <div className="bg-white/5 p-4 rounded-2xl border border-white/5 text-center min-w-[140px]">
                                 <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Flight Score</p>
                                 <p className={`text-3xl font-bold ${rpt.score >= 90 ? 'text-green-400' : 'text-yellow-400'}`}>{rpt.score || 100}</p>
                             </div>
-                            <div className="bg-white/5 p-4 rounded-2xl border border-white/[0.06] text-center min-w-[140px]">
+                            <div className="bg-white/5 p-4 rounded-2xl border border-white/5 text-center min-w-[140px]">
                                 <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Net Profit</p>
                                 <p className="text-3xl font-bold text-accent-gold">+{rpt.real_profit?.toLocaleString() || 0}</p>
                             </div>
@@ -233,7 +233,7 @@ export default function PirepDetailPage() {
 
 function TechnicalStat({ label, value, icon, color }: any) {
     return (
-        <div className="glass-panel p-5 rounded-2xl border border-white/[0.06] hover:border-white/10 transition-colors">
+        <div className="glass-panel p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
             <div className="flex items-center gap-3 mb-2">
                 <div className={`p-2 rounded-lg bg-white/5 ${color} bg-opacity-10`}>
                     {icon}

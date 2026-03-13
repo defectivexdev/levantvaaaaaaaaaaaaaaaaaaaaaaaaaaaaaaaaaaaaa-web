@@ -166,7 +166,7 @@ export default function AirportDetail({ icao }: AirportDetailProps) {
                             </thead>
                             <tbody>
                                 {airport.runways.map((rwy: any, idx: number) => (
-                                    <tr key={idx} className="border-b border-white/[0.06]">
+                                    <tr key={idx} className="border-b border-white/5">
                                         <td className="py-3 text-white font-mono font-bold">{rwy.name}</td>
                                         <td className="py-3 text-gray-300">{rwy.length?.toLocaleString()} ft</td>
                                         <td className="py-3 text-gray-300">{rwy.width?.toLocaleString()} ft</td>
@@ -192,7 +192,7 @@ export default function AirportDetail({ icao }: AirportDetailProps) {
                     {airport.frequencies?.length > 0 ? (
                         <div className="space-y-2 max-h-64 overflow-y-auto">
                             {airport.frequencies.map((freq: any, idx: number) => (
-                                <div key={idx} className="flex justify-between py-2 border-b border-white/[0.06]">
+                                <div key={idx} className="flex justify-between py-2 border-b border-white/5">
                                     <span className="text-gray-400">{freq.type}</span>
                                     <span className="text-white font-mono">{freq.frequency?.toFixed(3)} MHz</span>
                                 </div>
@@ -212,7 +212,7 @@ export default function AirportDetail({ icao }: AirportDetailProps) {
                     {airport.navaids?.length > 0 ? (
                         <div className="space-y-2 max-h-64 overflow-y-auto">
                             {airport.navaids.map((nav: any, idx: number) => (
-                                <div key={idx} className="flex justify-between py-2 border-b border-white/[0.06]">
+                                <div key={idx} className="flex justify-between py-2 border-b border-white/5">
                                     <div>
                                         <span className="text-white font-mono mr-2">{nav.ident}</span>
                                         <span className="text-xs text-gray-500">{nav.type}</span>

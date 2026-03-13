@@ -85,7 +85,7 @@ export default function LandingAnalysis({ rpt }: { rpt: any }) {
             </div>
 
             {/* CINEMATIC REPLAY CONTROLS */}
-            <div className="glass-panel p-6 rounded-2xl border border-white/[0.06] bg-gradient-to-r from-dark-900 to-dark-800">
+            <div className="glass-panel p-6 rounded-2xl border border-white/5 bg-gradient-to-r from-dark-900 to-dark-800">
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
                          <button 
@@ -118,7 +118,7 @@ export default function LandingAnalysis({ rpt }: { rpt: any }) {
 
             {/* GRAPHS */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="glass-panel p-6 rounded-2xl border border-white/[0.06] relative group">
+                <div className="glass-panel p-6 rounded-2xl border border-white/5 relative group">
                     <h4 className="text-xs font-bold text-gray-500 mb-6 uppercase tracking-widest flex items-center gap-2">
                         <TrendingUp size={14} className="text-emerald-400" /> Vertical Profile
                     </h4>
@@ -139,7 +139,7 @@ export default function LandingAnalysis({ rpt }: { rpt: any }) {
                     </div>
                 </div>
 
-                <div className="glass-panel p-6 rounded-2xl border border-white/[0.06]">
+                <div className="glass-panel p-6 rounded-2xl border border-white/5">
                     <h4 className="text-xs font-bold text-gray-500 mb-6 uppercase tracking-widest flex items-center gap-2">
                          <Activity size={14} className="text-purple-400" /> Stability Profile
                     </h4>
@@ -180,7 +180,7 @@ function StatBox({ label, value, icon, isTouchdown }: any) {
 function CustomTooltip({ active, payload }: any) {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-[#080808]/90 border border-white/[0.08] p-3 rounded-lg backdrop-blur-md shadow-2xl">
+            <div className="bg-[#080808]/90 border border-white/10 p-3 rounded-lg backdrop-blur-md shadow-2xl">
                 <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">T{payload[0].payload.time}s</p>
                 {payload.map((p: any, i: number) => (
                     <div key={i} className="flex items-center justify-between gap-4">

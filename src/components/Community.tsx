@@ -74,7 +74,7 @@ export default function Community() {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1, duration: 0.5 }}
                             whileHover={{ y: -10 }}
-                            className={`group relative glass-card p-10 flex flex-col items-center transition-all duration-300 border-white/[0.06] hover:border-white/20`}
+                            className={`group relative glass-card p-10 flex flex-col items-center transition-all duration-300 border-white/5 hover:border-white/20`}
                             style={{ 
                                 '--glow-color': social.glow 
                             } as React.CSSProperties}

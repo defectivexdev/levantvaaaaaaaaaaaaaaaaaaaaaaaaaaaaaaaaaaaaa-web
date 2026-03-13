@@ -43,7 +43,7 @@ export default function NewsPage() {
         switch (priority) {
             case 'urgent': return 'border-red-500/50 bg-red-500/10';
             case 'important': return 'border-yellow-500/50 bg-yellow-500/10';
-            default: return 'border-white/[0.08] bg-[#0a0a0a]';
+            default: return 'border-white/10 bg-panel backdrop-blur-sm';
         }
     };
 
@@ -55,7 +55,7 @@ export default function NewsPage() {
                     <h1 className="text-2xl font-bold text-white">News & NOTAMs</h1>
                     <p className="text-gray-500 text-xs mt-0.5">{notams.length} announcement{notams.length !== 1 ? 's' : ''}</p>
                 </div>
-                <div className="flex gap-1 bg-[#0a0a0a] p-1 rounded-xl border border-white/[0.06]">
+                <div className="flex gap-1 bg-panel backdrop-blur-sm p-1 rounded-xl border border-white/5">
                     {['all', 'news', 'notam', 'event'].map((tab) => (
                         <button
                             key={tab}
@@ -72,10 +72,10 @@ export default function NewsPage() {
 
             {loading ? (
                 <div className="space-y-3 animate-pulse">
-                    {[...Array(3)].map((_, i) => <div key={i} className="h-32 bg-[#0a0a0a] rounded-2xl border border-white/[0.06]" />)}
+                    {[...Array(3)].map((_, i) => <div key={i} className="h-32 bg-panel backdrop-blur-sm rounded-2xl border border-white/5" />)}
                 </div>
             ) : filtered.length === 0 ? (
-                <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-12 text-center text-gray-500">
+                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-12 text-center text-gray-500">
                     <Bell className="w-8 h-8 mx-auto mb-3 opacity-20" />
                     <p className="text-sm">No announcements yet</p>
                 </div>
@@ -84,7 +84,7 @@ export default function NewsPage() {
                     {filtered.map((item) => (
                         <div 
                             key={item._id} 
-                            className={`bg-[#0a0a0a] rounded-2xl p-5 border-l-4 ${getPriorityStyle(item.priority)}`}
+                            className={`bg-panel backdrop-blur-sm rounded-2xl p-5 border-l-4 ${getPriorityStyle(item.priority)}`}
                         >
                             <div className="flex items-start gap-4">
                                 <div className={`p-3 rounded-lg ${
@@ -152,3 +152,4 @@ export default function NewsPage() {
         </div>
     );
 }
+

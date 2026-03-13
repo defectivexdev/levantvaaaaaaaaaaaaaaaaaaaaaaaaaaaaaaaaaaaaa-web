@@ -294,7 +294,7 @@ export default function ActivityDetail({ activityId }: ActivityDetailProps) {
                             {activity.activityLegs?.map((leg: any, idx: number) => {
                                 const isComplete = progress?.completedLegIds?.includes(leg._id);
                                 return (
-                                    <tr key={leg._id} className="border-b border-white/[0.06]">
+                                    <tr key={leg._id} className="border-b border-white/5">
                                         <td className="py-3 text-gray-400">{idx + 1}</td>
                                         <td className="py-3 text-white font-mono">{leg.departure_icao || 'Any'}</td>
                                         <td className="py-3 text-white font-mono">{leg.arrival_icao || 'Any'}</td>
@@ -341,7 +341,7 @@ export default function ActivityDetail({ activityId }: ActivityDetailProps) {
                             </thead>
                             <tbody>
                                 {activity.leaderboard.map((entry: any, idx: number) => (
-                                    <tr key={entry._id} className="border-b border-white/[0.06]">
+                                    <tr key={entry._id} className="border-b border-white/5">
                                         <td className="py-3">
                                             {entry.pilot?.profileImage ? (
                                                 <img src={`/uploads/profiles/${entry.pilot.profileImage}`} className="w-8 h-8 rounded-full object-cover" />

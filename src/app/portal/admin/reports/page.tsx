@@ -94,7 +94,7 @@ export default function AdminReportsPage() {
                     </div>
                 </div>
 
-                <div className="flex bg-[#0a0a0a] rounded-lg p-1 border border-white/[0.06]">
+                <div className="flex bg-panel backdrop-blur-sm rounded-lg p-1 border border-white/5">
                     {['Pending', 'Accepted', 'Rejected'].map((s) => (
                         <button
                             key={s}
@@ -124,7 +124,7 @@ export default function AdminReportsPage() {
             ) : (
                 <div className="grid gap-4">
                     {reports.map((report) => (
-                        <div key={report._id} className="glass-card p-6 flex flex-col lg:flex-row gap-6 hover:border-accent-gold/20 transition-all border border-white/[0.06]">
+                        <div key={report._id} className="glass-card p-6 flex flex-col lg:flex-row gap-6 hover:border-accent-gold/20 transition-all border border-white/5">
                             {/* Flight Header Info */}
                             <div className="flex-1 space-y-4">
                                 <div className="flex items-center justify-between">
@@ -149,11 +149,11 @@ export default function AdminReportsPage() {
                                 </div>
 
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    <div className="bg-[#111]/50 p-3 rounded-lg border border-white/[0.06]">
+                                    <div className="bg-[#111]/50 p-3 rounded-lg border border-white/5">
                                         <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest">Duration</p>
                                         <p className="text-white font-mono">{formatDuration(report.flight_time)}</p>
                                     </div>
-                                    <div className="bg-[#111]/50 p-3 rounded-lg border border-white/[0.06]">
+                                    <div className="bg-[#111]/50 p-3 rounded-lg border border-white/5">
                                         <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest">Landing Rate</p>
                                         <p className={`font-mono ${
                                             report.landing_rate > -150 ? 'text-green-400' : 
@@ -162,7 +162,7 @@ export default function AdminReportsPage() {
                                             {report.landing_rate} <span className="text-[10px] opacity-60">fpm</span>
                                         </p>
                                     </div>
-                                    <div className="bg-[#111]/50 p-3 rounded-lg border border-white/[0.06]">
+                                    <div className="bg-[#111]/50 p-3 rounded-lg border border-white/5">
                                         <p className="text-gray-500 text-[10px] uppercase font-bold tracking-widest">Distance</p>
                                         <p className="text-white font-mono">{Math.round(report.distance)} <span className="text-[10px] opacity-60">nm</span></p>
                                     </div>
@@ -171,7 +171,7 @@ export default function AdminReportsPage() {
 
                             {/* Actions Area */}
                             {filterStatus === 'Pending' && (
-                                <div className="lg:w-48 flex lg:flex-col gap-2 justify-center border-t lg:border-t-0 lg:border-l border-white/[0.06] pt-4 lg:pt-0 lg:pl-6">
+                                <div className="lg:w-48 flex lg:flex-col gap-2 justify-center border-t lg:border-t-0 lg:border-l border-white/5 pt-4 lg:pt-0 lg:pl-6">
                                     <button
                                         onClick={() => handleAudit(report._id, 'Accepted')}
                                         disabled={processing === report._id}
@@ -203,3 +203,4 @@ export default function AdminReportsPage() {
         </div>
     );
 }
+

@@ -287,7 +287,7 @@ export default function Sidebar() {
             </div>
 
             {/* Bottom Section: Vault Widget + Pilot Info + Logout */}
-            <div className="border-t border-white/[0.04] p-2 space-y-1">
+            <div className="border-t border-white/5 p-2 space-y-1">
                 {/* Airline Vault Widget */}
                 {isAdmin && vaultBalance !== null && (
                     <Link href="/portal/admin/finance" className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-all group shadow-lg shadow-cyan-500/5">

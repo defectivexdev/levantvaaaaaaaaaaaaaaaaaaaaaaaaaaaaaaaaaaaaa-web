@@ -195,7 +195,7 @@ export default function OpsCenterPage() {
             <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 overflow-hidden min-h-0">
                 {/* Left: Global Flight Board */}
                 <div className="lg:col-span-1 glass-card flex flex-col min-h-0">
-                    <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
+                    <div className="p-4 border-b border-white/5 flex items-center justify-between">
                         <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
                             <Globe className="w-3 h-3 text-accent-gold" /> Global Flight Board
                         </h2>
@@ -204,7 +204,7 @@ export default function OpsCenterPage() {
                     
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
                         {flights.filter(f => f.network === 'LEVANT').map((f) => ( // Only show Levant flights in list
-                            <div key={f._id} className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 hover:bg-white/5 transition-all group">
+                            <div key={f._id} className="bg-white/[0.02] border border-white/5 rounded-xl p-4 hover:bg-white/5 transition-all group">
                                 <div className="flex justify-between items-start mb-3">
                                     <div>
                                         <p className="text-sm font-black text-white group-hover:text-accent-gold transition-colors">{f.callsign}</p>
@@ -233,7 +233,7 @@ export default function OpsCenterPage() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-2 pt-3 border-t border-white/[0.06]">
+                                <div className="grid grid-cols-2 gap-2 pt-3 border-t border-white/5">
                                     <div className="flex items-center gap-1.5 font-mono text-[9px] text-gray-500 uppercase">
                                         <Navigation size={10} className="text-blue-500" /> {Math.round(f.altitude)} ft
                                     </div>
@@ -261,13 +261,13 @@ export default function OpsCenterPage() {
 
                 {/* Right: Operations Map */}
                 <div className="lg:col-span-3 glass-card relative overflow-hidden flex flex-col">
-                    <div className="p-4 border-b border-white/[0.06] bg-[#080808]/50 relative z-20 flex items-center justify-between">
+                    <div className="p-4 border-b border-white/5 bg-[#080808]/50 relative z-20 flex items-center justify-between">
                         <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
                             <MapIcon className="w-3 h-3 text-blue-400" /> Live Map
                         </h2>
                         <div className="flex items-center gap-4">
                             {/* Network Toggles */}
-                            <div className="flex bg-white/5 rounded-lg p-1 border border-white/[0.08]">
+                            <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
                             </div>
                         </div>
                     </div>
@@ -278,7 +278,7 @@ export default function OpsCenterPage() {
 
                     {/* Overlay: Fleet Health / ATC Status (Floating) */}
                     <div className="absolute bottom-6 left-6 z-20 space-y-3 pointer-events-none">
-                        <div className="glass-panel p-4 rounded-2xl border border-white/[0.08] max-w-[200px] backdrop-blur-2xl">
+                        <div className="glass-panel p-4 rounded-2xl border border-white/10 max-w-[200px] backdrop-blur-2xl">
                              <p className="text-[10px] font-black text-gray-500 uppercase mb-2 tracking-widest">Main Hubs Status</p>
                              <div className="space-y-2">
                                  <HubStatus icao="OJAI" status="Active" pilots={flights.filter(f => f.departure_icao === 'OJAI').length} />
@@ -344,7 +344,7 @@ export default function OpsCenterPage() {
 
 function MiniStat({ label, value, icon }: any) {
     return (
-        <div className="glass-panel px-4 py-3 rounded-xl border border-white/[0.06] flex items-center gap-3 min-w-[140px]">
+        <div className="glass-panel px-4 py-3 rounded-xl border border-white/5 flex items-center gap-3 min-w-[140px]">
             <div className="shrink-0">{icon}</div>
             <div>
                 <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest leading-none mb-1">{label}</p>
@@ -367,3 +367,4 @@ function HubStatus({ icao, status, pilots }: any) {
         </div>
     );
 }
+

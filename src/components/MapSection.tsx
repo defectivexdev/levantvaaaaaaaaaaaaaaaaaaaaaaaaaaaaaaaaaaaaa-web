@@ -137,7 +137,7 @@ export default function MapSection() {
                         Track our pilots in real-time as they explore the skies of the Middle East and beyond.
                     </p>
                     {count > 0 && (
-                        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/[0.08]">
+                        <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10">
                             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                             <span className="text-sm text-gray-300 font-mono">{count} active flight{count !== 1 ? 's' : ''}</span>
                         </div>
@@ -150,7 +150,7 @@ export default function MapSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="glass-card overflow-hidden h-[650px] relative w-full border border-white/[0.06] shadow-2xl rounded-2xl"
+                    className="glass-card overflow-hidden h-[650px] relative w-full border border-white/5 shadow-2xl rounded-2xl"
                 >
                     <BorderBeam 
                         size={300} 

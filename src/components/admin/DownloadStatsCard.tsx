@@ -26,7 +26,7 @@ export const DownloadStatsCard = () => {
     const maxDownloads = Math.max(...stats.map(s => s.totalDownloads), 1);
 
     return (
-        <div className="glass-card p-6 rounded-2xl border border-white/[0.08] backdrop-blur-md relative overflow-hidden group">
+        <div className="glass-card p-6 rounded-2xl border border-white/10 backdrop-blur-md relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                 <Download size={80} />
             </div>
@@ -65,7 +65,7 @@ export const DownloadStatsCard = () => {
                                 </div>
                                 <span className="text-sm font-bold text-white">{item.totalDownloads}</span>
                             </div>
-                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/[0.06]">
+                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
                                 <div 
                                     className="h-full bg-gradient-to-r from-accent-gold to-[#b8860b] shadow-[0_0_8px_rgba(212,175,55,0.3)] transition-all duration-1000 ease-out" 
                                     style={{ width: `${(item.totalDownloads / maxDownloads) * 100}%` }}
@@ -76,7 +76,7 @@ export const DownloadStatsCard = () => {
                 )}
             </div>
             
-            <div className="mt-6 pt-4 border-t border-white/[0.06]">
+            <div className="mt-6 pt-4 border-t border-white/5">
                 <div className="flex justify-between text-[10px] text-gray-500 font-mono tracking-widest uppercase">
                     <span>Total Reach</span>
                     <span className="text-white font-bold">{stats.reduce((acc, s) => acc + s.totalDownloads, 0)} Downloads</span>

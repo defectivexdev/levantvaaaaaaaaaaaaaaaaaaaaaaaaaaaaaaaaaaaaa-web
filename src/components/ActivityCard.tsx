@@ -36,7 +36,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
             <div className="glass-card overflow-hidden hover:scale-[1.02] transition-transform cursor-pointer group relative">
                 {/* Ribbon */}
                 {activity.status.ribbonText && (
-                    <div className="absolute top-3 left-3 z-10 flex items-center gap-2 bg-[#0a0a0a]/90 backdrop-blur-sm px-3 py-1.5 rounded-md text-xs font-bold shadow-lg">
+                    <div className="absolute top-3 left-3 z-10 flex items-center gap-2 bg-panel/90 backdrop-blur-sm px-3 py-1.5 rounded-md text-xs font-bold shadow-lg">
                         {activity.status.showLiveTag && (
                             <span className="bg-red-500 text-white px-2 py-0.5 rounded-full text-[10px] animate-pulse">
                                 LIVE

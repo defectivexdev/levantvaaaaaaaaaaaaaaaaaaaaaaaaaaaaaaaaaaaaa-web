@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { useAuth } from '@/contexts/AuthContext';
 

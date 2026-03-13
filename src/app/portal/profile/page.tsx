@@ -264,13 +264,13 @@ export default function ProfilePage() {
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-br from-[#1a1a1a] via-[#141414] to-[#0f0f0f] rounded-2xl border border-white/[0.04] p-6"
+                className="bg-gradient-to-br from-[#1a1a1a] via-[#141414] to-[#0f0f0f] rounded-2xl border border-white/5 p-6"
             >
                 <div className="flex flex-col md:flex-row gap-6 items-start">
                     {/* Avatar */}
                     <div className="relative group flex-shrink-0">
                         <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 p-1">
-                            <div className="w-full h-full rounded-xl bg-[#0a0a0a] flex items-center justify-center overflow-hidden border-2 border-amber-500/30">
+                            <div className="w-full h-full rounded-xl bg-panel backdrop-blur-sm flex items-center justify-center overflow-hidden border-2 border-amber-500/30">
                                 {!avatarError ? (
                                     <img 
                                         key={avatarTimestamp}
@@ -369,7 +369,7 @@ export default function ProfilePage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
-                        className="bg-[#0a0a0a] border border-white/[0.04] rounded-xl p-4 hover:border-white/[0.08] transition-colors"
+                        className="bg-panel backdrop-blur-sm border border-white/5 rounded-xl p-4 hover:border-white/10 transition-colors"
                     >
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium">{stat.label}</span>
@@ -409,9 +409,9 @@ export default function ProfilePage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-[#0a0a0a] border border-white/[0.04] rounded-xl overflow-hidden"
+                        className="bg-panel backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden"
                     >
-                        <div className="px-4 py-3 border-b border-white/[0.04] flex items-center gap-2">
+                        <div className="px-4 py-3 border-b border-white/5 flex items-center gap-2">
                             <User className="w-4 h-4 text-amber-500" />
                             <h2 className="text-sm font-semibold text-white">Pilot Details</h2>
                         </div>
@@ -447,9 +447,9 @@ export default function ProfilePage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="lg:col-span-2 bg-[#0a0a0a] border border-white/[0.04] rounded-xl overflow-hidden"
+                    className="lg:col-span-2 bg-panel backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden"
                 >
-                    <div className="px-4 py-3 border-b border-white/[0.04] flex items-center gap-2">
+                    <div className="px-4 py-3 border-b border-white/5 flex items-center gap-2">
                         <Activity className="w-4 h-4 text-amber-500" />
                         <h2 className="text-sm font-semibold text-white">Recent Flights</h2>
                         <span className="ml-auto text-xs text-gray-500">{flightHistory.length} flights</span>
@@ -506,3 +506,4 @@ export default function ProfilePage() {
         </div>
     );
 }
+

@@ -117,7 +117,7 @@ export default function JumpseatsPage() {
             </div>
 
             {loading ? (
-                <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-12 text-center">
+                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-12 text-center">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto mb-3 text-accent-gold" />
                     <p className="text-gray-500 text-xs">Loading your status...</p>
                 </div>
@@ -125,17 +125,17 @@ export default function JumpseatsPage() {
                 <>
                     <div className="grid lg:grid-cols-2 gap-6">
                         {/* Current Status */}
-                        <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-5 h-fit">
+                        <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-5 h-fit">
                             <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                                 <MapPin className="w-3.5 h-3.5 text-accent-gold" />
                                 Current Location
                             </h2>
                             <div className="space-y-4">
-                                <div className="flex justify-between items-center p-4 bg-[#111]/50 rounded-lg border border-white/[0.06]">
+                                <div className="flex justify-between items-center p-4 bg-[#111]/50 rounded-lg border border-white/5">
                                     <span className="text-gray-400">Location</span>
                                     <span className="text-accent-gold font-mono text-2xl font-bold">{currentLocation}</span>
                                 </div>
-                                <div className="flex justify-between items-center p-4 bg-[#111]/50 rounded-lg border border-white/[0.06]">
+                                <div className="flex justify-between items-center p-4 bg-[#111]/50 rounded-lg border border-white/5">
                                     <span className="text-gray-400">Available Balance</span>
                                     <div className="text-right">
                                         <span className="text-emerald-400 font-bold text-2xl">{credits.toLocaleString()} cr</span>
@@ -156,7 +156,7 @@ export default function JumpseatsPage() {
                         </div>
 
                         {/* Search & Select */}
-                        <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-5 space-y-5">
+                        <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-5 space-y-5">
                             <div>
                                 <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                                     <Search className="w-3.5 h-3.5 text-accent-gold" />
@@ -167,7 +167,7 @@ export default function JumpseatsPage() {
                                     placeholder="Search by ICAO, City, or Name..." 
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-[#111]/50 border border-white/[0.08] rounded-lg p-3 text-white focus:outline-none focus:border-accent-gold transition-colors"
+                                    className="w-full bg-[#111]/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-accent-gold transition-colors"
                                 />
                             </div>
 
@@ -208,7 +208,7 @@ export default function JumpseatsPage() {
                     </div>
 
                     {/* Booking Confirmation Bar */}
-                    <div className={`bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-5 transition-all duration-300 ${selectedAirport ? 'opacity-100 translate-y-0 border-accent-gold/20' : 'opacity-40 translate-y-4 pointer-events-none'}`}>
+                    <div className={`bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-5 transition-all duration-300 ${selectedAirport ? 'opacity-100 translate-y-0 border-accent-gold/20' : 'opacity-40 translate-y-4 pointer-events-none'}`}>
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                             <div className="flex items-center gap-4">
                                 <CreditCard className="w-8 h-8 text-accent-gold hidden md:block" />
@@ -235,3 +235,4 @@ export default function JumpseatsPage() {
         </div>
     );
 }
+

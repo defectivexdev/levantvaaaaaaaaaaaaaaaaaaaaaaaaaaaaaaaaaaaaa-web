@@ -164,7 +164,7 @@ export default function AdminFinancePage() {
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl p-6 relative overflow-hidden shadow-2xl shadow-black/30 hover:border-cyan-500/30 transition-all group">
+                <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-2xl p-6 relative overflow-hidden shadow-2xl shadow-black/30 hover:border-cyan-500/30 transition-all group">
                     <div className="absolute -bottom-4 -right-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
                         <Wallet className="w-32 h-32" />
                     </div>
@@ -182,7 +182,7 @@ export default function AdminFinancePage() {
                     </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl p-6 shadow-2xl shadow-black/30 hover:border-emerald-500/30 transition-all group">
+                <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-2xl p-6 shadow-2xl shadow-black/30 hover:border-emerald-500/30 transition-all group">
                     <div className="flex items-center justify-between mb-3">
                         <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total Income</div>
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 flex items-center justify-center border border-emerald-500/30">
@@ -195,7 +195,7 @@ export default function AdminFinancePage() {
                     <div className="text-xs text-emerald-500/50 font-bold">Credits</div>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl p-6 shadow-2xl shadow-black/30 hover:border-red-500/30 transition-all group">
+                <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-2xl p-6 shadow-2xl shadow-black/30 hover:border-red-500/30 transition-all group">
                     <div className="flex items-center justify-between mb-3">
                         <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total Expenses</div>
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/10 flex items-center justify-center border border-red-500/30">
@@ -210,8 +210,8 @@ export default function AdminFinancePage() {
             </div>
 
             {/* Transaction Logs */}
-            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl overflow-hidden flex flex-col shadow-2xl shadow-black/30">
-                <div className="px-6 py-4 border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a]">
+            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-2xl overflow-hidden flex flex-col shadow-2xl shadow-black/30">
+                <div className="px-6 py-4 border-b border-white/5 flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a]">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-accent-gold/10 flex items-center justify-center border border-accent-gold/20">
                             <History className="w-5 h-5 text-accent-gold" />
@@ -234,7 +234,7 @@ export default function AdminFinancePage() {
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm">
-                        <thead className="bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] border-b border-white/[0.06]">
+                        <thead className="bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] border-b border-white/5">
                             <tr className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
                                 <th className="px-6 py-4 text-left">Date & Time</th>
                                 <th className="px-6 py-4 text-left">Type</th>
@@ -306,11 +306,11 @@ export default function AdminFinancePage() {
                 </div>
 
                 {totalPages > 1 && (
-                    <div className="px-6 py-4 border-t border-white/[0.06] flex items-center justify-between bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a]">
+                    <div className="px-6 py-4 border-t border-white/5 flex items-center justify-between bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a]">
                         <button 
                             disabled={page === 1}
                             onClick={() => setPage(p => p - 1)}
-                            className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 text-white border border-white/[0.08] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
+                            className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 text-white border border-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
                         >
                             Previous
                         </button>
@@ -318,7 +318,7 @@ export default function AdminFinancePage() {
                         <button 
                             disabled={page === totalPages}
                             onClick={() => setPage(p => p + 1)}
-                            className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 text-white border border-white/[0.08] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
+                            className="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 text-white border border-white/10 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg"
                         >
                             Next
                         </button>
@@ -330,7 +330,7 @@ export default function AdminFinancePage() {
             {activeModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
                     <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-accent-gold/[0.15] rounded-2xl w-full max-w-md shadow-2xl shadow-accent-gold/10 animate-in zoom-in-95 duration-200">
-                        <div className="p-6 border-b border-white/[0.08] flex justify-between items-center bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a]">
+                        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a]">
                             <h2 className="text-white font-bold text-lg flex items-center gap-3">
                                 {activeModal === 'deposit' && (
                                     <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
@@ -376,7 +376,7 @@ export default function AdminFinancePage() {
                                         value={pilotId} 
                                         onChange={(e) => setPilotId(e.target.value)}
                                         placeholder="e.g. LVT1234"
-                                        className="w-full bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all uppercase font-mono shadow-lg shadow-black/20"
+                                        className="w-full bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all uppercase font-mono shadow-lg shadow-black/20"
                                     />
                                 </div>
                             )}
@@ -391,7 +391,7 @@ export default function AdminFinancePage() {
                                         value={amount} 
                                         onChange={(e) => setAmount(e.target.value)}
                                         placeholder="0"
-                                        className="w-full bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-xl pl-12 pr-4 py-3 text-white font-mono font-bold text-lg focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
+                                        className="w-full bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white font-mono font-bold text-lg focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
                                     />
                                 </div>
                                 {(activeModal === 'withdraw' || activeModal?.startsWith('purchase') || activeModal === 'bonus') && (
@@ -411,15 +411,15 @@ export default function AdminFinancePage() {
                                         activeModal === 'purchaseCatering' ? "e.g. 100 meal sets" :
                                         "Optional description"
                                     }
-                                    className="w-full bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
+                                    className="w-full bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
                                 />
                             </div>
                         </div>
 
-                        <div className="p-6 bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] border-t border-white/[0.08] flex justify-end gap-3">
+                        <div className="p-6 bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] border-t border-white/10 flex justify-end gap-3">
                             <button 
                                 onClick={closeModal}
-                                className="px-5 py-2.5 text-sm font-bold text-gray-400 hover:text-white bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-xl transition-all hover:border-white/[0.15]"
+                                className="px-5 py-2.5 text-sm font-bold text-gray-400 hover:text-white bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-xl transition-all hover:border-white/[0.15]"
                             >
                                 Cancel
                             </button>
@@ -448,3 +448,4 @@ export default function AdminFinancePage() {
         </div>
     );
 }
+

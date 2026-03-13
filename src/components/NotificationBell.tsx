@@ -128,9 +128,9 @@ export default function NotificationBell() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute left-0 top-12 w-80 bg-[#0a0a0a] border border-white/[0.08] rounded-xl shadow-2xl z-50 overflow-hidden"
+                        className="absolute left-0 top-12 w-80 bg-panel border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden"
                     >
-                        <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
                             <h3 className="text-sm font-semibold text-white">Notifications</h3>
                             {unreadCount > 0 && (
                                 <button
@@ -157,7 +157,7 @@ export default function NotificationBell() {
                                         <button
                                             key={n._id}
                                             onClick={() => handleClick(n)}
-                                            className={`w-full text-left px-4 py-3 flex gap-3 hover:bg-white/5 transition-colors border-b border-white/[0.06] last:border-0 ${!n.read ? 'bg-white/[0.02]' : ''}`}
+                                            className={`w-full text-left px-4 py-3 flex gap-3 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0 ${!n.read ? 'bg-white/[0.02]' : ''}`}
                                         >
                                             <div className={`mt-0.5 flex-shrink-0 ${color}`}>
                                                 <Icon className="w-4 h-4" />

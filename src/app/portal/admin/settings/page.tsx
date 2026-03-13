@@ -187,8 +187,8 @@ export default function AdminSettingsPage() {
     };
 
     const renderSection = (title: string, icon: React.ReactNode, color: string, fields: FieldDef[]) => (
-        <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+        <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                 {icon}
                 <h2 className="text-sm font-bold text-white uppercase tracking-wider">{title}</h2>
                 <span className="ml-auto text-[10px] text-gray-600 font-mono">{fields.length} params</span>
@@ -197,7 +197,7 @@ export default function AdminSettingsPage() {
                 {fields.map(field => {
                     const changed = config[field.key] !== original[field.key];
                     return (
-                        <div key={field.key} className={`p-4 rounded-xl border transition-all ${changed ? 'border-accent-gold/30 bg-accent-gold/[0.03]' : 'border-white/[0.06] bg-white/[0.01] hover:border-white/10'}`}>
+                        <div key={field.key} className={`p-4 rounded-xl border transition-all ${changed ? 'border-accent-gold/30 bg-accent-gold/[0.03]' : 'border-white/5 bg-white/[0.01] hover:border-white/10'}`}>
                             <div className="flex items-center justify-between mb-2">
                                 <label className="text-xs font-bold text-gray-300">{field.label}</label>
                                 <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${changed ? 'bg-accent-gold/10 text-accent-gold' : 'text-gray-600'}`}>{field.unit}</span>
@@ -209,7 +209,7 @@ export default function AdminSettingsPage() {
                                 step={field.step}
                                 min={field.min}
                                 max={field.max}
-                                className="w-full bg-black/40 border border-white/[0.08] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-accent-gold/50 focus:outline-none transition-colors"
+                                className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-accent-gold/50 focus:outline-none transition-colors"
                             />
                             <p className="text-[9px] text-gray-600 mt-1.5 leading-relaxed">{field.description}</p>
                         </div>
@@ -249,7 +249,7 @@ export default function AdminSettingsPage() {
                     <button
                         onClick={() => setConfig(original)}
                         disabled={!hasChanges}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${hasChanges ? 'bg-white/5 hover:bg-white/10 text-gray-300 border border-white/[0.08]' : 'text-gray-700 cursor-not-allowed'}`}
+                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${hasChanges ? 'bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10' : 'text-gray-700 cursor-not-allowed'}`}
                     >
                         <RotateCcw className="w-3.5 h-3.5" /> Reset
                     </button>
@@ -272,14 +272,14 @@ export default function AdminSettingsPage() {
             {renderSection('Damage & Maintenance', <AlertTriangle size={16} className="text-rose-400" />, 'rose', damageFields)}
 
             {/* Pilot Salary Section */}
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
+                <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                     <Wallet size={16} className="text-green-400" />
                     <h2 className="text-sm font-bold text-white uppercase tracking-wider">Weekly Pilot Salary</h2>
                     <span className="ml-auto text-[10px] text-gray-600 font-mono">Paid every Monday</span>
                 </div>
                 <div className="p-5">
-                    <div className="flex items-center gap-3 mb-4 p-3 rounded-xl border border-white/[0.06] bg-white/[0.01]">
+                    <div className="flex items-center gap-3 mb-4 p-3 rounded-xl border border-white/5 bg-white/[0.01]">
                         <label className="text-xs font-bold text-gray-300">Salary System</label>
                         <button
                             onClick={() => handleChange('salary_enabled', config.salary_enabled ? 0 : 1)}
@@ -303,7 +303,7 @@ export default function AdminSettingsPage() {
                         ]).map(field => {
                             const changed = config[field.key] !== original[field.key];
                             return (
-                                <div key={field.key} className={`p-4 rounded-xl border transition-all ${changed ? 'border-green-500/30 bg-green-500/[0.03]' : 'border-white/[0.06] bg-white/[0.01] hover:border-white/10'}`}>
+                                <div key={field.key} className={`p-4 rounded-xl border transition-all ${changed ? 'border-green-500/30 bg-green-500/[0.03]' : 'border-white/5 bg-white/[0.01] hover:border-white/10'}`}>
                                     <div className="flex items-center justify-between mb-2">
                                         <label className="text-xs font-bold text-gray-300">{field.label}</label>
                                         <span className="text-[9px] font-mono text-gray-600">{field.rank}</span>
@@ -314,7 +314,7 @@ export default function AdminSettingsPage() {
                                         onChange={(e) => handleChange(field.key, parseFloat(e.target.value) || 0)}
                                         step={100}
                                         min={0}
-                                        className="w-full bg-black/40 border border-white/[0.08] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-green-500/50 focus:outline-none transition-colors"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-green-500/50 focus:outline-none transition-colors"
                                     />
                                     <p className="text-[9px] text-gray-600 mt-1.5">Cr per week</p>
                                 </div>
@@ -355,13 +355,13 @@ export default function AdminSettingsPage() {
             ])}
 
             {/* Fleet Operations */}
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
+                <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                     <Plane size={16} className="text-sky-400" />
                     <h2 className="text-sm font-bold text-white uppercase tracking-wider">Fleet Operations</h2>
                 </div>
                 <div className="p-5 space-y-4">
-                    <div className="flex items-center gap-3 p-3 rounded-xl border border-white/[0.06] bg-white/[0.01]">
+                    <div className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.01]">
                         <label className="text-xs font-bold text-gray-300">Location-Based Fleet</label>
                         <button
                             onClick={() => handleChange('location_based_fleet', config.location_based_fleet ? 0 : 1)}
@@ -378,8 +378,8 @@ export default function AdminSettingsPage() {
             </div>
 
             {/* Formula Preview */}
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
+                <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                     <Sparkles size={16} className="text-purple-400" />
                     <h2 className="text-sm font-bold text-white uppercase tracking-wider">Live Formula Preview</h2>
                 </div>
@@ -387,10 +387,10 @@ export default function AdminSettingsPage() {
                     <div><span className="text-accent-gold">fuelTaxAmount</span> = grossIncome × ({config.fuel_tax_percent}% / 100)</div>
                     <div><span className="text-rose-400">penaltyAmount</span> = (100 - flightScore) × <span className="text-white">{config.penalty_multiplier}</span></div>
                     <div><span className="text-emerald-400">netPilotPay</span> = max(0, grossIncome - fuelTaxAmount - penaltyAmount)</div>
-                    <div className="pt-3 border-t border-white/[0.06] mt-3">
+                    <div className="pt-3 border-t border-white/5 mt-3">
                         <span className="text-blue-400">bonusCredits</span> = ({config.cr_base_flight} + landingBonus + bonuses + penalties) × multiplier
                     </div>
-                    <div className="bg-white/[0.02] p-3 rounded-lg mt-2 border border-white/[0.06]">
+                    <div className="bg-white/[0.02] p-3 rounded-lg mt-2 border border-white/5">
                         <span className="text-gray-500">Example:</span> Greaser landing + new route + first flight = ({config.cr_base_flight} + {config.cr_greaser_bonus} + {config.cr_new_route_bonus}) × {config.cr_first_flight_multiplier} = <span className="text-blue-400 font-bold">{Math.round((config.cr_base_flight + config.cr_greaser_bonus + config.cr_new_route_bonus) * config.cr_first_flight_multiplier)} CR</span>
                     </div>
                 </div>
@@ -398,3 +398,4 @@ export default function AdminSettingsPage() {
         </div>
     );
 }
+

@@ -136,12 +136,12 @@ export default function DashboardPage() {
             <div className="space-y-6 animate-pulse">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {[...Array(4)].map((_, i) => (
-                        <div key={i} className="h-32 bg-[#0a0a0a] rounded-2xl border border-white/[0.04]" />
+                        <div key={i} className="h-32 bg-panel backdrop-blur-sm rounded-2xl border border-white/5" />
                     ))}
                 </div>
                 <div className="grid lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2 h-96 bg-[#0a0a0a] rounded-2xl border border-white/[0.04]" />
-                    <div className="h-96 bg-[#0a0a0a] rounded-2xl border border-white/[0.04]" />
+                    <div className="lg:col-span-2 h-96 bg-panel backdrop-blur-sm rounded-2xl border border-white/5" />
+                    <div className="h-96 bg-panel backdrop-blur-sm rounded-2xl border border-white/5" />
                 </div>
             </div>
         );
@@ -201,7 +201,7 @@ export default function DashboardPage() {
                                 variants={itemVariants}
                                 whileHover={{ scale: 1.02, y: -4 }}
                                 transition={{ duration: 0.2 }}
-                                className={`relative bg-gradient-to-br ${colors.bg} rounded-2xl p-5 border border-white/[0.04] hover:border-white/[0.08] transition-all group overflow-hidden cursor-pointer`}
+                                className={`relative bg-gradient-to-br ${colors.bg} rounded-2xl p-5 border border-white/5 hover:border-white/10 transition-all group overflow-hidden cursor-pointer`}
                             >
                                 <div className="absolute -bottom-2 -right-2 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity">
                                     <Icon className="w-24 h-24" />
@@ -234,8 +234,8 @@ export default function DashboardPage() {
                 {/* Left Column - Map & Recent Reports */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Active Flights Map */}
-                    <motion.div variants={itemVariants} className="bg-[#0a0a0a] rounded-2xl border border-white/[0.04] overflow-hidden">
-                        <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
+                    <motion.div variants={itemVariants} className="bg-panel backdrop-blur-sm rounded-2xl border border-white/5 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                                     <Activity className="w-5 h-5 text-emerald-500" />
@@ -252,8 +252,8 @@ export default function DashboardPage() {
                     </motion.div>
 
                     {/* Live Flight Status */}
-                    <motion.div variants={itemVariants} className="bg-[#0a0a0a] rounded-2xl border border-white/[0.04] overflow-hidden">
-                        <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
+                    <motion.div variants={itemVariants} className="bg-panel backdrop-blur-sm rounded-2xl border border-white/5 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
                                     <Plane className="w-5 h-5 text-amber-500" />
@@ -313,8 +313,8 @@ export default function DashboardPage() {
                     </motion.div>
 
                     {/* Recent PIREPs */}
-                    <motion.div variants={itemVariants} className="bg-[#0a0a0a] rounded-2xl border border-white/[0.04] overflow-hidden">
-                        <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
+                    <motion.div variants={itemVariants} className="bg-panel backdrop-blur-sm rounded-2xl border border-white/5 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
                                     <TrendingUp className="w-5 h-5 text-blue-500" />
@@ -399,8 +399,8 @@ export default function DashboardPage() {
                     )}
 
                     {/* Newest Pilots */}
-                    <motion.div variants={itemVariants} className="bg-[#0a0a0a] rounded-2xl border border-white/[0.04] overflow-hidden">
-                        <div className="px-5 py-4 border-b border-white/[0.04] flex items-center gap-3">
+                    <motion.div variants={itemVariants} className="bg-panel backdrop-blur-sm rounded-2xl border border-white/5 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-white/5 flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
                                 <Users className="w-5 h-5 text-purple-500" />
                             </div>
@@ -439,8 +439,8 @@ export default function DashboardPage() {
                     </motion.div>
 
                     {/* Airport METAR Widget */}
-                    <motion.div variants={itemVariants} className="bg-[#0a0a0a] rounded-2xl border border-white/[0.04] overflow-hidden">
-                        <div className="px-5 py-4 border-b border-white/[0.04] flex items-center gap-3">
+                    <motion.div variants={itemVariants} className="bg-panel backdrop-blur-sm rounded-2xl border border-white/5 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-white/5 flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
                                 <MapPin className="w-5 h-5 text-cyan-500" />
                             </div>
@@ -479,8 +479,8 @@ export default function DashboardPage() {
                     </motion.div>
 
                     {/* Discord Widget */}
-                    <motion.div variants={itemVariants} className="bg-[#0a0a0a] rounded-2xl border border-white/[0.04] overflow-hidden">
-                        <div className="px-5 py-4 border-b border-white/[0.04] flex items-center gap-3">
+                    <motion.div variants={itemVariants} className="bg-panel backdrop-blur-sm rounded-2xl border border-white/5 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-white/5 flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
                                 <Users className="w-5 h-5 text-indigo-500" />
                             </div>
@@ -507,3 +507,4 @@ export default function DashboardPage() {
         </>
     );
 }
+

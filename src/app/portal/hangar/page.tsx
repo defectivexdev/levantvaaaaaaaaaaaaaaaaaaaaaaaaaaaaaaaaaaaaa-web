@@ -35,7 +35,7 @@ export default function HangarPage() {
                      <h1 className="text-2xl font-bold text-white">Fleet Hangar</h1>
                      <p className="text-gray-500 text-xs mt-0.5">Manage airframe health</p>
                 </div>
-                <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-xl px-4 py-2">
+                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-xl px-4 py-2">
                     <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold block">Fleet</span>
                     <span className="text-lg font-bold text-white font-mono">{fleet.length}</span>
                 </div>
@@ -43,7 +43,7 @@ export default function HangarPage() {
 
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                  {fleet.map((plane) => (
-                     <div key={plane.registration} className={`bg-[#0a0a0a] border rounded-2xl p-5 relative overflow-hidden group ${plane.status === 'Grounded' ? 'border-red-500/20' : 'border-white/[0.06]'}`}>
+                     <div key={plane.registration} className={`bg-panel backdrop-blur-sm border rounded-2xl p-5 relative overflow-hidden group ${plane.status === 'Grounded' ? 'border-red-500/20' : 'border-white/5'}`}>
                          {plane.status === 'Grounded' && (
                              <div className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg animate-pulse">
                                  GROUNDED
@@ -102,3 +102,4 @@ export default function HangarPage() {
         </div>
     );
 }
+

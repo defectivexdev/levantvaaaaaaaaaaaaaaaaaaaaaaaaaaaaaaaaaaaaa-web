@@ -45,8 +45,8 @@ const ranks = PILOT_RANKS.map(r => r.name);
 type StatusFilter = 'All' | 'Active' | 'Inactive' | 'Pending' | 'On leave (LOA)' | 'Blacklist';
 type SortKey = 'name' | 'hours' | 'flights' | 'balance' | 'lastActivity';
 
-const inputClass = 'w-full bg-[#0a0a0a] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-1 focus:ring-accent-gold/20 transition-all';
-const selectClass = 'w-full bg-[#0a0a0a] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-accent-gold/40 focus:ring-1 focus:ring-accent-gold/20 transition-all appearance-none';
+const inputClass = 'w-full bg-panel backdrop-blur-sm border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-1 focus:ring-accent-gold/20 transition-all';
+const selectClass = 'w-full bg-panel backdrop-blur-sm border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-accent-gold/40 focus:ring-1 focus:ring-accent-gold/20 transition-all appearance-none';
 const labelClass = 'block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5';
 
 export default function AdminUsersPage() {
@@ -230,10 +230,10 @@ export default function AdminUsersPage() {
     if (loading) {
         return (
             <div className="space-y-4 animate-pulse">
-                <div className="h-20 bg-[#111] rounded-2xl border border-white/[0.06]" />
-                <div className="h-12 bg-[#111] rounded-2xl border border-white/[0.06]" />
+                <div className="h-20 bg-[#111] rounded-2xl border border-white/5" />
+                <div className="h-12 bg-[#111] rounded-2xl border border-white/5" />
                 {[...Array(6)].map((_, i) => (
-                    <div key={i} className="h-16 bg-[#111] rounded-2xl border border-white/[0.06]" />
+                    <div key={i} className="h-16 bg-[#111] rounded-2xl border border-white/5" />
                 ))}
             </div>
         );
@@ -254,7 +254,7 @@ export default function AdminUsersPage() {
 
             {/* Status Tabs + Search */}
             <div className="flex flex-col lg:flex-row gap-4">
-                <div className="flex gap-2 bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] p-1.5 rounded-2xl border border-white/[0.08] overflow-x-auto flex-shrink-0 shadow-lg shadow-black/20">
+                <div className="flex gap-2 bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] p-1.5 rounded-2xl border border-white/10 overflow-x-auto flex-shrink-0 shadow-lg shadow-black/20">
                     {statusTabs.map(tab => (
                         <button
                             key={tab.value}
@@ -283,15 +283,15 @@ export default function AdminUsersPage() {
                         placeholder="Search by ID, name, or email..."
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        className="w-full bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
+                        className="w-full bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
                     />
                 </div>
             </div>
 
             {/* Table */}
-            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl shadow-black/30">
+            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/30">
                 {/* Table Header */}
-                <div className="grid grid-cols-[2fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-3 px-6 py-4 border-b border-white/[0.06] bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                <div className="grid grid-cols-[2fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-3 px-6 py-4 border-b border-white/5 bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] text-[10px] font-black text-gray-500 uppercase tracking-widest">
                     <button onClick={() => toggleSort('name')} className="flex items-center gap-1 hover:text-white transition-colors text-left">
                         Pilot {sortKey === 'name' && <ArrowUpDown size={10} className="text-accent-gold" />}
                     </button>
@@ -324,7 +324,7 @@ export default function AdminUsersPage() {
                             >
                                 {/* Pilot */}
                                 <div className="flex items-center gap-3 min-w-0">
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#161616] to-[#0a0a0a] border border-white/[0.08] flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0 group-hover:border-accent-gold/40 group-hover:shadow-lg group-hover:shadow-accent-gold/10 transition-all">
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#161616] to-[#0a0a0a] border border-white/10 flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0 group-hover:border-accent-gold/40 group-hover:shadow-lg group-hover:shadow-accent-gold/10 transition-all">
                                         {getInitials(user.firstName, user.lastName)}
                                     </div>
                                     <div className="min-w-0">
@@ -379,7 +379,7 @@ export default function AdminUsersPage() {
                 )}
             </div>
 
-            <div className="text-xs text-gray-600 text-right font-mono bg-[#0a0a0a] px-4 py-2 rounded-xl border border-white/[0.06] inline-block ml-auto">
+            <div className="text-xs text-gray-600 text-right font-mono bg-panel backdrop-blur-sm px-4 py-2 rounded-xl border border-white/5 inline-block ml-auto">
                 Showing <span className="text-accent-gold font-bold">{filteredUsers.length}</span> of <span className="text-white font-bold">{stats.total}</span> pilots
             </div>
 
@@ -408,7 +408,7 @@ export default function AdminUsersPage() {
                         onClick={e => e.stopPropagation()}
                     >
                         {/* Modal Header: User Profile Card */}
-                        <div className="relative px-6 pt-6 pb-5 border-b border-white/[0.08] bg-gradient-to-br from-[#0c0c0c] to-[#111]">
+                        <div className="relative px-6 pt-6 pb-5 border-b border-white/10 bg-gradient-to-br from-[#0c0c0c] to-[#111]">
                             {/* Top accent glow line */}
                             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent" />
                             <button
@@ -419,10 +419,10 @@ export default function AdminUsersPage() {
                             </button>
                             <div className="modal-header flex items-center gap-4">
                                 <div className="relative">
-                                    <div className="w-14 h-14 rounded-2xl bg-[#161616] border border-white/[0.08] flex items-center justify-center text-xl font-black text-gray-300">
+                                    <div className="w-14 h-14 rounded-2xl bg-[#161616] border border-white/10 flex items-center justify-center text-xl font-black text-gray-300">
                                         {getInitials(selectedUser.firstName, selectedUser.lastName)}
                                     </div>
-                                    <div className="absolute -bottom-1.5 -right-1.5 bg-[#0c0c0c] rounded-full p-0.5 border border-white/[0.08]" title={selectedUser.rank}>
+                                    <div className="absolute -bottom-1.5 -right-1.5 bg-[#0c0c0c] rounded-full p-0.5 border border-white/10" title={selectedUser.rank}>
                                         <img
                                             src={getRankImage(selectedUser.rank)}
                                             alt={selectedUser.rank}
@@ -449,7 +449,7 @@ export default function AdminUsersPage() {
                                     { label: 'Total CR', value: selectedUser.totalCredits?.toLocaleString(), color: 'text-amber-400', icon: CreditCard },
                                     { label: 'Balance', value: selectedUser.balance?.toLocaleString(), color: 'text-emerald-400', icon: CreditCard },
                                 ].map(s => (
-                                    <div key={s.label} className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-3 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
+                                    <div key={s.label} className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/10 p-3 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
                                         <s.icon size={14} className={`mx-auto mb-1.5 ${s.color}`} />
                                         <div className={`text-sm font-bold font-mono ${s.color}`}>{s.value}</div>
                                         <div className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-1">{s.label}</div>
@@ -634,7 +634,7 @@ export default function AdminUsersPage() {
                         </div>
 
                         {/* Sticky Footer */}
-                        <div className="sticky bottom-0 bg-[#0c0c0c]/90 backdrop-blur-sm border-t border-white/[0.06] px-6 py-4">
+                        <div className="sticky bottom-0 bg-[#0c0c0c]/90 backdrop-blur-sm border-t border-white/5 px-6 py-4">
                             <div className="flex items-center justify-between mb-3">
                                 <div className="flex gap-2">
                                     <button
@@ -663,7 +663,7 @@ export default function AdminUsersPage() {
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => setShowDeleteConfirm(false)}
-                                            className="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white border border-white/[0.06] hover:border-white/[0.12] transition-all"
+                                            className="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-400 hover:text-white border border-white/5 hover:border-white/[0.12] transition-all"
                                         >
                                             Cancel
                                         </button>
@@ -684,7 +684,7 @@ export default function AdminUsersPage() {
                                         setShowDeleteConfirm(false);
                                         setError('');
                                     }}
-                                    className="px-4 py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white border border-white/[0.06] hover:border-white/[0.12] transition-all"
+                                    className="px-4 py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white border border-white/5 hover:border-white/[0.12] transition-all"
                                 >
                                     Cancel
                                 </button>
@@ -703,3 +703,4 @@ export default function AdminUsersPage() {
         </div>
     );
 }
+

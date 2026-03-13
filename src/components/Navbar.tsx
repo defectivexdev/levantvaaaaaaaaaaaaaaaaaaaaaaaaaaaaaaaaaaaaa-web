@@ -87,7 +87,7 @@ export default function Navbar() {
                                 {link.name}
                             </Link>
                         ))}
-                        <div className="border-t border-white/[0.06] my-2" />
+                        <div className="border-t border-white/5 my-2" />
                         <Link
                             href="/login"
                             className="block py-3 px-2 text-accent-gold hover:text-white transition-colors text-sm font-bold"

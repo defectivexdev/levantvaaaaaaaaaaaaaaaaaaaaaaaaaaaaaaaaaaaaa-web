@@ -71,7 +71,7 @@ export default function AwardsPage() {
                         {myAwards.length} of {awards.length} earned
                     </p>
                 </div>
-                <div className="flex gap-1 bg-[#0a0a0a] p-1 rounded-xl border border-white/[0.06]">
+                <div className="flex gap-1 bg-panel backdrop-blur-sm p-1 rounded-xl border border-white/5">
                     {([['all', `All ${awards.length}`], ['earned', `Earned ${myAwards.length}`], ['locked', `Locked ${awards.length - myAwards.length}`]] as const).map(([key, label]) => (
                         <button 
                             key={key}
@@ -87,7 +87,7 @@ export default function AwardsPage() {
             </div>
 
             {/* Progress Bar */}
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-4">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-4">
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Collection Progress</span>
                     <span className="text-xs font-bold text-accent-gold font-mono">{awards.length > 0 ? Math.round((myAwards.length / awards.length) * 100) : 0}%</span>
@@ -120,17 +120,17 @@ export default function AwardsPage() {
                                 return (
                                     <div 
                                         key={award._id} 
-                                        className={`bg-[#0a0a0a] border rounded-2xl p-4 flex gap-4 transition-all ${
+                                        className={`bg-panel backdrop-blur-sm border rounded-2xl p-4 flex gap-4 transition-all ${
                                             earned 
                                                 ? 'border-emerald-500/20' 
-                                                : 'border-white/[0.06] opacity-50 grayscale hover:opacity-70 hover:grayscale-0'
+                                                : 'border-white/5 opacity-50 grayscale hover:opacity-70 hover:grayscale-0'
                                         }`}
                                     >
                                         <div className="flex-shrink-0">
                                             {award.imageUrl ? (
                                                 <img src={`/img/award/${award.imageUrl}`} alt={award.name} className="w-14 h-14 object-contain" />
                                             ) : (
-                                                <div className="w-14 h-14 bg-[#111] rounded-xl flex items-center justify-center border border-white/[0.06]">
+                                                <div className="w-14 h-14 bg-[#111] rounded-xl flex items-center justify-center border border-white/5">
                                                     <Award className="w-6 h-6 text-accent-gold" />
                                                 </div>
                                             )}
@@ -160,7 +160,7 @@ export default function AwardsPage() {
             })}
 
             {filteredAwards.length === 0 && (
-                <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-12 text-center text-gray-500 text-sm">
+                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-12 text-center text-gray-500 text-sm">
                     No awards found matching your filter.
                 </div>
             )}

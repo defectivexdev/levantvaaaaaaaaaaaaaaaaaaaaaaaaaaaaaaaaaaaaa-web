@@ -88,7 +88,7 @@ export default function StorePage() {
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             {/* Premium Hero Section */}
-            <div className="relative overflow-hidden rounded-3xl bg-[#0a0a0a] border border-white/[0.06] p-8 md:p-12 shadow-2xl">
+            <div className="relative overflow-hidden rounded-3xl bg-panel backdrop-blur-sm border border-white/5 p-8 md:p-12 shadow-2xl">
                 {/* Background Decoration */}
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent-gold/5 rounded-full blur-[100px] pointer-events-none" />
                 <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary-500/5 rounded-full blur-[100px] pointer-events-none" />
@@ -115,7 +115,7 @@ export default function StorePage() {
                         <span className="text-sm font-bold">Refresh</span>
                     </button>
                     <div className="flex flex-col items-center">
-                        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/[0.08] shadow-xl flex flex-col items-center min-w-[240px]">
+                        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-xl flex flex-col items-center min-w-[240px]">
                             <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">Current Balance</p>
                             <div className="flex items-center gap-3">
                                 <span className="text-4xl font-display font-bold text-white tracking-widest leading-none">
@@ -147,7 +147,7 @@ export default function StorePage() {
             {loading ? (
                 <div className="flex flex-col gap-4">
                     {[1, 2, 3].map(i => (
-                        <div key={i} className="h-24 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] animate-pulse" />
+                        <div key={i} className="h-24 rounded-2xl bg-panel backdrop-blur-sm border border-white/5 animate-pulse" />
                     ))}
                 </div>
             ) : filteredItems.length === 0 ? (
@@ -158,7 +158,7 @@ export default function StorePage() {
             ) : (
                 <div className="flex flex-col gap-4">
                     {filteredItems.map((item) => (
-                        <div key={item._id} className="relative group flex items-center p-4 md:p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/10 transition-all duration-300 shadow-lg">
+                        <div key={item._id} className="relative group flex items-center p-4 md:p-6 rounded-2xl bg-panel backdrop-blur-sm border border-white/5 hover:border-white/10 transition-all duration-300 shadow-lg">
                             {/* Glow Effect */}
                             <div className={`absolute -inset-0.5 bg-gradient-to-r opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none rounded-2xl ${getCategoryStyles(item.category)}`} />
 
@@ -186,7 +186,7 @@ export default function StorePage() {
                                 </div>
 
                                 {/* Right: Price and Action */}
-                                <div className="flex items-center gap-6 md:gap-8 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 border-white/[0.06]">
+                                <div className="flex items-center gap-6 md:gap-8 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
                                     <div className="flex flex-col flex-shrink-0">
                                         <span className="text-gray-500 text-[9px] uppercase font-bold tracking-[0.2em] mb-1">Price</span>
                                         <div className="flex items-center gap-1.5">
@@ -226,3 +226,4 @@ export default function StorePage() {
         </div>
     );
 }
+

@@ -16,9 +16,9 @@ export default function NetworkVerification({ pilotId, currentIvaoVid }: Network
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-[#0a0a0a] rounded-xl border border-white/[0.04] overflow-hidden"
+                className="bg-panel rounded-xl border border-white/5 overflow-hidden"
             >
-                <div className="px-4 py-3 border-b border-white/[0.04] flex items-center gap-2">
+                <div className="px-4 py-3 border-b border-white/5 flex items-center gap-2">
                     <Network className="w-4 h-4 text-accent-gold" />
                     <h2 className="text-sm font-semibold text-white">Network Verification</h2>
                 </div>

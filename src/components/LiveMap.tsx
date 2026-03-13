@@ -175,7 +175,7 @@ export default function LiveMap({
 
     if (isLoading && flights.length === 0) {
         return (
-            <div className="flex items-center justify-center bg-[#0a0a0a] rounded-xl border border-white/10" style={{ height }}>
+            <div className="flex items-center justify-center bg-panel rounded-xl border border-white/10" style={{ height }}>
                 <div className="text-center">
                     <Loader2 className="w-8 h-8 animate-spin text-accent-gold mx-auto mb-2" />
                     <p className="text-gray-400 text-sm">Loading live map...</p>

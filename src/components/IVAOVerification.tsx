@@ -169,7 +169,7 @@ export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerifi
 
     if (statusLoading) {
         return (
-            <div className="bg-[#0a0a0a] border border-white/[0.04] rounded-xl p-4">
+            <div className="bg-panel border border-white/5 rounded-xl p-4">
                 <div className="flex items-center justify-center py-4">
                     <Loader2 className="w-5 h-5 text-amber-500 animate-spin" />
                 </div>
@@ -182,9 +182,9 @@ export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerifi
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="bg-[#0a0a0a] border border-white/[0.04] rounded-xl overflow-hidden"
+            className="bg-panel border border-white/5 rounded-xl overflow-hidden"
         >
-            <div className="px-4 py-3 border-b border-white/[0.04] flex items-center gap-2">
+            <div className="px-4 py-3 border-b border-white/5 flex items-center gap-2">
                 <Shield className="w-4 h-4 text-amber-500" />
                 <h2 className="text-sm font-semibold text-white">IVAO Verification</h2>
                 {status?.verified && (
@@ -277,7 +277,7 @@ export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerifi
                         <button
                             onClick={handleSync}
                             disabled={syncing}
-                            className="w-full px-4 py-2 bg-black/50 hover:bg-black/70 disabled:bg-gray-800 disabled:cursor-not-allowed border border-white/[0.08] hover:border-amber-500/50 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                            className="w-full px-4 py-2 bg-panel/50 hover:bg-black/70 disabled:bg-gray-800 disabled:cursor-not-allowed border border-white/10 hover:border-amber-500/50 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                         >
                             {syncing ? (
                                 <>

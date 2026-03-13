@@ -164,7 +164,7 @@ export default function BlacklistManagementPage() {
                             placeholder="Pilot ID (e.g. LVT0001)..."
                             value={userId}
                             onChange={(e) => handleUserIdChange(e.target.value)}
-                            className="w-full bg-[#0a0a0a] border border-white/[0.08] rounded-lg pl-10 pr-4 py-3 text-white text-sm focus:outline-none focus:border-accent-gold"
+                            className="w-full bg-panel backdrop-blur-sm border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white text-sm focus:outline-none focus:border-accent-gold"
                             required
                         />
                         {lookupLoading && (
@@ -173,7 +173,7 @@ export default function BlacklistManagementPage() {
                             </div>
                         )}
                         {pilotLookup && (
-                            <div className="absolute left-0 right-0 top-full mt-1 bg-[#0a0a0a] border border-emerald-500/30 rounded-lg px-3 py-2 z-10 flex items-center gap-2">
+                            <div className="absolute left-0 right-0 top-full mt-1 bg-panel backdrop-blur-sm border border-emerald-500/30 rounded-lg px-3 py-2 z-10 flex items-center gap-2">
                                 <CheckCircle size={14} className="text-emerald-400 shrink-0" />
                                 <span className="text-sm text-white font-medium">{pilotLookup.name}</span>
                                 <span className="text-xs text-gray-500 font-mono">{pilotLookup.pilotId}</span>
@@ -186,7 +186,7 @@ export default function BlacklistManagementPage() {
                             placeholder="Reason for blacklisting..."
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
-                            className="w-full bg-[#0a0a0a] border border-white/[0.08] rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-accent-gold"
+                            className="w-full bg-panel backdrop-blur-sm border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-accent-gold"
                         />
                     </div>
                     <button
@@ -208,7 +208,7 @@ export default function BlacklistManagementPage() {
                     placeholder="Search by ID, name, email, or reason..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full bg-[#0a0a0a] border border-white/[0.08] rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-gold"
+                    className="w-full bg-panel backdrop-blur-sm border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-gold"
                 />
             </div>
 
@@ -227,7 +227,7 @@ export default function BlacklistManagementPage() {
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-[#111]/50">
-                                <tr className="text-left text-gray-500 text-xs uppercase tracking-widest border-b border-white/[0.06]">
+                                <tr className="text-left text-gray-500 text-xs uppercase tracking-widest border-b border-white/5">
                                     <th className="p-4">Pilot</th>
                                     <th className="p-4">Reason</th>
                                     <th className="p-4">Blacklisted By</th>
@@ -237,7 +237,7 @@ export default function BlacklistManagementPage() {
                             </thead>
                             <tbody>
                                 {filtered.map((entry) => (
-                                    <tr key={entry.id} className="border-b border-white/[0.06] hover:bg-white/[0.02] transition-colors">
+                                    <tr key={entry.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                                         <td className="p-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
@@ -281,3 +281,4 @@ export default function BlacklistManagementPage() {
         </div>
     );
 }
+

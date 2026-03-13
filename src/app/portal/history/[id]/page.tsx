@@ -95,7 +95,7 @@ export default function FlightDetailsPage({ params }: { params: Promise<{ id: st
 
             {/* Main Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="md:col-span-2 bg-gradient-to-br from-white/5 to-white/0 rounded-2xl p-6 border border-white/[0.06] relative overflow-hidden group">
+                <div className="md:col-span-2 bg-gradient-to-br from-white/5 to-white/0 rounded-2xl p-6 border border-white/5 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                         <Navigation size={100} />
                     </div>
@@ -117,13 +117,13 @@ export default function FlightDetailsPage({ params }: { params: Promise<{ id: st
                     </div>
                 </div>
 
-                <div className="bg-white/5 rounded-2xl p-6 border border-white/[0.06] flex flex-col justify-center">
+                <div className="bg-white/5 rounded-2xl p-6 border border-white/5 flex flex-col justify-center">
                     <span className="text-xs text-gray-500 uppercase tracking-widest mb-1">Aircraft</span>
                     <span className="text-2xl font-bold text-white">{flight.aircraft_type}</span>
                     <span className="text-xs text-gray-600 font-mono mt-1">N/A Reg</span>
                 </div>
 
-                <div className="bg-white/5 rounded-2xl p-6 border border-white/[0.06] flex flex-col justify-center">
+                <div className="bg-white/5 rounded-2xl p-6 border border-white/5 flex flex-col justify-center">
                     <span className="text-xs text-gray-500 uppercase tracking-widest mb-1">Landing Rate</span>
                     <div className={`text-2xl font-bold font-mono ${flight.landing_rate < -500 ? 'text-rose-500' : 'text-emerald-400'} flex items-center gap-2`}>
                         {flight.landing_rate} <span className="text-sm text-gray-500 font-normal">fpm</span>
@@ -171,7 +171,7 @@ export default function FlightDetailsPage({ params }: { params: Promise<{ id: st
             <div className="flex justify-end">
                 <button
                     onClick={() => setShowStrip(!showStrip)}
-                    className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/[0.08] rounded-xl text-xs font-bold text-gray-300 flex items-center gap-2 transition-all"
+                    className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-gray-300 flex items-center gap-2 transition-all"
                 >
                     <Share2 size={14} /> {showStrip ? 'Hide' : 'Show'} Flight Strip
                 </button>
@@ -180,7 +180,7 @@ export default function FlightDetailsPage({ params }: { params: Promise<{ id: st
 
             {/* Flight Profile Chart */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 bg-[#0a0a0a] rounded-2xl border border-white/[0.06] p-6 shadow-xl">
+                <div className="lg:col-span-2 bg-panel rounded-2xl border border-white/5 p-6 shadow-xl">
                     <div className="flex items-center justify-between mb-6">
                         <div>
                             <h2 className="text-lg font-bold text-white flex items-center gap-2">
@@ -195,7 +195,7 @@ export default function FlightDetailsPage({ params }: { params: Promise<{ id: st
                 </div>
 
                 {/* Score & Events */}
-                <div className="bg-[#0a0a0a] rounded-2xl border border-white/[0.06] p-6 shadow-xl flex flex-col">
+                <div className="bg-panel rounded-2xl border border-white/5 p-6 shadow-xl flex flex-col">
                      <div className="mb-6 text-center">
                          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full border-4 border-amber-500/20 bg-amber-500/5 mb-3 relative">
                              <span className="text-4xl font-black text-white">{flight.score}</span>
@@ -205,7 +205,7 @@ export default function FlightDetailsPage({ params }: { params: Promise<{ id: st
                      </div>
 
                      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-3">
-                         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 sticky top-0 bg-[#0a0a0a] py-2">Deductions & Events</h3>
+                         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 sticky top-0 bg-panel py-2">Deductions & Events</h3>
                          
                          {flight.log?.deductions && flight.log.deductions.length > 0 ? (
                              flight.log.deductions.map((d: any, i: number) => (

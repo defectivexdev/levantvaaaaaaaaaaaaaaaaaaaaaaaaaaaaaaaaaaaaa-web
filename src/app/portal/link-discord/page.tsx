@@ -71,14 +71,14 @@ export default function LinkDiscordPage() {
 
     if (statusLoading) {
         return (
-            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+            <div className="min-h-screen bg-panel backdrop-blur-sm flex items-center justify-center">
                 <Loader2 className="w-8 h-8 text-cyan-500 animate-spin" />
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] p-6">
+        <div className="min-h-screen bg-panel backdrop-blur-sm p-6">
             <div className="max-w-2xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -117,7 +117,7 @@ export default function LinkDiscordPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="bg-[#0a0a0a] border border-white/[0.04] rounded-xl p-6"
+                    className="bg-panel backdrop-blur-sm border border-white/5 rounded-xl p-6"
                 >
                     <div className="flex items-center gap-3 mb-4">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${ivaoVerified ? 'bg-cyan-500/20 text-cyan-400' : 'bg-gray-500/20 text-gray-500'}`}>
@@ -181,3 +181,4 @@ export default function LinkDiscordPage() {
         </div>
     );
 }
+

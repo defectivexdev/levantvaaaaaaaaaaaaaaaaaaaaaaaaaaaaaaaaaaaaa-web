@@ -199,7 +199,7 @@ export default function AdminStorePage() {
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
             {/* Header Section */}
-            <div className="relative overflow-hidden rounded-3xl bg-[#0a0a0a] border border-white/[0.06] p-8 shadow-2xl">
+            <div className="relative overflow-hidden rounded-3xl bg-panel backdrop-blur-sm border border-white/5 p-8 shadow-2xl">
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent-gold/5 rounded-full blur-[100px] pointer-events-none" />
                 <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div className="flex items-center gap-4">
@@ -238,18 +238,18 @@ export default function AdminStorePage() {
             {loading ? (
                 <div className="flex flex-col gap-4">
                     {[1, 2, 3].map(i => (
-                        <div key={i} className="h-24 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] animate-pulse" />
+                        <div key={i} className="h-24 rounded-2xl bg-panel backdrop-blur-sm border border-white/5 animate-pulse" />
                     ))}
                 </div>
             ) : filteredItems.length === 0 ? (
-                <div className="h-64 rounded-3xl border border-dashed border-white/10 flex flex-col items-center justify-center gap-4 text-gray-500 bg-[#0a0a0a]">
+                <div className="h-64 rounded-3xl border border-dashed border-white/10 flex flex-col items-center justify-center gap-4 text-gray-500 bg-panel backdrop-blur-sm">
                     <Package className="w-12 h-12 opacity-20" />
                     <p className="font-medium">No items found.</p>
                 </div>
             ) : (
                 <div className="flex flex-col gap-4">
                     {filteredItems.map((item) => (
-                        <div key={item._id} className="group flex flex-col sm:flex-row items-start sm:items-center p-5 rounded-2xl bg-[#0a0a0a] border border-white/[0.06] hover:border-white/10 transition-all duration-300 shadow-lg gap-6">
+                        <div key={item._id} className="group flex flex-col sm:flex-row items-start sm:items-center p-5 rounded-2xl bg-panel backdrop-blur-sm border border-white/5 hover:border-white/10 transition-all duration-300 shadow-lg gap-6">
                             
                             {/* Left: Icon/Image */}
                             <div className="flex-shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-dark-700/50 to-dark-900/50 flex items-center justify-center relative border border-white/5 overflow-hidden">
@@ -283,7 +283,7 @@ export default function AdminStorePage() {
                             </div>
 
                             {/* Right: Price & Actions */}
-                            <div className="flex items-center gap-6 sm:gap-8 w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-white/[0.06]">
+                            <div className="flex items-center gap-6 sm:gap-8 w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 border-white/5">
                                 <div className="flex flex-col flex-shrink-0">
                                     <span className="text-gray-500 text-[9px] uppercase font-bold tracking-[0.2em] mb-1">Price</span>
                                     <div className="text-lg font-display font-bold text-accent-gold font-mono">
@@ -317,7 +317,7 @@ export default function AdminStorePage() {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-md animate-in fade-in duration-300">
-                    <div className="bg-[#0a0a0a] rounded-3xl w-full max-w-2xl border border-white/[0.08] shadow-[0_0_80px_rgba(0,0,0,0.5)] overflow-hidden max-h-[90vh] flex flex-col animate-in zoom-in-95 slide-in-from-bottom-4 duration-400">
+                    <div className="bg-panel backdrop-blur-sm rounded-3xl w-full max-w-2xl border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.5)] overflow-hidden max-h-[90vh] flex flex-col animate-in zoom-in-95 slide-in-from-bottom-4 duration-400">
                         {/* Header with gradient accent */}
                         <div className="relative p-6 border-b border-white/10 flex justify-between items-center overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-r from-accent-gold/5 via-transparent to-transparent pointer-events-none" />
@@ -330,7 +330,7 @@ export default function AdminStorePage() {
                                     <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">Store Management</p>
                                 </div>
                             </div>
-                            <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-xl bg-white/5 border border-white/[0.08] flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 transition-all">
+                            <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 transition-all">
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
@@ -352,7 +352,7 @@ export default function AdminStorePage() {
                                             type="text"
                                             value={name}
                                             onChange={e => setName(e.target.value)}
-                                            className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-gray-600"
+                                            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/20 transition-all placeholder:text-gray-600"
                                             placeholder="e.g. Gold Wings Badge"
                                         />
                                     </div>
@@ -364,7 +364,7 @@ export default function AdminStorePage() {
                                                 type="number"
                                                 value={price}
                                                 onChange={e => setPrice(e.target.value)}
-                                                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/20 transition-all font-mono placeholder:text-gray-600"
+                                                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/20 transition-all font-mono placeholder:text-gray-600"
                                                 placeholder="500"
                                             />
                                         </div>
@@ -373,7 +373,7 @@ export default function AdminStorePage() {
                                             <select
                                                 value={category}
                                                 onChange={e => setCategory(e.target.value as any)}
-                                                className="w-full bg-[#111] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 transition-all appearance-none cursor-pointer"
+                                                className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 transition-all appearance-none cursor-pointer"
                                             >
                                                 <option value="Badge">Badge</option>
                                                 <option value="Perk">Perk</option>
@@ -388,21 +388,21 @@ export default function AdminStorePage() {
                                             value={description}
                                             onChange={(e) => setDescription(e.target.value)}
                                             rows={4}
-                                            className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/20 transition-all resize-none placeholder:text-gray-600"
+                                            className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/20 transition-all resize-none placeholder:text-gray-600"
                                             placeholder="What does this item do? Why should pilots want it?"
                                         >
                                         </textarea>
                                     </div>
 
                                     {/* Active Toggle */}
-                                    <div className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.06]">
+                                    <div className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/5">
                                         <div className="flex items-center gap-3">
                                             <div className={`w-2 h-2 rounded-full ${active ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]' : 'bg-rose-500'}`} />
                                             <label htmlFor="active" className="text-gray-300 text-sm font-bold cursor-pointer">{active ? 'Published (Visible)' : 'Hidden (Draft)'}</label>
                                         </div>
                                         <div className="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" id="active" checked={active} onChange={e => setActive(e.target.checked)} className="sr-only peer" />
-                                            <div className="w-11 h-6 bg-[#111] border border-white/[0.08] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
+                                            <div className="w-11 h-6 bg-[#111] border border-white/10 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
                                         </div>
                                     </div>
                                 </div>
@@ -433,7 +433,7 @@ export default function AdminStorePage() {
                                         <input type="file" ref={imageInputRef} className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, 'image')} />
                                         <input 
                                             type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)}
-                                            className="mt-2 w-full bg-white/[0.02] border border-white/[0.06] rounded-lg px-3 py-1.5 text-xs text-gray-500 font-mono focus:outline-none focus:border-accent-gold/30 transition-all"
+                                            className="mt-2 w-full bg-white/[0.02] border border-white/5 rounded-lg px-3 py-1.5 text-xs text-gray-500 font-mono focus:outline-none focus:border-accent-gold/30 transition-all"
                                             placeholder="Or paste image URL..."
                                         />
                                     </div>
@@ -459,7 +459,7 @@ export default function AdminStorePage() {
                                                 <FileText size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" />
                                                 <input
                                                     type="text" value={downloadUrl} onChange={e => setDownloadUrl(e.target.value)}
-                                                    className="w-full bg-white/[0.02] border border-white/[0.06] rounded-xl pl-9 pr-4 py-2.5 text-white focus:outline-none focus:border-accent-gold/30 transition-all text-xs font-mono placeholder:text-gray-600"
+                                                    className="w-full bg-white/[0.02] border border-white/5 rounded-xl pl-9 pr-4 py-2.5 text-white focus:outline-none focus:border-accent-gold/30 transition-all text-xs font-mono placeholder:text-gray-600"
                                                     placeholder="https://..."
                                                 />
                                             </div>
@@ -469,7 +469,7 @@ export default function AdminStorePage() {
 
                                     {/* Live Preview Card */}
                                     {name && (
-                                        <div className="p-4 bg-white/[0.02] rounded-xl border border-white/[0.06]">
+                                        <div className="p-4 bg-white/[0.02] rounded-xl border border-white/5">
                                             <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mb-2">Preview</p>
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-lg bg-accent-gold/10 border border-accent-gold/20 flex items-center justify-center text-lg">
@@ -514,3 +514,4 @@ export default function AdminStorePage() {
         </div>
     );
 }
+

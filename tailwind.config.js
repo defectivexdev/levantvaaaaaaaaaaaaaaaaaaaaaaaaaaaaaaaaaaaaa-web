@@ -8,7 +8,10 @@ module.exports = {
     theme: {
         extend: {
             colors: {
+                background: '#0b0f19',
+                panel: '#121826',
                 primary: {
+                    DEFAULT: '#1d4ed8',
                     50: '#f0f9ff',
                     100: '#e0f2fe',
                     200: '#bae6fd',
@@ -20,16 +23,22 @@ module.exports = {
                     800: '#075985',
                     900: '#0c4a6e',
                 },
+                secondary: {
+                    DEFAULT: '#22c55e',
+                },
+                text: {
+                    DEFAULT: '#e5e7eb',
+                },
                 accent: {
                     gold: '#D4AF37',
                     bronze: '#CD7F32',
                 },
                 dark: {
-                    900: '#0a0a0a',
-                    800: '#121212',
-                    700: '#1a1a1a',
-                    600: '#242424',
-                    500: '#2d2d2d',
+                    900: '#0b0f19',
+                    800: '#121826',
+                    700: '#1e293b',
+                    600: '#334155',
+                    500: '#475569',
                 }
             },
             fontFamily: {

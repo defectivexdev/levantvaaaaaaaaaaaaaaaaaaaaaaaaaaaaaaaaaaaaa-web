@@ -98,12 +98,12 @@ export default function EventsPage() {
 
             {loading ? (
                 <div className="space-y-4 animate-pulse">
-                    {[...Array(2)].map((_, i) => <div key={i} className="h-72 bg-[#0a0a0a] rounded-2xl border border-white/[0.06]" />)}
+                    {[...Array(2)].map((_, i) => <div key={i} className="h-72 bg-panel backdrop-blur-sm rounded-2xl border border-white/5" />)}
                 </div>
             ) : (
                 <div className="grid gap-6">
                     {events.map((event) => (
-                        <div key={event._id} className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden group">
+                        <div key={event._id} className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden group">
                             <Link href={`/portal/events/${event._id}`} className="block">
                                 <div className="h-48 md:h-64 relative">
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -185,3 +185,4 @@ export default function EventsPage() {
         </div>
     );
 }
+

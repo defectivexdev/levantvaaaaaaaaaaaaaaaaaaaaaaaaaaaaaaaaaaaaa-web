@@ -103,11 +103,11 @@ export default function ReportsPage() {
                 <p className="text-gray-500 text-xs mt-0.5">View all your submitted flight reports</p>
             </div>
 
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="text-left text-gray-500 text-sm border-b border-white/10 bg-[#0a0a0a]/50">
+                            <tr className="text-left text-gray-500 text-sm border-b border-white/10 bg-panel backdrop-blur-sm/50">
                                 <th className="p-4">Callsign</th>
                                 <th className="p-4">Route</th>
                                 <th className="p-4">Aircraft</th>
@@ -134,7 +134,7 @@ export default function ReportsPage() {
                                 reports.map((report) => (
                                     <tr 
                                         key={report._id} 
-                                        className="border-b border-white/[0.06] hover:bg-white/5 transition-colors cursor-pointer group"
+                                        className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer group"
                                         onClick={() => window.location.href = `/portal/reports/${report._id}`}
                                     >
                                         <td className="p-4 text-white font-mono group-hover:text-accent-gold transition-colors">{report.callsign}</td>
@@ -195,8 +195,8 @@ export default function ReportsPage() {
             {/* Edit Modal */}
             {editingReport && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl">
-                        <div className="p-4 border-b border-white/[0.06] flex justify-between items-center bg-white/5">
+                    <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl">
+                        <div className="p-4 border-b border-white/5 flex justify-between items-center bg-white/5">
                             <h2 className="text-white font-bold flex items-center gap-2">
                                 <Edit className="w-4 h-4 text-accent-gold" />
                                 Edit PIREP Comments
@@ -215,14 +215,14 @@ export default function ReportsPage() {
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Pilot Comments</label>
                                 <textarea 
-                                    className="w-full h-32 bg-black/40 border border-white/[0.08] rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/50 transition-colors"
+                                    className="w-full h-32 bg-black/40 border border-white/10 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/50 transition-colors"
                                     placeholder="Enter your notes about the flight..."
                                     value={newComments}
                                     onChange={(e) => setNewComments(e.target.value)}
                                 />
                             </div>
                         </div>
-                        <div className="p-4 bg-white/5 border-t border-white/[0.06] flex justify-end gap-3">
+                        <div className="p-4 bg-white/5 border-t border-white/5 flex justify-end gap-3">
                             <button 
                                 onClick={() => setEditingReport(null)}
                                 className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors"
@@ -244,3 +244,4 @@ export default function ReportsPage() {
         </div>
     );
 }
+

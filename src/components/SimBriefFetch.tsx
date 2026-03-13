@@ -86,7 +86,7 @@ export default function SimBriefFetch() {
                             placeholder="SimBrief ID/User"
                             value={sbId}
                             onChange={(e) => setSbId(e.target.value)}
-                            className="flex-1 bg-white/5 border border-white/[0.08] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all font-mono"
+                            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all font-mono"
                         />
                         <button 
                             onClick={handleFetch}
@@ -98,7 +98,7 @@ export default function SimBriefFetch() {
                     </div>
                 ) : (
                     <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
-                        <div className="flex items-center justify-between bg-white/5 p-3 rounded-xl border border-white/[0.06]">
+                        <div className="flex items-center justify-between bg-white/5 p-3 rounded-xl border border-white/5">
                             <div className="text-center">
                                 <p className="text-lg font-bold text-white">{ofp.origin.icao_code}</p>
                                 <p className="text-[8px] text-gray-500 uppercase">{ofp.origin.icao_code}</p>
@@ -116,17 +116,17 @@ export default function SimBriefFetch() {
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
-                            <div className="bg-white/5 p-2 rounded-lg border border-white/[0.06] flex items-center gap-2">
+                            <div className="bg-white/5 p-2 rounded-lg border border-white/5 flex items-center gap-2">
                                 <Fuel size={12} className="text-blue-400" />
                                 <span className="text-[10px] font-mono text-gray-300">{ofp.fuel.plan_ramp} lbs</span>
                             </div>
-                            <div className="bg-white/5 p-2 rounded-lg border border-white/[0.06] flex items-center gap-2">
+                            <div className="bg-white/5 p-2 rounded-lg border border-white/5 flex items-center gap-2">
                                 <Clock size={12} className="text-blue-400" />
                                 <span className="text-[10px] font-mono text-gray-300">{Math.floor(ofp.times.est_time_enroute/60)}m</span>
                             </div>
                         </div>
 
-                        <div className="flex gap-2 text-[10px] text-gray-500 font-mono py-1 line-clamp-1 border-t border-white/[0.06] mt-2">
+                        <div className="flex gap-2 text-[10px] text-gray-500 font-mono py-1 line-clamp-1 border-t border-white/5 mt-2">
                             {ofp.general.route}
                         </div>
 

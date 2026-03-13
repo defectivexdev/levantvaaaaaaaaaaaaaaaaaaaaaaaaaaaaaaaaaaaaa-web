@@ -30,7 +30,7 @@ export default function Services() {
     const [activeIndex, setActiveIndex] = useState(0);
 
     return (
-        <section className="py-24 px-4 bg-transparent relative border-t border-white/[0.06]">
+        <section className="py-24 px-4 bg-transparent relative border-t border-white/5">
             <div className="max-w-6xl mx-auto relative z-10">
                 {/* Header */}
                 <motion.div 

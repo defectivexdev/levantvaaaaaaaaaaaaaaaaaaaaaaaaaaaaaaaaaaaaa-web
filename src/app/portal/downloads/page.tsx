@@ -82,7 +82,7 @@ export default function DownloadsPage() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden"
+                className="relative bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden"
             >
                 {/* Decorative background */}
                 <div className="absolute inset-0">
@@ -98,7 +98,7 @@ export default function DownloadsPage() {
                             <span className="text-accent-gold text-[10px] font-bold uppercase tracking-widest">Official Software</span>
                         </div>
                         {release && (
-                            <span className="px-3 py-1.5 bg-white/5 border border-white/[0.08] rounded-full text-gray-400 text-[10px] font-mono">
+                            <span className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 text-[10px] font-mono">
                                 v{release.version}
                             </span>
                         )}
@@ -143,7 +143,7 @@ export default function DownloadsPage() {
                             {/* Download button */}
                             <div className="pt-2">
                                 {loading ? (
-                                    <div className="h-14 w-64 bg-white/5 border border-white/[0.08] rounded-xl animate-pulse flex items-center justify-center">
+                                    <div className="h-14 w-64 bg-white/5 border border-white/10 rounded-xl animate-pulse flex items-center justify-center">
                                         <span className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">Loading...</span>
                                     </div>
                                 ) : release?.msi ? (
@@ -186,7 +186,7 @@ export default function DownloadsPage() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 + i * 0.05 }}
-                                    className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 group hover:border-white/10 transition-all"
+                                    className="bg-white/[0.02] border border-white/5 rounded-xl p-4 group hover:border-white/10 transition-all"
                                 >
                                     <feat.icon className="w-5 h-5 text-accent-gold mb-2 group-hover:scale-110 transition-transform" />
                                     <p className="text-white text-sm font-bold">{feat.label}</p>
@@ -214,7 +214,7 @@ export default function DownloadsPage() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 + i * 0.1 }}
-                            className="bg-[#0a0a0a] border border-white/[0.06] rounded-xl p-5 flex items-center gap-4 group hover:border-white/10 transition-all"
+                            className="bg-panel backdrop-blur-sm border border-white/5 rounded-xl p-5 flex items-center gap-4 group hover:border-white/10 transition-all"
                         >
                             <div className={`w-12 h-12 rounded-xl bg-${tool.color}-500/10 border border-${tool.color}-500/20 flex items-center justify-center group-hover:scale-105 transition-transform`}>
                                 <tool.icon className={`w-5 h-5 text-${tool.color}-400`} />
@@ -249,3 +249,4 @@ export default function DownloadsPage() {
         </div>
     );
 }
+

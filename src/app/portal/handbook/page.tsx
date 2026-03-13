@@ -94,7 +94,7 @@ export default function HandbookPage() {
                     <p className="text-gray-300 text-sm">
                         Pilots progress through the ranks based on flight hours and landing quality. Each rank unlocks larger aircraft and premium routes.
                     </p>
-                    <div className="bg-[#111]/50 rounded-xl border border-white/[0.06] divide-y divide-white/5">
+                    <div className="bg-[#111]/50 rounded-xl border border-white/5 divide-y divide-white/5">
                         <div className="p-4 flex justify-between items-center">
                             <span className="text-white font-medium">Cadet</span>
                             <span className="text-gray-500 text-xs">Entry Level</span>
@@ -157,7 +157,7 @@ export default function HandbookPage() {
                             className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
                                 activeSection === section.id
                                     ? 'bg-accent-gold/10 border-accent-gold/30 text-accent-gold'
-                                    : 'bg-[#0a0a0a] border-white/[0.06] text-gray-500 hover:text-white hover:border-white/[0.1]'
+                                    : 'bg-panel backdrop-blur-sm border-white/5 text-gray-500 hover:text-white hover:border-white/[0.1]'
                             }`}
                         >
                             <div className="flex items-center gap-3">
@@ -170,10 +170,11 @@ export default function HandbookPage() {
                 </div>
 
                 {/* Content Area */}
-                <div className="flex-1 bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-8 min-h-[400px]">
+                <div className="flex-1 bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-8 min-h-[400px]">
                     {sections.find(s => s.id === activeSection)?.content}
                 </div>
             </div>
         </div>
     );
 }
+

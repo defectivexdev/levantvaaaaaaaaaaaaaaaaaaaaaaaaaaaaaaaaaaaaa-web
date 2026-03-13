@@ -142,7 +142,7 @@ export default function AdminEventsPage() {
             <div className="grid gap-4">
                 {events.map((event) => (
                     <div key={event._id} className="glass-card p-6 flex flex-col md:flex-row gap-6">
-                        <div className="w-full md:w-48 h-32 bg-[#0a0a0a] rounded-lg overflow-hidden shrink-0">
+                        <div className="w-full md:w-48 h-32 bg-panel backdrop-blur-sm rounded-lg overflow-hidden shrink-0">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={event.banner_image} alt={event.title} className="w-full h-full object-cover" />
                         </div>
@@ -206,7 +206,7 @@ export default function AdminEventsPage() {
                                     type="text"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full bg-[#111]/50 border border-white/[0.08] rounded-lg p-2 text-white"
+                                    className="w-full bg-[#111]/50 border border-white/10 rounded-lg p-2 text-white"
                                 />
                             </div>
 
@@ -216,7 +216,7 @@ export default function AdminEventsPage() {
                                     <select
                                         value={formData.type}
                                         onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                                        className="w-full bg-[#111]/50 border border-white/[0.08] rounded-lg p-2 text-white"
+                                        className="w-full bg-[#111]/50 border border-white/10 rounded-lg p-2 text-white"
                                     >
                                         <option value="Fly-In">Fly-In</option>
                                         <option value="Group Flight">Group Flight</option>
@@ -229,7 +229,7 @@ export default function AdminEventsPage() {
                                     <select
                                         value={formData.is_active ? 'true' : 'false'}
                                         onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
-                                        className="w-full bg-[#111]/50 border border-white/[0.08] rounded-lg p-2 text-white"
+                                        className="w-full bg-[#111]/50 border border-white/10 rounded-lg p-2 text-white"
                                     >
                                         <option value="true">Active</option>
                                         <option value="false">Draft</option>
@@ -244,7 +244,7 @@ export default function AdminEventsPage() {
                                         type="datetime-local"
                                         value={formData.start_time ? new Date(formData.start_time).toISOString().slice(0, 16) : ''}
                                         onChange={(e) => setFormData({ ...formData, start_time: new Date(e.target.value).toISOString() })}
-                                        className="w-full bg-[#111]/50 border border-white/[0.08] rounded-lg p-2 text-white"
+                                        className="w-full bg-[#111]/50 border border-white/10 rounded-lg p-2 text-white"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -253,7 +253,7 @@ export default function AdminEventsPage() {
                                         type="datetime-local"
                                         value={formData.end_time ? new Date(formData.end_time).toISOString().slice(0, 16) : ''}
                                         onChange={(e) => setFormData({ ...formData, end_time: new Date(e.target.value).toISOString() })}
-                                        className="w-full bg-[#111]/50 border border-white/[0.08] rounded-lg p-2 text-white"
+                                        className="w-full bg-[#111]/50 border border-white/10 rounded-lg p-2 text-white"
                                     />
                                 </div>
                             </div>
@@ -265,7 +265,7 @@ export default function AdminEventsPage() {
                                     value={airportInput}
                                     onChange={(e) => setAirportInput(e.target.value)}
                                     placeholder="EGLL, LFPG, KJFK"
-                                    className="w-full bg-[#111]/50 border border-white/[0.08] rounded-lg p-2 text-white font-mono uppercase"
+                                    className="w-full bg-[#111]/50 border border-white/10 rounded-lg p-2 text-white font-mono uppercase"
                                 />
                             </div>
 
@@ -273,7 +273,7 @@ export default function AdminEventsPage() {
                                 <label className="text-sm text-gray-400">Banner Image</label>
 
                                 <div className="flex flex-col gap-3">
-                                    <div className="w-full h-40 bg-[#0a0a0a] rounded-xl overflow-hidden border border-white/[0.08]">
+                                    <div className="w-full h-40 bg-panel backdrop-blur-sm rounded-xl overflow-hidden border border-white/10">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img
                                             src={formData.banner_image || '/img/events/default.jpg'}
@@ -283,7 +283,7 @@ export default function AdminEventsPage() {
                                     </div>
 
                                     <div className="flex items-center gap-3">
-                                        <label className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold cursor-pointer transition-all border border-white/[0.08] ${
+                                        <label className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold cursor-pointer transition-all border border-white/10 ${
                                             uploadingBanner ? 'opacity-60 pointer-events-none' : 'hover:bg-white/5'
                                         }`}>
                                             <ImageIcon className="w-4 h-4 text-accent-gold" />
@@ -338,7 +338,7 @@ export default function AdminEventsPage() {
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     rows={4}
-                                    className="w-full bg-[#111]/50 border border-white/[0.08] rounded-lg p-2 text-white"
+                                    className="w-full bg-[#111]/50 border border-white/10 rounded-lg p-2 text-white"
                                 />
                             </div>
                         </div>
@@ -356,3 +356,4 @@ export default function AdminEventsPage() {
         </div>
     );
 }
+

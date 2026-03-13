@@ -130,7 +130,7 @@ export default function AdminPilotsPage() {
                         placeholder="Search by ID, Name or Email..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-[#0a0a0a] border border-white/[0.08] rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-gold"
+                        className="w-full bg-panel backdrop-blur-sm border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-gold"
                     />
                 </div>
                 <div className="relative">
@@ -138,7 +138,7 @@ export default function AdminPilotsPage() {
                     <select
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
-                        className="w-full bg-[#0a0a0a] border border-white/[0.08] rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-gold appearance-none"
+                        className="w-full bg-panel backdrop-blur-sm border border-white/10 rounded-lg pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-gold appearance-none"
                     >
                         <option value="all">All Statuses</option>
                         <option value="active">Active</option>
@@ -159,7 +159,7 @@ export default function AdminPilotsPage() {
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-[#111]/50">
-                                <tr className="text-left text-gray-500 text-xs uppercase tracking-widest border-b border-white/[0.06]">
+                                <tr className="text-left text-gray-500 text-xs uppercase tracking-widest border-b border-white/5">
                                     <th className="p-4">Pilot</th>
                                     <th className="p-4">Stats</th>
                                     <th className="p-4">Role</th>
@@ -233,7 +233,7 @@ export default function AdminPilotsPage() {
             {/* Edit Modal */}
             {editing && (
                 <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                    <div className="bg-[#0a0a0a] rounded-xl w-full max-w-md border border-white/[0.08] shadow-2xl overflow-hidden">
+                    <div className="bg-panel backdrop-blur-sm rounded-xl w-full max-w-md border border-white/10 shadow-2xl overflow-hidden">
                         <div className="p-6 border-b border-white/10 flex justify-between items-center">
                             <div>
                                 <h2 className="text-xl font-bold text-white">Edit Pilot</h2>
@@ -262,7 +262,7 @@ export default function AdminPilotsPage() {
                                             className={`py-2 px-3 rounded border text-xs font-semibold transition-all ${
                                                 editing.status === s 
                                                     ? 'bg-accent-gold border-accent-gold text-dark-900' 
-                                                    : 'bg-[#111] border-white/[0.06] text-gray-400 hover:border-white/20'
+                                                    : 'bg-[#111] border-white/5 text-gray-400 hover:border-white/20'
                                             }`}
                                         >
                                             {s}
@@ -271,7 +271,7 @@ export default function AdminPilotsPage() {
                                 </div>
                             </div>
 
-                            <div className="pt-4 border-t border-white/[0.06]">
+                            <div className="pt-4 border-t border-white/5">
                                 <label className="block text-gray-500 text-xs uppercase tracking-wider mb-2 font-bold">User Role</label>
                                 <div className="grid grid-cols-2 gap-2">
                                     <button
@@ -279,7 +279,7 @@ export default function AdminPilotsPage() {
                                         className={`py-3 rounded border text-xs font-bold transition-all ${
                                             editing.role === 'Pilot' 
                                                 ? 'bg-blue-500 border-blue-500 text-white' 
-                                                : 'bg-[#111] border-white/[0.06] text-gray-400 hover:border-white/20'
+                                                : 'bg-[#111] border-white/5 text-gray-400 hover:border-white/20'
                                         }`}
                                     >
                                         PILOT
@@ -289,7 +289,7 @@ export default function AdminPilotsPage() {
                                         className={`py-3 rounded border text-xs font-bold transition-all ${
                                             editing.role === 'Admin' 
                                                 ? 'bg-purple-600 border-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.3)]' 
-                                                : 'bg-[#111] border-white/[0.06] text-gray-400 hover:border-white/20'
+                                                : 'bg-[#111] border-white/5 text-gray-400 hover:border-white/20'
                                         }`}
                                     >
                                         ADMIN
@@ -297,7 +297,7 @@ export default function AdminPilotsPage() {
                                 </div>
                             </div>
 
-                            <div className="pt-4 border-t border-white/[0.06]">
+                            <div className="pt-4 border-t border-white/5">
                                 <label className="block text-gray-500 text-xs uppercase tracking-wider mb-2 font-bold">Base Airport</label>
                                 <select
                                     value={editing.homeBase || ''}
@@ -309,7 +309,7 @@ export default function AdminPilotsPage() {
                                         }
                                         handleUpdate(editing.id, { homeBase: val, currentLocation: val });
                                     }}
-                                    className="w-full bg-[#111] border border-white/[0.06] rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-accent-gold"
+                                    className="w-full bg-[#111] border border-white/5 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-accent-gold"
                                 >
                                     <option value="">Select Base</option>
                                     <option value="OSDI">Damascus (OSDI)</option>
@@ -319,12 +319,12 @@ export default function AdminPilotsPage() {
                                 </select>
                             </div>
 
-                            <div className="pt-4 border-t border-white/[0.06]">
+                            <div className="pt-4 border-t border-white/5">
                                 <label className="block text-gray-500 text-xs uppercase tracking-wider mb-2 font-bold">Hub Manager</label>
                                 <select
                                     value={editing.hub_manager || ''}
                                     onChange={(e) => handleUpdate(editing.id, { hub_manager: e.target.value || null })}
-                                    className="w-full bg-[#111] border border-white/[0.06] rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-accent-gold"
+                                    className="w-full bg-[#111] border border-white/5 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:border-accent-gold"
                                 >
                                     <option value="">None (Regular Pilot)</option>
                                     <option value="OJAI">OJAI Hub Manager</option>
@@ -335,7 +335,7 @@ export default function AdminPilotsPage() {
                             </div>
                         </div>
 
-                        <div className="p-6 bg-[#080808]/50 border-t border-white/[0.06] flex justify-end">
+                        <div className="p-6 bg-[#080808]/50 border-t border-white/5 flex justify-end">
                             <button
                                 onClick={() => setEditing(null)}
                                 className="px-6 py-2 text-gray-400 hover:text-white transition-colors text-sm font-medium"
@@ -349,3 +349,4 @@ export default function AdminPilotsPage() {
         </div>
     );
 }
+

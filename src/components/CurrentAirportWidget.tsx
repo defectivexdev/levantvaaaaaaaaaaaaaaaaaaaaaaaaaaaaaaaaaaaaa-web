@@ -75,7 +75,7 @@ export default function CurrentAirportWidget({ icao = 'OJAI' }: CurrentAirportWi
                             </div>
                             
                             {/* Parsed weather info */}
-                            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06]">
+                            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
                                 {airport.metar.temp !== undefined && (
                                     <div className="text-center">
                                         <Thermometer className="w-4 h-4 mx-auto text-orange-400 mb-1" />

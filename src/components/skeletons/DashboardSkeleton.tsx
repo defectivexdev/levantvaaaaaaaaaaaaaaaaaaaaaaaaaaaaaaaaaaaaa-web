@@ -109,7 +109,7 @@ export function PilotStatsDashboardSkeleton() {
 
 export function LiveMapSkeleton() {
     return (
-        <div className="relative rounded-xl overflow-hidden border border-white/10 bg-[#0a0a0a]" style={{ height: '600px' }}>
+        <div className="relative rounded-xl overflow-hidden border border-white/10 bg-panel" style={{ height: '600px' }}>
             <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center space-y-4">
                     <Skeleton className="h-16 w-16 rounded-full mx-auto" />

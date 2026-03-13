@@ -4,10 +4,11 @@
 
 @layer base {
   :root {
-    --background: 10 10 10;
-    --foreground: 255 255 255;
-    --primary: 14 165 233;
+    --background: 11 15 25; /* #0b0f19 */
+    --foreground: 229 231 235; /* #e5e7eb */
+    --primary: 29 78 216; /* #1d4ed8 */
     --accent-gold: 212 175 55;
+    --panel: 18 24 38; /* #121826 */
   }
 
   * {
@@ -22,16 +23,16 @@
 
   body {
     font-family: var(--font-winky), var(--font-manrope), system-ui, sans-serif;
-    background: #0f0f0f;
-    color: white;
+    background: #0b0f19;
+    color: #e5e7eb;
     min-height: 100vh;
   }
 }
 
 @layer components {
   .glass-card {
-    background: #0a0a0a;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: #121826;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     transition: all 0.2s ease;
   }

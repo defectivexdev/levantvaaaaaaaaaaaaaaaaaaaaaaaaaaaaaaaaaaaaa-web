@@ -163,7 +163,7 @@ export default function AdminNotamsPage() {
                         </thead>
                         <tbody>
                             {notams.map((notam) => (
-                                <tr key={notam._id} className="border-t border-white/[0.06] hover:bg-white/5">
+                                <tr key={notam._id} className="border-t border-white/5 hover:bg-white/5">
                                     <td className="p-4 text-white">{notam.title}</td>
                                     <td className="p-4">
                                         <span className={`text-xs px-2 py-1 rounded uppercase ${
@@ -222,7 +222,7 @@ export default function AdminNotamsPage() {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                    <div className="bg-[#0a0a0a] rounded-xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
+                    <div className="bg-panel backdrop-blur-sm rounded-xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between p-6 border-b border-white/10">
                             <h2 className="text-xl font-bold text-white">
                                 {editing ? 'Edit Post' : 'New Post'}
@@ -238,7 +238,7 @@ export default function AdminNotamsPage() {
                                     type="text"
                                     value={title}
                                     onChange={e => setTitle(e.target.value)}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                 />
                             </div>
                             <div>
@@ -247,7 +247,7 @@ export default function AdminNotamsPage() {
                                     value={content}
                                     onChange={e => setContent(e.target.value)}
                                     rows={5}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -256,7 +256,7 @@ export default function AdminNotamsPage() {
                                     <select
                                         value={type}
                                         onChange={e => setType(e.target.value as any)}
-                                        className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                        className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                     >
                                         <option value="news">News</option>
                                         <option value="notam">NOTAM</option>
@@ -268,7 +268,7 @@ export default function AdminNotamsPage() {
                                     <select
                                         value={priority}
                                         onChange={e => setPriority(e.target.value as any)}
-                                        className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                        className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                     >
                                         <option value="normal">Normal</option>
                                         <option value="important">Important</option>
@@ -285,7 +285,7 @@ export default function AdminNotamsPage() {
                                                 type="datetime-local"
                                                 value={eventDate}
                                                 onChange={e => setEventDate(e.target.value)}
-                                                className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                                className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                             />
                                         </div>
                                         <div>
@@ -294,7 +294,7 @@ export default function AdminNotamsPage() {
                                                 type="number"
                                                 value={bonusCredits}
                                                 onChange={e => setBonusCredits(e.target.value)}
-                                                className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                                className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                             />
                                         </div>
                                     </div>
@@ -304,7 +304,7 @@ export default function AdminNotamsPage() {
                                             type="text"
                                             value={eventLocation}
                                             onChange={e => setEventLocation(e.target.value)}
-                                            className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                            className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                         />
                                     </div>
                                 </>
@@ -331,3 +331,4 @@ export default function AdminNotamsPage() {
         </div>
     );
 }
+

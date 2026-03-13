@@ -8,7 +8,7 @@ export default function TourRulesPage() {
     return (
         <div className="space-y-10">
             <div className="max-w-4xl mx-auto">
-                <div className="flex items-center justify-between bg-[#0a0a0a] border border-white/[0.08] rounded-2xl px-4 py-3">
+                <div className="flex items-center justify-between bg-panel backdrop-blur-sm border border-white/10 rounded-2xl px-4 py-3">
                     <Link href="/portal/tours" className="inline-flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Back to Tours
@@ -44,8 +44,8 @@ export default function TourRulesPage() {
             </div>
 
             {/* General Rules */}
-            <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-8 space-y-6">
-                <div className="flex items-center gap-3 pb-4 border-b border-white/[0.08]">
+            <div className="bg-panel backdrop-blur-sm border border-white/10 rounded-2xl p-8 space-y-6">
+                <div className="flex items-center gap-3 pb-4 border-b border-white/10">
                     <Shield className="w-6 h-6 text-cyan-400" />
                     <h2 className="text-2xl font-bold text-white">General Rules</h2>
                 </div>
@@ -94,8 +94,8 @@ export default function TourRulesPage() {
             </div>
 
             {/* Submission Process */}
-            <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-8 space-y-6">
-                <div className="flex items-center gap-3 pb-4 border-b border-white/[0.08]">
+            <div className="bg-panel backdrop-blur-sm border border-white/10 rounded-2xl p-8 space-y-6">
+                <div className="flex items-center gap-3 pb-4 border-b border-white/10">
                     <AlertTriangle className="w-6 h-6 text-yellow-400" />
                     <h2 className="text-2xl font-bold text-white">Submission Process</h2>
                 </div>
@@ -136,8 +136,8 @@ export default function TourRulesPage() {
             </div>
 
             {/* Validation Outcomes */}
-            <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-8 space-y-6">
-                <div className="flex items-center gap-3 pb-4 border-b border-white/[0.08]">
+            <div className="bg-panel backdrop-blur-sm border border-white/10 rounded-2xl p-8 space-y-6">
+                <div className="flex items-center gap-3 pb-4 border-b border-white/10">
                     <Shield className="w-6 h-6 text-purple-400" />
                     <h2 className="text-2xl font-bold text-white">Validation Outcomes</h2>
                 </div>
@@ -217,3 +217,4 @@ export default function TourRulesPage() {
         </div>
     );
 }
+

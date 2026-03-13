@@ -40,7 +40,7 @@ export default function ActivitiesPage() {
                     <h1 className="text-2xl font-bold text-white">Tours & Events</h1>
                     <p className="text-gray-500 text-xs mt-0.5">Community activities, group flights, and multi-leg tours</p>
                 </div>
-                <div className="flex gap-1 bg-[#0a0a0a] p-1 rounded-xl border border-white/[0.06]">
+                <div className="flex gap-1 bg-panel backdrop-blur-sm p-1 rounded-xl border border-white/5">
                     {([['all', 'All', null], ['Tour', 'Tours', Map], ['Event', 'Events', Calendar]] as const).map(([key, label, Icon]) => (
                         <button 
                             key={key}
@@ -58,7 +58,7 @@ export default function ActivitiesPage() {
 
             {loading ? (
                 <div className="space-y-4 animate-pulse">
-                    {[...Array(3)].map((_, i) => <div key={i} className="h-48 bg-[#0a0a0a] rounded-2xl border border-white/[0.06]" />)}
+                    {[...Array(3)].map((_, i) => <div key={i} className="h-48 bg-panel backdrop-blur-sm rounded-2xl border border-white/5" />)}
                 </div>
             ) : (
                 <>
@@ -77,7 +77,7 @@ export default function ActivitiesPage() {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-8 text-center text-gray-500 text-sm">
+                                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-8 text-center text-gray-500 text-sm">
                                     No tours available
                                 </div>
                             )}
@@ -99,7 +99,7 @@ export default function ActivitiesPage() {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-8 text-center text-gray-500 text-sm">
+                                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-8 text-center text-gray-500 text-sm">
                                     No events available
                                 </div>
                             )}
@@ -110,3 +110,4 @@ export default function ActivitiesPage() {
         </div>
     );
 }
+

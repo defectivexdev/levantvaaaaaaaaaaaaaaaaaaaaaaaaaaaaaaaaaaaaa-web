@@ -302,7 +302,7 @@ export default function DeveloperManagementPage() {
             {/* Actions Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Test Email */}
-                <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6 hover:border-blue-500/30 transition-all">
+                <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/5 rounded-xl p-6 hover:border-blue-500/30 transition-all">
                     <div className="flex items-start gap-3 mb-4">
                         <div className="p-2 rounded-lg bg-blue-500/10">
                             <Mail className="w-5 h-5 text-blue-400" />
@@ -320,7 +320,7 @@ export default function DeveloperManagementPage() {
                             value={testEmail}
                             onChange={(e) => setTestEmail(e.target.value)}
                             placeholder="Enter test email address"
-                            className="w-full px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
+                            className="w-full px-3 py-2 rounded-lg bg-panel backdrop-blur-sm border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
                         />
                         <button
                             onClick={handleTestEmail}
@@ -343,7 +343,7 @@ export default function DeveloperManagementPage() {
                 </div>
 
                 {/* Clear Download Logs */}
-                <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6 hover:border-purple-500/30 transition-all">
+                <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/5 rounded-xl p-6 hover:border-purple-500/30 transition-all">
                     <div className="flex items-start gap-3 mb-4">
                         <div className="p-2 rounded-lg bg-purple-500/10">
                             <Trash2 className="w-5 h-5 text-purple-400" />
@@ -375,7 +375,7 @@ export default function DeveloperManagementPage() {
                 </div>
 
                 {/* Clear Bids */}
-                <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6 hover:border-pink-500/30 transition-all">
+                <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/5 rounded-xl p-6 hover:border-pink-500/30 transition-all">
                     <div className="flex items-start gap-3 mb-4">
                         <div className="p-2 rounded-lg bg-pink-500/10">
                             <Trash2 className="w-5 h-5 text-pink-400" />
@@ -408,7 +408,7 @@ export default function DeveloperManagementPage() {
             </div>
 
             {/* Country Blacklist Section */}
-            <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6">
+            <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/5 rounded-xl p-6">
                 <div className="flex items-start justify-between mb-6">
                     <div className="flex items-start gap-3">
                         <div className="p-2 rounded-lg bg-red-500/10">
@@ -432,7 +432,7 @@ export default function DeveloperManagementPage() {
 
                 {/* Add Country Form */}
                 {showAddForm && (
-                    <div className="mb-4 p-4 bg-[#0a0a0a] border border-white/10 rounded-lg space-y-3">
+                    <div className="mb-4 p-4 bg-panel backdrop-blur-sm border border-white/10 rounded-lg space-y-3">
                         <div className="grid grid-cols-2 gap-3">
                             <input
                                 type="text"
@@ -440,14 +440,14 @@ export default function DeveloperManagementPage() {
                                 onChange={(e) => setNewCountry({ ...newCountry, code: e.target.value.toUpperCase() })}
                                 placeholder="Country Code (e.g., US) *Required"
                                 maxLength={2}
-                                className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors uppercase"
+                                className="px-3 py-2 rounded-lg bg-panel backdrop-blur-sm border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors uppercase"
                             />
                             <input
                                 type="text"
                                 value={newCountry.name}
                                 onChange={(e) => setNewCountry({ ...newCountry, name: e.target.value })}
                                 placeholder="Country Name (optional)"
-                                className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
+                                className="px-3 py-2 rounded-lg bg-panel backdrop-blur-sm border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
                             />
                         </div>
                         <input
@@ -455,7 +455,7 @@ export default function DeveloperManagementPage() {
                             value={newCountry.reason}
                             onChange={(e) => setNewCountry({ ...newCountry, reason: e.target.value })}
                             placeholder="Reason (optional)"
-                            className="w-full px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
+                            className="w-full px-3 py-2 rounded-lg bg-panel backdrop-blur-sm border border-white/10 text-white text-sm focus:outline-none focus:border-red-500/50 transition-colors"
                         />
                         <button
                             onClick={handleAddCountry}
@@ -487,7 +487,7 @@ export default function DeveloperManagementPage() {
                         blacklist.map((entry) => (
                             <div
                                 key={entry._id}
-                                className="flex items-center justify-between p-3 bg-[#0a0a0a] border border-white/10 rounded-lg hover:border-red-500/30 transition-all"
+                                className="flex items-center justify-between p-3 bg-panel backdrop-blur-sm border border-white/10 rounded-lg hover:border-red-500/30 transition-all"
                             >
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
@@ -522,7 +522,7 @@ export default function DeveloperManagementPage() {
             </div>
 
             {/* Country Bypass Section */}
-            <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/[0.06] rounded-xl p-6">
+            <div className="bg-gradient-to-br from-[#0a0e17] to-[#0d1117] border border-white/5 rounded-xl p-6">
                 <div className="flex items-start justify-between mb-6">
                     <div className="flex items-start gap-3">
                         <div className="p-2 rounded-lg bg-emerald-500/10">
@@ -546,14 +546,14 @@ export default function DeveloperManagementPage() {
 
                 {/* Add Bypass Form */}
                 {showBypassForm && (
-                    <div className="mb-4 p-4 bg-[#0a0a0a] border border-white/10 rounded-lg space-y-3">
+                    <div className="mb-4 p-4 bg-panel backdrop-blur-sm border border-white/10 rounded-lg space-y-3">
                         <div className="grid grid-cols-2 gap-3">
                             <input
                                 type="text"
                                 value={newBypass.pilotId}
                                 onChange={(e) => setNewBypass({ ...newBypass, pilotId: e.target.value.toUpperCase() })}
                                 placeholder="Pilot ID (e.g., LVT123) *Required"
-                                className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors uppercase"
+                                className="px-3 py-2 rounded-lg bg-panel backdrop-blur-sm border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors uppercase"
                             />
                             <input
                                 type="text"
@@ -561,7 +561,7 @@ export default function DeveloperManagementPage() {
                                 onChange={(e) => setNewBypass({ ...newBypass, countryCode: e.target.value.toUpperCase() })}
                                 placeholder="Country Code (optional)"
                                 maxLength={2}
-                                className="px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors uppercase"
+                                className="px-3 py-2 rounded-lg bg-panel backdrop-blur-sm border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors uppercase"
                             />
                         </div>
                         <input
@@ -569,7 +569,7 @@ export default function DeveloperManagementPage() {
                             value={newBypass.reason}
                             onChange={(e) => setNewBypass({ ...newBypass, reason: e.target.value })}
                             placeholder="Reason (optional)"
-                            className="w-full px-3 py-2 rounded-lg bg-[#0a0a0a] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
+                            className="w-full px-3 py-2 rounded-lg bg-panel backdrop-blur-sm border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
                         />
                         <button
                             onClick={handleAddBypass}
@@ -601,7 +601,7 @@ export default function DeveloperManagementPage() {
                         bypasses.map((entry) => (
                             <div
                                 key={entry._id}
-                                className="flex items-center justify-between p-3 bg-[#0a0a0a] border border-white/10 rounded-lg hover:border-emerald-500/30 transition-all"
+                                className="flex items-center justify-between p-3 bg-panel backdrop-blur-sm border border-white/10 rounded-lg hover:border-emerald-500/30 transition-all"
                             >
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
@@ -640,3 +640,4 @@ export default function DeveloperManagementPage() {
         </div>
     );
 }
+

@@ -9,7 +9,7 @@ export default function Partners() {
     ];
 
     return (
-        <section id="partners" className="py-24 bg-transparent border-t border-white/[0.06] relative overflow-hidden">
+        <section id="partners" className="py-24 bg-transparent border-t border-white/5 relative overflow-hidden">
             {/* Background Decorative Element */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-accent-gold/5 blur-[100px] -z-10" />
 

@@ -63,7 +63,7 @@ export const DownloadButton = ({ owner, repo }: DownloadButtonProps) => {
 
     if (loading) {
         return (
-            <div className="animate-pulse bg-white/5 border border-white/[0.08] rounded-2xl h-16 w-64 flex items-center justify-center">
+            <div className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-16 w-64 flex items-center justify-center">
                 <div className="text-xs text-white/40 tracking-widest font-mono uppercase">Checking Latest Version...</div>
             </div>
         );

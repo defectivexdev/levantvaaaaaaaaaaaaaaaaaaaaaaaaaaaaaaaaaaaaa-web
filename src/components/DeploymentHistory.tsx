@@ -51,7 +51,7 @@ export const DeploymentHistory = () => {
   }, []);
 
   return (
-    <div className="glass-card p-6 rounded-2xl border border-white/[0.08] backdrop-blur-md overflow-hidden bg-black/20">
+    <div className="glass-card p-6 rounded-2xl border border-white/10 backdrop-blur-md overflow-hidden bg-black/20">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-bold flex items-center gap-2 text-white">
           <Activity size={20} className="text-accent-gold" />
@@ -68,7 +68,7 @@ export const DeploymentHistory = () => {
       
       <div className="overflow-x-auto custom-scrollbar">
         <table className="w-full text-left text-sm">
-          <thead className="text-gray-400 border-b border-white/[0.06] uppercase tracking-widest text-[10px]">
+          <thead className="text-gray-400 border-b border-white/5 uppercase tracking-widest text-[10px]">
             <tr>
               <th className="pb-3 font-medium">Version</th>
               <th className="pb-3 font-medium">Changes / Commit</th>

@@ -176,7 +176,7 @@ export default function ToursPage() {
                             transition={{ delay: index * 0.1 }}
                         >
                             <Link href={`/portal/tours/${tour._id}`}>
-                                <div className="group relative bg-[#0a0a0a] border-2 border-white/[0.08] rounded-3xl overflow-hidden hover:border-cyan-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10">
+                                <div className="group relative bg-panel backdrop-blur-sm border-2 border-white/10 rounded-3xl overflow-hidden hover:border-cyan-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/10">
                                     {/* Banner Image */}
                                     <div className="relative h-48 overflow-hidden">
                                         {tour.image ? (
@@ -242,7 +242,7 @@ export default function ToursPage() {
                                         </div>
 
                                         {/* Stats Grid */}
-                                        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.08]">
+                                        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
                                             <div className="text-center">
                                                 <div className="flex items-center justify-center mb-2">
                                                     <Plane className="w-5 h-5 text-cyan-400" />
@@ -298,3 +298,4 @@ export default function ToursPage() {
         </div>
     );
 }
+

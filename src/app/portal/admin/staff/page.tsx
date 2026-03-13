@@ -146,7 +146,7 @@ export default function AdminStaffPage() {
                 
                 {/* --- Add Staff Member Form --- */}
                 <div className="space-y-6">
-                    <div className="flex items-center justify-center gap-3 pb-2 border-b border-white/[0.06]">
+                    <div className="flex items-center justify-center gap-3 pb-2 border-b border-white/5">
                         <div className="w-10 h-10 rounded-xl bg-emerald-400/10 flex items-center justify-center border border-emerald-400/20">
                             {editingMemberId ? <Edit className="text-emerald-400" size={20} /> : <Plus className="text-emerald-400" size={20} />}
                         </div>
@@ -155,14 +155,14 @@ export default function AdminStaffPage() {
                         </h2>
                     </div>
 
-                    <form onSubmit={handleAddOrUpdateStaff} className="glass-card p-8 rounded-3xl space-y-8 border border-white/[0.08] bg-black/40 backdrop-blur-md text-white">
+                    <form onSubmit={handleAddOrUpdateStaff} className="glass-card p-8 rounded-3xl space-y-8 border border-white/10 bg-black/40 backdrop-blur-md text-white">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1.5">
                                 <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Pilot ID</label>
                                 <input 
                                     type="text" placeholder="e.g. LVT001" 
                                     value={pilotIdInput} onChange={e => setPilotIdInput(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm font-mono outline-none focus:border-emerald-500/50 transition-all placeholder:text-gray-700"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm font-mono outline-none focus:border-emerald-500/50 transition-all placeholder:text-gray-700"
                                     required
                                     disabled={!!editingMemberId}
                                 />
@@ -172,7 +172,7 @@ export default function AdminStaffPage() {
                                 <input 
                                     type="text" placeholder="Optional" 
                                     value={memberDetails.name} onChange={e => setMemberDetails({...memberDetails, name: e.target.value})}
-                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
                                 />
                             </div>
                         </div>
@@ -181,7 +181,7 @@ export default function AdminStaffPage() {
                             <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Role Title</label>
                             <select 
                                 value={memberDetails.roleTitle} onChange={e => setMemberDetails({...memberDetails, roleTitle: e.target.value})}
-                                className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm outline-none focus:border-accent-gold/50 transition-all font-medium appearance-none cursor-pointer"
+                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm outline-none focus:border-accent-gold/50 transition-all font-medium appearance-none cursor-pointer"
                                 required
                             >
                                 <option value="" className="text-black">Select Position...</option>
@@ -205,13 +205,13 @@ export default function AdminStaffPage() {
                             </select>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/[0.06]">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
                             <div className="space-y-1.5">
                                 <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Direct Email</label>
                                 <input 
                                     type="email" placeholder="staff@levantva.com" 
                                     value={memberDetails.email} onChange={e => setMemberDetails({...memberDetails, email: e.target.value})}
-                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
                                 />
                             </div>
                             <div className="space-y-1.5">
@@ -219,7 +219,7 @@ export default function AdminStaffPage() {
                                 <input 
                                     type="text" placeholder="Discord User ID (for avatar)" 
                                     value={memberDetails.discord} onChange={e => setMemberDetails({...memberDetails, discord: e.target.value})}
-                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-[#5865F2]/50 transition-all placeholder:text-gray-700"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:border-[#5865F2]/50 transition-all placeholder:text-gray-700"
                                 />
                             </div>
                         </div>
@@ -239,7 +239,7 @@ export default function AdminStaffPage() {
 
                 {/* --- Current Staff List --- */}
                 <div className="space-y-6">
-                    <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
+                    <div className="flex items-center justify-between pb-2 border-b border-white/5">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-accent-gold/10 flex items-center justify-center border border-accent-gold/20">
                                 <Users className="text-accent-gold" size={20} />
@@ -255,10 +255,10 @@ export default function AdminStaffPage() {
                                 key={member._id}
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white/[0.03] p-6 rounded-3xl flex items-center justify-between border border-white/[0.06] hover:border-white/10 group transition-all"
+                                className="bg-white/[0.03] p-6 rounded-3xl flex items-center justify-between border border-white/5 hover:border-white/10 group transition-all"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-800 to-black p-0.5 flex items-center justify-center border border-white/[0.08]">
+                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-800 to-black p-0.5 flex items-center justify-center border border-white/10">
                                         <div className="w-full h-full rounded-[14px] overflow-hidden bg-zinc-900 flex items-center justify-center">
                                             {member.discord ? (
                                                 <img 
@@ -299,7 +299,7 @@ export default function AdminStaffPage() {
                         ))}
                         
                         {members.length === 0 && !loading && (
-                            <div className="col-span-full text-center py-20 border border-dashed border-white/[0.06] rounded-3xl bg-white/[0.01]">
+                            <div className="col-span-full text-center py-20 border border-dashed border-white/5 rounded-3xl bg-white/[0.01]">
                                 <p className="text-gray-600 text-xs font-bold uppercase tracking-widest">No Active Team Members</p>
                             </div>
                         )}
@@ -313,7 +313,7 @@ export default function AdminStaffPage() {
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                        className="bg-panel backdrop-blur-sm border border-white/10 rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between mb-6">
@@ -335,7 +335,7 @@ export default function AdminStaffPage() {
                                     <input 
                                         type="text" 
                                         value={pilotIdInput} 
-                                        className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm font-mono outline-none cursor-not-allowed opacity-50"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm font-mono outline-none cursor-not-allowed opacity-50"
                                         disabled
                                     />
                                 </div>
@@ -346,7 +346,7 @@ export default function AdminStaffPage() {
                                         placeholder="Optional" 
                                         value={memberDetails.name} 
                                         onChange={e => setMemberDetails({...memberDetails, name: e.target.value})}
-                                        className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
                                     />
                                 </div>
                             </div>
@@ -356,7 +356,7 @@ export default function AdminStaffPage() {
                                 <select 
                                     value={memberDetails.roleTitle} 
                                     onChange={e => setMemberDetails({...memberDetails, roleTitle: e.target.value})}
-                                    className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm outline-none focus:border-accent-gold/50 transition-all font-medium appearance-none cursor-pointer"
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm outline-none focus:border-accent-gold/50 transition-all font-medium appearance-none cursor-pointer"
                                     required
                                 >
                                     <option value="" className="text-black">Select Position...</option>
@@ -380,7 +380,7 @@ export default function AdminStaffPage() {
                                 </select>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/[0.06]">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
                                 <div className="space-y-1.5">
                                     <label className="text-[10px] text-gray-400 font-bold uppercase ml-1 tracking-widest">Direct Email</label>
                                     <input 
@@ -388,7 +388,7 @@ export default function AdminStaffPage() {
                                         placeholder="staff@levantva.com" 
                                         value={memberDetails.email} 
                                         onChange={e => setMemberDetails({...memberDetails, email: e.target.value})}
-                                        className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:border-white/20 transition-all placeholder:text-gray-700"
                                     />
                                 </div>
                                 <div className="space-y-1.5">
@@ -398,7 +398,7 @@ export default function AdminStaffPage() {
                                         placeholder="Discord User ID (for avatar)" 
                                         value={memberDetails.discord} 
                                         onChange={e => setMemberDetails({...memberDetails, discord: e.target.value})}
-                                        className="w-full bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-white text-sm focus:border-[#5865F2]/50 transition-all placeholder:text-gray-700"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white text-sm focus:border-[#5865F2]/50 transition-all placeholder:text-gray-700"
                                     />
                                 </div>
                             </div>
@@ -426,3 +426,4 @@ export default function AdminStaffPage() {
         </div>
     );
 }
+

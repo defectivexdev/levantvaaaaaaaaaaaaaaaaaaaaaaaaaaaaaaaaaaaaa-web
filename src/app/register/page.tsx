@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import { BorderBeam } from '@/components/ui/border-beam';
 
 // Registration Page - Key System Removed

@@ -124,7 +124,7 @@ export default function AdminDOTMPage() {
     };
 
     const activeDotm = dotms.find(d => d.is_active);
-    const inputCls = "w-full bg-[#0a0a0a] border border-white/[0.08] rounded-xl px-4 py-3 text-white text-sm font-mono focus:border-accent-gold/50 focus:outline-none transition-colors";
+    const inputCls = "w-full bg-panel backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-mono focus:border-accent-gold/50 focus:outline-none transition-colors";
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
@@ -149,7 +149,7 @@ export default function AdminDOTMPage() {
             {/* Active DOTM Hero */}
             {activeDotm && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                    className="relative bg-[#0a0a0a] border border-accent-gold/20 rounded-2xl overflow-hidden"
+                    className="relative bg-panel backdrop-blur-sm border border-accent-gold/20 rounded-2xl overflow-hidden"
                 >
                     {activeDotm.banner_image && (
                         <div className="absolute inset-0">
@@ -183,7 +183,7 @@ export default function AdminDOTMPage() {
             <AnimatePresence>
                 {showForm && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                        <div className="bg-[#0a0a0a] border border-accent-gold/20 rounded-xl p-6">
+                        <div className="bg-panel backdrop-blur-sm border border-accent-gold/20 rounded-xl p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-sm font-bold text-white uppercase tracking-wider">Add New Destination</h2>
                                 <button onClick={() => setShowForm(false)} className="text-gray-500 hover:text-white"><X className="w-4 h-4" /></button>
@@ -220,14 +220,14 @@ export default function AdminDOTMPage() {
                                     <input type="file" ref={fileInputRef} accept="image/*" onChange={handleImageUpload} className="hidden" />
                                     <div className="flex items-center gap-4">
                                         <button type="button" onClick={() => fileInputRef.current?.click()} disabled={uploading}
-                                            className="flex items-center gap-2 px-4 py-3 bg-[#0a0a0a] border border-white/[0.08] rounded-xl text-sm text-gray-400 hover:border-accent-gold/30 hover:text-white transition-colors disabled:opacity-50"
+                                            className="flex items-center gap-2 px-4 py-3 bg-panel backdrop-blur-sm border border-white/10 rounded-xl text-sm text-gray-400 hover:border-accent-gold/30 hover:text-white transition-colors disabled:opacity-50"
                                         >
                                             {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4" />}
                                             {uploading ? 'Uploading...' : 'Choose Image'}
                                         </button>
                                         {(imagePreview || bannerImage) && (
                                             <div className="relative group">
-                                                <img src={imagePreview || bannerImage} alt="Preview" className="h-12 w-20 object-cover rounded-lg border border-white/[0.08]" />
+                                                <img src={imagePreview || bannerImage} alt="Preview" className="h-12 w-20 object-cover rounded-lg border border-white/10" />
                                                 <button type="button" onClick={() => { setBannerImage(''); setImagePreview(null); }}
                                                     className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <X className="w-3 h-3 text-white" />
@@ -251,8 +251,8 @@ export default function AdminDOTMPage() {
             </AnimatePresence>
 
             {/* History Table */}
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
+                <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                     <Calendar className="w-4 h-4 text-gray-400" />
                     <h2 className="text-sm font-bold text-white uppercase tracking-wider">History</h2>
                     <span className="ml-auto text-[10px] text-gray-600 font-mono">{dotms.length} destinations</span>
@@ -275,13 +275,13 @@ export default function AdminDOTMPage() {
                                 <div className="flex items-center gap-4">
                                     {dotm.banner_image ? (
                                         <img src={dotm.banner_image} alt="" className={`w-14 h-14 rounded-xl object-cover border transition-all ${
-                                            dotm.is_active ? 'border-accent-gold/30 shadow-[0_0_20px_rgba(234,179,8,0.1)]' : 'border-white/[0.06]'
+                                            dotm.is_active ? 'border-accent-gold/30 shadow-[0_0_20px_rgba(234,179,8,0.1)]' : 'border-white/5'
                                         }`} />
                                     ) : (
                                         <div className={`w-14 h-14 rounded-xl flex items-center justify-center font-mono font-bold text-sm border transition-all ${
                                             dotm.is_active 
                                                 ? 'bg-accent-gold/10 text-accent-gold border-accent-gold/30 shadow-[0_0_20px_rgba(234,179,8,0.1)]' 
-                                                : 'bg-white/[0.02] text-gray-500 border-white/[0.06]'
+                                                : 'bg-white/[0.02] text-gray-500 border-white/5'
                                         }`}>
                                             {dotm.airport_icao}
                                         </div>
@@ -332,3 +332,4 @@ export default function AdminDOTMPage() {
         </div>
     );
 }
+

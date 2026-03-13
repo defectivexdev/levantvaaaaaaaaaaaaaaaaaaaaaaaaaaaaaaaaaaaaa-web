@@ -153,7 +153,7 @@ export default function AdminPirepsPage() {
 
             {/* Filters */}
             <div className="flex flex-col lg:flex-row gap-4">
-                <div className="flex gap-2 bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] p-1.5 rounded-2xl border border-white/[0.08] overflow-x-auto flex-shrink-0 shadow-lg shadow-black/20">
+                <div className="flex gap-2 bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] p-1.5 rounded-2xl border border-white/10 overflow-x-auto flex-shrink-0 shadow-lg shadow-black/20">
                     {['pending', 'approved', 'rejected', 'all'].map(s => {
                         const count = s === 'all' ? allPireps.length : allPireps.filter(p => {
                             if (s === 'pending') return p.approved_status === 0;
@@ -192,15 +192,15 @@ export default function AdminPirepsPage() {
                         placeholder="Search by Pilot or Callsign..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.currentTarget.value)}
-                        className="w-full bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
+                        className="w-full bg-gradient-to-r from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 transition-all shadow-lg shadow-black/20"
                     />
                 </div>
             </div>
 
             {/* Table */}
-            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl shadow-black/30">
+            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-black/30">
                 <table className="w-full text-left">
-                    <thead className="bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] border-b border-white/[0.06]">
+                    <thead className="bg-gradient-to-r from-[#0c0c0c] to-[#0a0a0a] border-b border-white/5">
                         <tr className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
                             <th className="px-6 py-4">Pilot</th>
                             <th className="px-6 py-4">Flight</th>
@@ -230,7 +230,7 @@ export default function AdminPirepsPage() {
                             <tr key={p._id} className="hover:bg-gradient-to-r hover:from-accent-gold/5 hover:to-transparent transition-all group border-l-2 border-transparent hover:border-accent-gold/30">
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#161616] to-[#0a0a0a] border border-white/[0.08] flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0 group-hover:border-accent-gold/40 group-hover:shadow-lg group-hover:shadow-accent-gold/10 transition-all">
+                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#161616] to-[#0a0a0a] border border-white/10 flex items-center justify-center text-xs font-bold text-gray-400 flex-shrink-0 group-hover:border-accent-gold/40 group-hover:shadow-lg group-hover:shadow-accent-gold/10 transition-all">
                                             <Plane size={16} className="text-gray-500" />
                                         </div>
                                         <div>
@@ -293,7 +293,7 @@ export default function AdminPirepsPage() {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={() => setSelectedPirep(null)} />
                     <div className="relative w-full max-w-3xl bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-accent-gold/[0.15] rounded-2xl p-8 shadow-2xl shadow-accent-gold/10 animate-in zoom-in-95 duration-200">
-                        <div className="flex justify-between items-start mb-6 pb-6 border-b border-white/[0.08]">
+                        <div className="flex justify-between items-start mb-6 pb-6 border-b border-white/10">
                             <div>
                                 <h3 className="text-3xl font-black text-white bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">{selectedPirep.callsign}</h3>
                                 <p className="text-gray-400 text-sm mt-1 flex items-center gap-2">
@@ -313,22 +313,22 @@ export default function AdminPirepsPage() {
                         </div>
 
                         <div className="grid grid-cols-4 gap-3 mb-6">
-                            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
+                            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/10 p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
                                 <Clock size={16} className="mx-auto mb-2 text-cyan-400" />
                                 <p className="text-sm font-bold font-mono text-cyan-400">{Math.floor(selectedPirep.flight_time / 60).toString().padStart(2, '0')}h {(selectedPirep.flight_time % 60).toString().padStart(2, '0')}m</p>
                                 <p className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-1">Flight Time</p>
                             </div>
-                            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
+                            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/10 p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
                                 <TrendingUp size={16} className={`mx-auto mb-2 ${selectedPirep.landing_rate < -500 ? 'text-red-400' : 'text-emerald-400'}`} />
                                 <p className={`text-sm font-bold font-mono ${selectedPirep.landing_rate < -500 ? 'text-red-400' : 'text-emerald-400'}`}>{selectedPirep.landing_rate}</p>
                                 <p className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-1">Landing Rate</p>
                             </div>
-                            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
+                            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/10 p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
                                 <CheckCircle size={16} className={`mx-auto mb-2 ${selectedPirep.score < 80 ? 'text-red-400' : 'text-emerald-400'}`} />
                                 <p className={`text-sm font-bold font-mono ${selectedPirep.score < 80 ? 'text-red-400' : 'text-emerald-400'}`}>{selectedPirep.score}</p>
                                 <p className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-1">Score</p>
                             </div>
-                            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/[0.08] p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
+                            <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] rounded-xl border border-white/10 p-4 text-center hover:border-accent-gold/20 transition-all shadow-lg shadow-black/20">
                                 <Plane size={16} className="mx-auto mb-2 text-blue-400" />
                                 <p className="text-sm font-bold font-mono text-blue-400">{selectedPirep.departure_icao}</p>
                                 <p className="text-[8px] text-gray-500 uppercase tracking-widest font-bold mt-1">Departure</p>
@@ -379,7 +379,7 @@ export default function AdminPirepsPage() {
                                 <p className="text-xs text-gray-500 uppercase mb-3 flex items-center gap-2 font-bold tracking-wider">
                                     <MessageSquare size={14} className="text-accent-gold" /> Pilot Comments
                                 </p>
-                                <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-xl p-5 text-sm text-gray-300 italic shadow-lg shadow-black/20">
+                                <div className="bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-xl p-5 text-sm text-gray-300 italic shadow-lg shadow-black/20">
                                     "{selectedPirep.comments}"
                                 </div>
                             </div>
@@ -393,7 +393,7 @@ export default function AdminPirepsPage() {
                             <textarea
                                 value={adminComment}
                                 onChange={(e) => setAdminComment(e.currentTarget.value)}
-                                className="w-full bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] rounded-xl p-4 text-white focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 outline-none h-28 text-sm shadow-lg shadow-black/20 transition-all"
+                                className="w-full bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 rounded-xl p-4 text-white focus:border-accent-gold/40 focus:ring-2 focus:ring-accent-gold/10 outline-none h-28 text-sm shadow-lg shadow-black/20 transition-all"
                                 placeholder="Reason for approval/rejection..."
                             />
                             
@@ -416,7 +416,7 @@ export default function AdminPirepsPage() {
                                 <button
                                     onClick={() => setSelectedPirep(null)}
                                     disabled={processing}
-                                    className="px-6 py-3.5 bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/[0.08] text-gray-400 hover:text-white hover:border-white/[0.15] rounded-xl transition-all font-bold"
+                                    className="px-6 py-3.5 bg-gradient-to-br from-[#0a0a0a] to-[#0d0d0d] border border-white/10 text-gray-400 hover:text-white hover:border-white/[0.15] rounded-xl transition-all font-bold"
                                 >
                                     Cancel
                                 </button>
@@ -438,9 +438,10 @@ export default function AdminPirepsPage() {
             {lightboxImg && (
                 <div className="fixed inset-0 z-[200] flex items-center justify-center p-8 bg-black/90 backdrop-blur-md" onClick={() => setLightboxImg(null)}>
                     <button onClick={() => setLightboxImg(null)} className="absolute top-6 right-6 text-white/60 hover:text-white text-3xl font-bold">&times;</button>
-                    <img src={lightboxImg} alt="Flight Proof" className="max-w-full max-h-full rounded-xl shadow-2xl border border-white/[0.08] object-contain" />
+                    <img src={lightboxImg} alt="Flight Proof" className="max-w-full max-h-full rounded-xl shadow-2xl border border-white/10 object-contain" />
                 </div>
             )}
         </div>
     );
 }
+

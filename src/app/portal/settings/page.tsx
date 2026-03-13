@@ -129,7 +129,7 @@ export default function SettingsPage() {
         }
     };
 
-    const inputCls = "w-full bg-[#0a0a0a] border border-white/[0.08] rounded-xl px-4 py-3 text-white text-sm font-mono focus:border-accent-gold/50 focus:outline-none transition-colors";
+    const inputCls = "w-full bg-panel backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-mono focus:border-accent-gold/50 focus:outline-none transition-colors";
 
     return (
         <div className="max-w-2xl mx-auto space-y-6">
@@ -145,8 +145,8 @@ export default function SettingsPage() {
             </div>
 
             {/* Integrations - Combined Section */}
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
+                <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                     <Wifi className="w-4 h-4 text-amber-500" />
                     <h2 className="text-sm font-bold text-white uppercase tracking-wider">SimBrief / ACARS / Network</h2>
                 </div>
@@ -166,7 +166,7 @@ export default function SettingsPage() {
                         </div>
                     </div>
 
-                    <div className="border-t border-white/[0.06] pt-6" />
+                    <div className="border-t border-white/5 pt-6" />
 
                     {/* ACARS */}
                     <div className="space-y-4">
@@ -183,10 +183,10 @@ export default function SettingsPage() {
                             <label className="block text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1.5">Weight Unit</label>
                             <div className="flex gap-2">
                                 <button type="button" onClick={() => setWeightUnit('lbs')}
-                                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all border ${weightUnit === 'lbs' ? 'bg-accent-gold/20 border-accent-gold/40 text-accent-gold' : 'bg-[#0a0a0a] border-white/10 text-gray-400 hover:border-white/20'}`}
+                                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all border ${weightUnit === 'lbs' ? 'bg-accent-gold/20 border-accent-gold/40 text-accent-gold' : 'bg-panel backdrop-blur-sm border-white/10 text-gray-400 hover:border-white/20'}`}
                                 >LBS</button>
                                 <button type="button" onClick={() => setWeightUnit('kgs')}
-                                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all border ${weightUnit === 'kgs' ? 'bg-accent-gold/20 border-accent-gold/40 text-accent-gold' : 'bg-[#0a0a0a] border-white/10 text-gray-400 hover:border-white/20'}`}
+                                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all border ${weightUnit === 'kgs' ? 'bg-accent-gold/20 border-accent-gold/40 text-accent-gold' : 'bg-panel backdrop-blur-sm border-white/10 text-gray-400 hover:border-white/20'}`}
                                 >KGS</button>
                             </div>
                             <p className="text-[10px] text-gray-600 mt-1.5">Used across the portal for fuel, cargo, and payload values</p>
@@ -205,7 +205,7 @@ export default function SettingsPage() {
                         </div>
                     </div>
 
-                    <div className="border-t border-white/[0.06] pt-6" />
+                    <div className="border-t border-white/5 pt-6" />
 
                     {/* Network */}
                     <div className="space-y-4">
@@ -218,7 +218,7 @@ export default function SettingsPage() {
                             <button
                                 type="button"
                                 onClick={() => setCountryDropdownOpen(!countryDropdownOpen)}
-                                className="w-full bg-[#0a0a0a] border border-white/[0.08] rounded-xl px-4 py-3 text-white text-sm font-mono focus:border-accent-gold/50 focus:outline-none transition-colors flex items-center justify-between"
+                                className="w-full bg-panel backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-mono focus:border-accent-gold/50 focus:outline-none transition-colors flex items-center justify-between"
                             >
                                 {country ? (
                                     <span className="flex items-center gap-2">
@@ -232,7 +232,7 @@ export default function SettingsPage() {
                             </button>
                             
                             {countryDropdownOpen && (
-                                <div className="absolute z-50 w-full mt-2 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-2xl max-h-64 overflow-hidden">
+                                <div className="absolute z-50 w-full mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl max-h-64 overflow-hidden">
                                     <div className="max-h-64 overflow-y-auto">
                                         {countries.map(c => (
                                             <button
@@ -270,8 +270,8 @@ export default function SettingsPage() {
             </div>
 
             {/* Password */}
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
-                <div className="px-6 py-4 border-b border-white/[0.06] flex items-center gap-3">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
+                <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                     <Lock className="w-4 h-4 text-red-400" />
                     <h2 className="text-sm font-bold text-white uppercase tracking-wider">Change Password</h2>
                 </div>
@@ -312,3 +312,4 @@ export default function SettingsPage() {
         </div>
     );
 }
+

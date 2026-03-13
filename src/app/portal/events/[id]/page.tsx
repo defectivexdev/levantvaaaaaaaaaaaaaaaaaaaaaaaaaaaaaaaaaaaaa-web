@@ -134,7 +134,7 @@ export default function EventDetailPage() {
                 Back to Events
             </Link>
 
-            <div className="relative h-80 rounded-3xl overflow-hidden border-2 border-white/[0.08]">
+            <div className="relative h-80 rounded-3xl overflow-hidden border-2 border-white/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={bannerUrl} alt={event.title} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
@@ -160,7 +160,7 @@ export default function EventDetailPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="space-y-6">
-                    <div className="bg-[#0a0a0a] border-2 border-white/[0.08] rounded-3xl p-6 space-y-5">
+                    <div className="bg-panel border-2 border-white/10 rounded-3xl p-6 space-y-5">
                         <h3 className="text-lg font-bold text-white">Event Info</h3>
 
                         <div className="space-y-3">
@@ -196,7 +196,7 @@ export default function EventDetailPage() {
                             </div>
                         </div>
 
-                        <div className="pt-3 border-t border-white/[0.08]">
+                        <div className="pt-3 border-t border-white/10">
                             {bookingStatus === 'booked' ? (
                                 <button
                                     onClick={handleCancel}
@@ -218,7 +218,7 @@ export default function EventDetailPage() {
                     </div>
                 </div>
 
-                <div className="lg:col-span-2 bg-[#0a0a0a] border-2 border-white/[0.08] rounded-3xl p-8">
+                <div className="lg:col-span-2 bg-panel border-2 border-white/10 rounded-3xl p-8">
                     <h3 className="text-2xl font-black text-white mb-4">Briefing</h3>
                     <div className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
                         {event.description}

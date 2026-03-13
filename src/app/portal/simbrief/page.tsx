@@ -159,7 +159,7 @@ export default function BookFlightPage() {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="relative overflow-hidden bg-[#0a0a0a] border-2 border-cyan-500/30 rounded-3xl p-6 shadow-2xl shadow-cyan-500/10"
+                    className="relative overflow-hidden bg-panel backdrop-blur-sm border-2 border-cyan-500/30 rounded-3xl p-6 shadow-2xl shadow-cyan-500/10"
                 >
                     <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 blur-3xl" />
                     <div className="relative space-y-4">
@@ -221,7 +221,7 @@ export default function BookFlightPage() {
             {/* Main Card */}
             <div className="grid md:grid-cols-2 gap-6">
                 {/* Instructions Card */}
-                <div className="bg-[#0a0a0a] rounded-3xl border border-white/[0.08] p-6 space-y-6">
+                <div className="bg-panel backdrop-blur-sm rounded-3xl border border-white/10 p-6 space-y-6">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
                             <MapPin className="w-5 h-5 text-purple-400" />
@@ -265,7 +265,7 @@ export default function BookFlightPage() {
                 </div>
 
                 {/* Import Card */}
-                <div className="bg-[#0a0a0a] rounded-3xl border border-white/[0.08] p-6 space-y-6">
+                <div className="bg-panel backdrop-blur-sm rounded-3xl border border-white/10 p-6 space-y-6">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center">
                             <Settings2 className="w-5 h-5 text-cyan-400" />
@@ -334,3 +334,4 @@ export default function BookFlightPage() {
         </div>
     );
 }
+

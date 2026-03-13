@@ -233,7 +233,7 @@ export default function AdminToursPage() {
                         </thead>
                         <tbody>
                             {tours.map((tour) => (
-                                <tr key={tour._id} className="border-t border-white/[0.06] hover:bg-white/5">
+                                <tr key={tour._id} className="border-t border-white/5 hover:bg-white/5">
                                     <td className="p-4">
                                         <p className="text-white font-medium">{tour.name}</p>
                                         <p className="text-gray-500 text-sm">{tour.total_distance} nm</p>
@@ -273,7 +273,7 @@ export default function AdminToursPage() {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                    <div className="bg-[#0a0a0a] rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <div className="bg-panel backdrop-blur-sm rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between p-6 border-b border-white/10">
                             <h2 className="text-xl font-bold text-white">{editing ? 'Edit Tour' : 'New Tour'}</h2>
                             <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-white">
@@ -287,7 +287,7 @@ export default function AdminToursPage() {
                                     type="text"
                                     value={name}
                                     onChange={e => setName(e.target.value)}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                 />
                             </div>
                             <div>
@@ -296,7 +296,7 @@ export default function AdminToursPage() {
                                     value={description}
                                     onChange={e => setDescription(e.target.value)}
                                     rows={3}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                 />
                             </div>
 
@@ -307,7 +307,7 @@ export default function AdminToursPage() {
                                         type="datetime-local"
                                         value={startDateZulu}
                                         onChange={(e) => setStartDateZulu(e.target.value)}
-                                        className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                        className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                     />
                                     <p className="text-[11px] text-gray-500 mt-1">Stored in UTC (Zulu time).</p>
                                 </div>
@@ -317,7 +317,7 @@ export default function AdminToursPage() {
                                         type="datetime-local"
                                         value={endDateZulu}
                                         onChange={(e) => setEndDateZulu(e.target.value)}
-                                        className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                        className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                     />
                                     <p className="text-[11px] text-gray-500 mt-1">Leave empty for no end date.</p>
                                 </div>
@@ -326,7 +326,7 @@ export default function AdminToursPage() {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="space-y-2">
                                     <label className="block text-sm text-gray-400">Tour Image</label>
-                                    <div className="bg-[#111] border border-white/[0.08] rounded-xl p-3 space-y-3">
+                                    <div className="bg-[#111] border border-white/10 rounded-xl p-3 space-y-3">
                                         <div className="w-full aspect-[16/9] rounded-lg overflow-hidden bg-black/30 border border-white/10 flex items-center justify-center">
                                             {image ? (
                                                 <img src={image} alt="Tour" className="w-full h-full object-cover" />
@@ -353,7 +353,7 @@ export default function AdminToursPage() {
 
                                 <div className="space-y-2">
                                     <label className="block text-sm text-gray-400">Banner Image</label>
-                                    <div className="bg-[#111] border border-white/[0.08] rounded-xl p-3 space-y-3">
+                                    <div className="bg-[#111] border border-white/10 rounded-xl p-3 space-y-3">
                                         <div className="w-full aspect-[16/9] rounded-lg overflow-hidden bg-black/30 border border-white/10 flex items-center justify-center">
                                             {banner ? (
                                                 <img src={banner} alt="Banner" className="w-full h-full object-cover" />
@@ -380,7 +380,7 @@ export default function AdminToursPage() {
 
                                 <div className="space-y-2">
                                     <label className="block text-sm text-gray-400">Award Image</label>
-                                    <div className="bg-[#111] border border-white/[0.08] rounded-xl p-3 space-y-3">
+                                    <div className="bg-[#111] border border-white/10 rounded-xl p-3 space-y-3">
                                         <div className="w-full aspect-[16/9] rounded-lg overflow-hidden bg-black/30 border border-white/10 flex items-center justify-center">
                                             {awardImage ? (
                                                 <img src={awardImage} alt="Award" className="w-full h-full object-cover" />
@@ -419,7 +419,7 @@ export default function AdminToursPage() {
                                                 onChange={e => updateLeg(index, 'departure_icao', e.target.value.toUpperCase())}
                                                 placeholder="DEP"
                                                 maxLength={4}
-                                                className="w-24 bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white font-mono uppercase"
+                                                className="w-24 bg-[#111] border border-white/10 rounded px-3 py-2 text-white font-mono uppercase"
                                             />
                                             <span className="text-gray-500">→</span>
                                             <input
@@ -428,14 +428,14 @@ export default function AdminToursPage() {
                                                 onChange={e => updateLeg(index, 'arrival_icao', e.target.value.toUpperCase())}
                                                 placeholder="ARR"
                                                 maxLength={4}
-                                                className="w-24 bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white font-mono uppercase"
+                                                className="w-24 bg-[#111] border border-white/10 rounded px-3 py-2 text-white font-mono uppercase"
                                             />
                                             <input
                                                 type="number"
                                                 value={leg.distance_nm || ''}
                                                 onChange={e => updateLeg(index, 'distance_nm', parseInt(e.target.value) || 0)}
                                                 placeholder="NM"
-                                                className="w-20 bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white"
+                                                className="w-20 bg-[#111] border border-white/10 rounded px-3 py-2 text-white"
                                             />
                                             <button
                                                 onClick={() => removeLeg(index)}
@@ -469,3 +469,4 @@ export default function AdminToursPage() {
         </div>
     );
 }
+

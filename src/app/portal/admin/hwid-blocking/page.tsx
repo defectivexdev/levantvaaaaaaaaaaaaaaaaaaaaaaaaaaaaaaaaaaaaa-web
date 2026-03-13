@@ -92,8 +92,8 @@ export default function HwidBlockingPage() {
                 </div>
             </div>
 
-            <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-5 space-y-5">
-                <div className="flex items-center gap-3 p-3 rounded-xl border border-white/[0.06] bg-white/[0.01]">
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-5 space-y-5">
+                <div className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.01]">
                     <div>
                         <p className="text-xs font-bold text-gray-200">HWID Lock</p>
                         <p className="text-[11px] text-gray-500">
@@ -111,7 +111,7 @@ export default function HwidBlockingPage() {
                     </span>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 rounded-xl border border-white/[0.06] bg-white/[0.01]">
+                <div className="flex items-start gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.01]">
                     <div className="flex-1 space-y-2">
                         <p className="text-xs font-bold text-gray-200">Country Blocking</p>
                         <p className="text-[11px] text-gray-500">
@@ -122,7 +122,7 @@ export default function HwidBlockingPage() {
                             value={state.blockedCountriesText}
                             onChange={e => setState(s => ({ ...s, blockedCountriesText: e.target.value }))}
                             rows={3}
-                            className="w-full bg-black/40 border border-white/[0.08] rounded-lg px-3 py-2 text-white text-sm font-mono focus:border-rose-500/50 focus:outline-none"
+                            className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-white text-sm font-mono focus:border-rose-500/50 focus:outline-none"
                             placeholder="Example: SY, IR, RU"
                         />
                         <p className="text-[10px] text-gray-600">
@@ -156,3 +156,4 @@ export default function HwidBlockingPage() {
         </div>
     );
 }
+

@@ -157,7 +157,7 @@ export default function AwardCelebration() {
                                 </p>
                             )}
                             {current.award_id.category && (
-                                <span className="inline-block px-3 py-1 bg-white/5 border border-white/[0.08] rounded-full text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                                <span className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] text-gray-400 font-bold uppercase tracking-wider">
                                     {current.award_id.category}
                                 </span>
                             )}

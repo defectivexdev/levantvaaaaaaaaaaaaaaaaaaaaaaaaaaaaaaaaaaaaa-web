@@ -47,7 +47,7 @@ export default function LiveGlobe() {
     if (!mounted) return <div className="h-96 w-full flex items-center justify-center bg-transparent"><div className="animate-spin text-primary-500">Loading Globe...</div></div>;
 
     return (
-        <div className="w-full h-[600px] relative overflow-hidden rounded-3xl bg-[#050505] border border-white/[0.06] shadow-2xl">
+        <div className="w-full h-[600px] relative overflow-hidden rounded-3xl bg-[#050505] border border-white/5 shadow-2xl">
             <div className="absolute top-6 left-6 z-10 pointer-events-none">
                 <h3 className="text-2xl font-display font-bold text-white text-glow">Live Operations</h3>
                 <div className="flex items-center gap-2 mt-2">

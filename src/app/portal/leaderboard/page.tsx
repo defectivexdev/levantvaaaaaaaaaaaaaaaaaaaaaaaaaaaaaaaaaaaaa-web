@@ -88,7 +88,7 @@ function LeaderboardContent() {
                                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
                                     filter === f.key 
                                         ? 'bg-accent-gold/10 border-accent-gold/30 text-accent-gold' 
-                                        : 'bg-transparent border-white/[0.06] text-gray-500 hover:text-white hover:border-white/10'
+                                        : 'bg-transparent border-white/5 text-gray-500 hover:text-white hover:border-white/10'
                                 }`}
                             >
                                 <f.icon className="w-3.5 h-3.5" />
@@ -103,7 +103,7 @@ function LeaderboardContent() {
                             <p className="text-gray-500 text-xs font-mono uppercase tracking-widest">Loading rankings...</p>
                         </div>
                     ) : leaderboard.length === 0 ? (
-                        <div className="text-center py-24 bg-[#0a0a0a] border border-white/[0.06] rounded-2xl">
+                        <div className="text-center py-24 bg-panel backdrop-blur-sm border border-white/5 rounded-2xl">
                             <Trophy className="w-16 h-16 mx-auto mb-4 text-gray-700" />
                             <p className="text-gray-500">No pilots on the leaderboard yet.</p>
                         </div>
@@ -112,22 +112,22 @@ function LeaderboardContent() {
                             {top3.length >= 3 && (
                                 <div className="grid grid-cols-3 gap-4 items-end">
                                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                                        className="bg-[#0a0a0a] border border-gray-500/20 rounded-2xl p-5 text-center relative overflow-hidden group hover:border-gray-400/30 transition-all"
+                                        className="bg-panel backdrop-blur-sm border border-gray-500/20 rounded-2xl p-5 text-center relative overflow-hidden group hover:border-gray-400/30 transition-all"
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-t from-gray-500/5 to-transparent" />
                                         <div className="relative">
                                             <div className="text-3xl mb-3">🥈</div>
-                                            <div className="w-14 h-14 rounded-full mx-auto mb-3 bg-[#0a0a0a] border-2 border-gray-500/30 overflow-hidden">
+                                            <div className="w-14 h-14 rounded-full mx-auto mb-3 bg-panel backdrop-blur-sm border-2 border-gray-500/30 overflow-hidden">
                                                 {top3[1].avatarUrl ? (
                                                     <img src={top3[1].avatarUrl} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                                                 ) : null}
-                                                <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-sm bg-[#0a0a0a]">
+                                                <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-sm bg-panel backdrop-blur-sm">
                                                     {top3[1].name.split(' ').map(n => n[0]).join('')}
                                                 </div>
                                             </div>
                                             <p className="text-white font-bold text-sm truncate">{top3[1].name}</p>
                                             <p className="text-gray-500 font-mono text-[10px] mt-0.5">{top3[1].pilotId}</p>
-                                            <div className="mt-3 pt-3 border-t border-white/[0.06]">
+                                            <div className="mt-3 pt-3 border-t border-white/5">
                                                 <p className="text-gray-300 font-bold font-mono text-lg">
                                                     {top3[1].isCredits ? `${(top3[1].credits || 0).toLocaleString()} CR` : top3[1].isLanding ? `${top3[1].hours.toFixed(0)} fpm` : formatHours(top3[1].hours)}
                                                 </p>
@@ -137,22 +137,22 @@ function LeaderboardContent() {
                                     </motion.div>
 
                                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}
-                                        className="bg-[#0a0a0a] border border-yellow-500/30 rounded-2xl p-6 text-center relative overflow-hidden group hover:border-yellow-400/40 transition-all shadow-[0_0_40px_rgba(234,179,8,0.05)]"
+                                        className="bg-panel backdrop-blur-sm border border-yellow-500/30 rounded-2xl p-6 text-center relative overflow-hidden group hover:border-yellow-400/40 transition-all shadow-[0_0_40px_rgba(234,179,8,0.05)]"
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-t from-yellow-500/5 to-transparent" />
                                         <div className="relative">
                                             <div className="text-4xl mb-3">🥇</div>
-                                            <div className="w-16 h-16 rounded-full mx-auto mb-3 bg-[#0a0a0a] border-2 border-yellow-500/40 overflow-hidden ring-4 ring-yellow-500/10">
+                                            <div className="w-16 h-16 rounded-full mx-auto mb-3 bg-panel backdrop-blur-sm border-2 border-yellow-500/40 overflow-hidden ring-4 ring-yellow-500/10">
                                                 {top3[0].avatarUrl ? (
                                                     <img src={top3[0].avatarUrl} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                                                 ) : null}
-                                                <div className="w-full h-full flex items-center justify-center text-accent-gold font-bold bg-[#0a0a0a]">
+                                                <div className="w-full h-full flex items-center justify-center text-accent-gold font-bold bg-panel backdrop-blur-sm">
                                                     {top3[0].name.split(' ').map(n => n[0]).join('')}
                                                 </div>
                                             </div>
                                             <p className="text-white font-bold truncate">{top3[0].name}</p>
                                             <p className="text-accent-gold font-mono text-[10px] mt-0.5">{top3[0].pilotId}</p>
-                                            <div className="mt-3 pt-3 border-t border-white/[0.06]">
+                                            <div className="mt-3 pt-3 border-t border-white/5">
                                                 <p className="text-accent-gold font-bold font-mono text-2xl">
                                                     {top3[0].isCredits ? `${(top3[0].credits || 0).toLocaleString()} CR` : top3[0].isLanding ? `${top3[0].hours.toFixed(0)} fpm` : formatHours(top3[0].hours)}
                                                 </p>
@@ -162,22 +162,22 @@ function LeaderboardContent() {
                                     </motion.div>
 
                                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                                        className="bg-[#0a0a0a] border border-orange-500/20 rounded-2xl p-5 text-center relative overflow-hidden group hover:border-orange-400/30 transition-all"
+                                        className="bg-panel backdrop-blur-sm border border-orange-500/20 rounded-2xl p-5 text-center relative overflow-hidden group hover:border-orange-400/30 transition-all"
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-t from-orange-500/5 to-transparent" />
                                         <div className="relative">
                                             <div className="text-3xl mb-3">🥉</div>
-                                            <div className="w-14 h-14 rounded-full mx-auto mb-3 bg-[#0a0a0a] border-2 border-orange-500/30 overflow-hidden">
+                                            <div className="w-14 h-14 rounded-full mx-auto mb-3 bg-panel backdrop-blur-sm border-2 border-orange-500/30 overflow-hidden">
                                                 {top3[2].avatarUrl ? (
                                                     <img src={top3[2].avatarUrl} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                                                 ) : null}
-                                                <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-sm bg-[#0a0a0a]">
+                                                <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-sm bg-panel backdrop-blur-sm">
                                                     {top3[2].name.split(' ').map(n => n[0]).join('')}
                                                 </div>
                                             </div>
                                             <p className="text-white font-bold text-sm truncate">{top3[2].name}</p>
                                             <p className="text-gray-500 font-mono text-[10px] mt-0.5">{top3[2].pilotId}</p>
-                                            <div className="mt-3 pt-3 border-t border-white/[0.06]">
+                                            <div className="mt-3 pt-3 border-t border-white/5">
                                                 <p className="text-orange-300 font-bold font-mono text-lg">
                                                     {top3[2].isCredits ? `${(top3[2].credits || 0).toLocaleString()} CR` : top3[2].isLanding ? `${top3[2].hours.toFixed(0)} fpm` : formatHours(top3[2].hours)}
                                                 </p>
@@ -189,7 +189,7 @@ function LeaderboardContent() {
                             )}
 
                             {rest.length > 0 && (
-                                <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl overflow-hidden">
+                                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
                                     {rest.map((pilot, i) => (
                                         <motion.div
                                             key={pilot.pilotId}
@@ -199,11 +199,11 @@ function LeaderboardContent() {
                                             className="flex items-center gap-4 px-6 py-4 border-b border-white/[0.03] last:border-b-0 hover:bg-white/[0.02] transition-colors"
                                         >
                                             <span className="text-gray-600 font-mono font-bold text-sm w-8 text-center">#{i + 4}</span>
-                                            <div className="w-10 h-10 rounded-full bg-[#0a0a0a] border border-white/[0.06] overflow-hidden shrink-0">
+                                            <div className="w-10 h-10 rounded-full bg-panel backdrop-blur-sm border border-white/5 overflow-hidden shrink-0">
                                                 {pilot.avatarUrl ? (
                                                     <img src={pilot.avatarUrl} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                                                 ) : null}
-                                                <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold text-xs bg-[#0a0a0a]">
+                                                <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold text-xs bg-panel backdrop-blur-sm">
                                                     {pilot.name.split(' ').map(n => n[0]).join('')}
                                                 </div>
                                             </div>

@@ -174,43 +174,43 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                 <span className="text-gray-500">Status</span>
                                 {getStatusBadge(pirep.approved_status)}
                             </div>
-                            <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                            <div className="flex justify-between border-t border-white/5 pt-3">
                                 <span className="text-gray-500">Pilot ID</span>
                                 <span className="text-accent-gold font-mono">{pirep.callsign}</span>
                             </div>
-                            <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                            <div className="flex justify-between border-t border-white/5 pt-3">
                                 <span className="text-gray-500">Date Filed</span>
                                 <span className="text-white">{new Date(pirep.created_at).toLocaleDateString()}</span>
                             </div>
                             {pirep.date && (
-                                <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                                <div className="flex justify-between border-t border-white/5 pt-3">
                                     <span className="text-gray-500">Date Flown</span>
                                     <span className="text-white">{new Date(pirep.date).toLocaleDateString()}</span>
                                 </div>
                             )}
-                            <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                            <div className="flex justify-between border-t border-white/5 pt-3">
                                 <span className="text-gray-500">Distance</span>
                                 <span className="text-white">{pirep.distance || 0} nm</span>
                             </div>
-                            <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                            <div className="flex justify-between border-t border-white/5 pt-3">
                                 <span className="text-gray-500">Duration</span>
                                 <span className="text-white">{pirep.duration || '-'}</span>
                             </div>
-                            <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                            <div className="flex justify-between border-t border-white/5 pt-3">
                                 <span className="text-gray-500">PAX</span>
                                 <span className="text-white">{pirep.pax || 0}</span>
                             </div>
-                            <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                            <div className="flex justify-between border-t border-white/5 pt-3">
                                 <span className="text-gray-500">Cargo</span>
                                 <span className="text-white">{pirep.cargo || 0} kg</span>
                             </div>
-                            <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                            <div className="flex justify-between border-t border-white/5 pt-3">
                                 <span className="text-gray-500">Landing Rate</span>
                                 <span className={pirep.landing_rate && pirep.landing_rate > -200 ? 'text-green-400' : 'text-yellow-400'}>
                                     {pirep.landing_rate ? `${pirep.landing_rate} fpm` : 'N/A'}
                                 </span>
                             </div>
-                            <div className="flex justify-between border-t border-white/[0.06] pt-3">
+                            <div className="flex justify-between border-t border-white/5 pt-3">
                                 <span className="text-gray-500">Score</span>
                                 <span className="text-white">{pirep.score || 'N/A'}</span>
                             </div>
@@ -230,7 +230,7 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                     type="text"
                                     value={formData.flight_number}
                                     onChange={(e) => setFormData({ ...formData, flight_number: e.target.value })}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-3 py-2 text-white"
                                     required
                                 />
                             </div>
@@ -240,7 +240,7 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                     type="text"
                                     value={formData.aircraft}
                                     onChange={(e) => setFormData({ ...formData, aircraft: e.target.value })}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-3 py-2 text-white"
                                     required
                                 />
                             </div>
@@ -251,7 +251,7 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                     value={formData.departure_icao}
                                     onChange={(e) => setFormData({ ...formData, departure_icao: e.target.value.toUpperCase() })}
                                     maxLength={4}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white font-mono"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-3 py-2 text-white font-mono"
                                     required
                                 />
                             </div>
@@ -262,7 +262,7 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                     value={formData.arrival_icao}
                                     onChange={(e) => setFormData({ ...formData, arrival_icao: e.target.value.toUpperCase() })}
                                     maxLength={4}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white font-mono"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-3 py-2 text-white font-mono"
                                     required
                                 />
                             </div>
@@ -273,7 +273,7 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                     value={formData.alternate_icao}
                                     onChange={(e) => setFormData({ ...formData, alternate_icao: e.target.value.toUpperCase() })}
                                     maxLength={4}
-                                    className="w-full bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white font-mono"
+                                    className="w-full bg-[#111] border border-white/10 rounded px-3 py-2 text-white font-mono"
                                 />
                             </div>
                         </div>
@@ -284,7 +284,7 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                 value={formData.route}
                                 onChange={(e) => setFormData({ ...formData, route: e.target.value.toUpperCase() })}
                                 rows={3}
-                                className="w-full bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white font-mono text-sm"
+                                className="w-full bg-[#111] border border-white/10 rounded px-3 py-2 text-white font-mono text-sm"
                             />
                         </div>
 
@@ -294,7 +294,7 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                 value={formData.comments}
                                 onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
                                 rows={3}
-                                className="w-full bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white"
+                                className="w-full bg-[#111] border border-white/10 rounded px-3 py-2 text-white"
                             />
                             <p className="text-xs text-gray-500 mt-1">Comments appear publicly.</p>
                         </div>
@@ -344,7 +344,7 @@ export default function EditPirepPage({ params }: { params: Promise<{ id: string
                                 value={formData.admin_comments}
                                 onChange={(e) => setFormData({ ...formData, admin_comments: e.target.value })}
                                 rows={3}
-                                className="w-full bg-[#111] border border-white/[0.08] rounded px-3 py-2 text-white"
+                                className="w-full bg-[#111] border border-white/10 rounded px-3 py-2 text-white"
                             />
                             <p className="text-xs text-gray-500 mt-1">Comments will be emailed to the pilot and visible only to them on the report.</p>
                         </div>

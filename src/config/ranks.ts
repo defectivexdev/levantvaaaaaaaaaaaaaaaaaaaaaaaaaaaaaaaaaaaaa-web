@@ -31,7 +31,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Amateur Pilot',
         minHours: 150,
         maxHours: 300,
-        image: `/img/ranks/amature_pilots.png?v=${CACHE_VERSION}`,
+        image: `/img/ranks/amateur_pilots.png?v=${CACHE_VERSION}`,
         order: 3
     },
     {
@@ -39,7 +39,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Private Pilot',
         minHours: 300,
         maxHours: 500,
-        image: `/img/ranks/pp_pilots.png?v=${CACHE_VERSION}`,
+        image: `/img/ranks/private_pilot.png?v=${CACHE_VERSION}`,
         order: 4
     },
     {
@@ -47,7 +47,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'First Officer',
         minHours: 500,
         maxHours: 1000,
-        image: `/img/ranks/first_officers.png?v=${CACHE_VERSION}`,
+        image: `/img/ranks/first_officer.png?v=${CACHE_VERSION}`,
         order: 5
     },
     {
@@ -55,7 +55,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Senior First Officer',
         minHours: 1000,
         maxHours: 2500,
-        image: `/img/ranks/senior_firstofficer.png?v=${CACHE_VERSION}`,
+        image: `/img/ranks/senior_first_officer.png?v=${CACHE_VERSION}`,
         order: 6
     },
     {
@@ -71,7 +71,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Flight Captain',
         minHours: 5000,
         maxHours: 7000,
-        image: `/img/ranks/flight_cap.png?v=${CACHE_VERSION}`,
+        image: `/img/ranks/flight_captain.png?v=${CACHE_VERSION}`,
         order: 8
     },
     {
@@ -79,7 +79,7 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Senior Flight Captain',
         minHours: 7000,
         maxHours: 10000,
-        image: `/img/ranks/senior_flightcaps.png?v=${CACHE_VERSION}`,
+        image: `/img/ranks/senior_flight_captain.png?v=${CACHE_VERSION}`,
         order: 9
     },
     {
@@ -87,15 +87,15 @@ export const PILOT_RANKS: RankConfig[] = [
         name: 'Commercial Captain',
         minHours: 10000,
         maxHours: 20000,
-        image: `/img/ranks/CommerCap.png?v=${CACHE_VERSION}`,
+        image: `/img/ranks/commercial_captain.png?v=${CACHE_VERSION}`,
         order: 10
     },
     {
         id: 'instructor',
-        name: 'Instructor',
+        name: 'instructor',
         minHours: 20000,
         maxHours: Infinity,
-        image: `/img/ranks/Instructor.png?v=${CACHE_VERSION}`,
+        image: `/img/ranks/instructor.png?v=${CACHE_VERSION}`,
         order: 11
     }
 ];

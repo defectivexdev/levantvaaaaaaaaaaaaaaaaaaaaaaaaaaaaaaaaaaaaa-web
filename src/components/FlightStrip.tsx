@@ -49,7 +49,7 @@ export default function FlightStrip({ flightId, onClose }: FlightStripProps) {
 
     if (loading) {
         return (
-            <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-8 flex justify-center">
+            <div className="bg-panel border border-white/10 rounded-2xl p-8 flex justify-center">
                 <div className="w-5 h-5 border-2 border-accent-gold/30 border-t-accent-gold rounded-full animate-spin" />
             </div>
         );
@@ -57,7 +57,7 @@ export default function FlightStrip({ flightId, onClose }: FlightStripProps) {
 
     if (error || !strip) {
         return (
-            <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-6 text-center text-gray-500 text-sm">
+            <div className="bg-panel border border-white/10 rounded-2xl p-6 text-center text-gray-500 text-sm">
                 {error || 'Flight strip unavailable'}
             </div>
         );
@@ -147,7 +147,7 @@ export default function FlightStrip({ flightId, onClose }: FlightStripProps) {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-3 border-t border-white/[0.06] flex items-center justify-between bg-black/20">
+            <div className="px-6 py-3 border-t border-white/5 flex items-center justify-between bg-black/20">
                 <div className="text-[10px] text-gray-500">
                     <span className="text-gray-400 font-bold">{strip.pilot_name}</span> · {strip.aircraft_type} · {strip.distance}nm
                 </div>

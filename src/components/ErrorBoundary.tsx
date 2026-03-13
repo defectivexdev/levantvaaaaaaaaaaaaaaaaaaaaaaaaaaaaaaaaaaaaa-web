@@ -42,7 +42,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
                             this.setState({ hasError: false, error: null });
                             window.location.reload();
                         }}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/[0.08] text-sm font-bold text-gray-300 hover:text-white hover:border-white/20 transition-all"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-gray-300 hover:text-white hover:border-white/20 transition-all"
                     >
                         <RefreshCw size={14} />
                         Reload Page

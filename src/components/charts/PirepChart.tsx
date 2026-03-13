@@ -26,7 +26,7 @@ interface PirepChartProps {
 export default function PirepChart({ data }: PirepChartProps) {
     if (!data || data.length === 0) {
         return (
-            <div className="flex items-center justify-center h-64 bg-white/5 rounded-xl border border-white/[0.08]">
+            <div className="flex items-center justify-center h-64 bg-white/5 rounded-xl border border-white/10">
                 <p className="text-gray-500 text-sm">No telemetry data available for this flight.</p>
             </div>
         );
@@ -38,7 +38,7 @@ export default function PirepChart({ data }: PirepChartProps) {
         : data;
 
     return (
-        <div className="w-full h-[400px] bg-black/20 rounded-xl p-4 border border-white/[0.06]">
+        <div className="w-full h-[400px] bg-black/20 rounded-xl p-4 border border-white/5">
             <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
                     data={chartData}

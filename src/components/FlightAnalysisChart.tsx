@@ -29,8 +29,8 @@ interface Props {
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/[0.08] p-4 rounded-xl shadow-2xl ring-1 ring-white/5">
-                <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-3 pb-2 border-b border-white/[0.06]">
+            <div className="bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/10 p-4 rounded-xl shadow-2xl ring-1 ring-white/5">
+                <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-3 pb-2 border-b border-white/5">
                     T + {new Date(label).toLocaleTimeString([], { hour12: false })}
                 </p>
                 {payload.map((entry: any, index: number) => (
@@ -77,7 +77,7 @@ export default function FlightAnalysisChart({ data }: Props) {
 
     return (
         <div className="space-y-6">
-            <div className="glass-card p-8 border border-white/[0.06] shadow-2xl relative overflow-hidden">
+            <div className="glass-card p-8 border border-white/5 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1 h-full bg-accent-gold/40" />
                 
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
@@ -189,7 +189,7 @@ export default function FlightAnalysisChart({ data }: Props) {
             </div>
 
             {/* Passenger Comfort Score Timeline */}
-            <div className="glass-card p-8 border border-white/[0.06] relative overflow-hidden group">
+            <div className="glass-card p-8 border border-white/5 relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-1 h-full bg-blue-400/40" />
                 <div className="flex items-center justify-between mb-8">
                     <div>
@@ -226,7 +226,7 @@ export default function FlightAnalysisChart({ data }: Props) {
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="mt-6 flex items-center justify-center gap-8 py-4 bg-black/20 rounded-xl border border-white/[0.06]">
+                <div className="mt-6 flex items-center justify-center gap-8 py-4 bg-black/20 rounded-xl border border-white/5">
                     <ComfortStat label="Avg. Comfort" value={`${avgComfort}%`} />
                     <div className="w-[1px] h-8 bg-white/5" />
                     <ComfortStat label="Max Altitude" value={`${maxAlt.toLocaleString()} ft`} />

@@ -53,7 +53,7 @@ export default function LandingLeaderboard() {
                 {landings.map((landing, index) => (
                     <div 
                         key={landing._id} 
-                        className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/[0.06] hover:border-accent-gold/30 hover:bg-accent-gold/5 transition-all group"
+                        className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-accent-gold/30 hover:bg-accent-gold/5 transition-all group"
                     >
                         <div className="flex items-center gap-3">
                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold font-mono text-sm ${
@@ -99,7 +99,7 @@ export default function LandingLeaderboard() {
                 )}
             </div>
             
-            <div className="p-4 bg-white/5 border-t border-white/[0.06] text-center">
+            <div className="p-4 bg-white/5 border-t border-white/5 text-center">
                 <button 
                     onClick={() => router.push('/portal/leaderboard?tab=landing')}
                     className="text-[10px] text-gray-500 hover:text-white uppercase font-bold tracking-widest transition-colors"

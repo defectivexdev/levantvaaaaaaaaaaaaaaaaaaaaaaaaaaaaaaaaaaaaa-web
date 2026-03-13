@@ -17,7 +17,7 @@ interface ChartData {
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-        <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-lg px-3 py-2 shadow-xl">
+        <div className="bg-panel border border-white/10 rounded-lg px-3 py-2 shadow-xl">
             <p className="text-xs text-gray-400 mb-1">{label}</p>
             {payload.map((p: any, i: number) => (
                 <p key={i} className="text-xs font-medium" style={{ color: p.color }}>
@@ -43,7 +43,7 @@ export default function DashboardCharts() {
         return (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {[...Array(4)].map((_, i) => (
-                    <div key={i} className="bg-[#0a0a0a]/50 border border-white/[0.06] rounded-xl h-64 animate-pulse" />
+                    <div key={i} className="bg-panel/50 border border-white/5 rounded-xl h-64 animate-pulse" />
                 ))}
             </div>
         );
@@ -58,7 +58,7 @@ export default function DashboardCharts() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Flight Hours Per Month */}
-            <div className="bg-[#0a0a0a]/50 border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-panel/50 border border-white/5 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-4">
                     <TrendingUp className="w-4 h-4 text-accent-gold" />
                     <h3 className="text-sm font-semibold text-white">Flight Hours (12 months)</h3>
@@ -81,7 +81,7 @@ export default function DashboardCharts() {
             </div>
 
             {/* Landing Rate Trend */}
-            <div className="bg-[#0a0a0a]/50 border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-panel/50 border border-white/5 rounded-xl p-4">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <Plane className="w-4 h-4 text-emerald-400" />
@@ -101,7 +101,7 @@ export default function DashboardCharts() {
             </div>
 
             {/* Landing Distribution */}
-            <div className="bg-[#0a0a0a]/50 border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-panel/50 border border-white/5 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-4">
                     <Target className="w-4 h-4 text-blue-400" />
                     <h3 className="text-sm font-semibold text-white">Landing Distribution (last 50)</h3>
@@ -122,7 +122,7 @@ export default function DashboardCharts() {
             </div>
 
             {/* Fuel Efficiency */}
-            <div className="bg-[#0a0a0a]/50 border border-white/[0.06] rounded-xl p-4">
+            <div className="bg-panel/50 border border-white/5 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-4">
                     <Fuel className="w-4 h-4 text-orange-400" />
                     <h3 className="text-sm font-semibold text-white">Fuel Efficiency (lbs/hr)</h3>

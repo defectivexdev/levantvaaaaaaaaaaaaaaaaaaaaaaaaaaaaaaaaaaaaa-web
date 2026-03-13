@@ -95,7 +95,7 @@ export default function AdminPage() {
             {/* Stats Summary */}
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
                 {statCards.map(s => (
-                    <div key={s.label} className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-4 flex items-center gap-3">
+                    <div key={s.label} className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-4 flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-xl ${s.iconBg} flex items-center justify-center flex-shrink-0`}>
                             <s.icon className={`w-5 h-5 ${s.color}`} />
                         </div>
@@ -112,7 +112,7 @@ export default function AdminPage() {
             {/* Main Actions Grid */}
             <div className="grid md:grid-cols-2 gap-3">
                 {adminActions.map((action) => (
-                    <Link key={action.title} href={action.link} className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-5 hover:border-accent-gold/20 transition-all group">
+                    <Link key={action.title} href={action.link} className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-5 hover:border-accent-gold/20 transition-all group">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <div className="p-2.5 bg-white/[0.04] rounded-xl group-hover:bg-accent-gold/10 transition-colors">
@@ -141,15 +141,15 @@ export default function AdminPage() {
             
             {/* Secondary Actions */}
             <div className="grid grid-cols-3 gap-3">
-                 <button className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-4 flex flex-col items-center gap-2 text-gray-600 cursor-not-allowed">
+                 <button className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-4 flex flex-col items-center gap-2 text-gray-600 cursor-not-allowed">
                      <Bell className="w-4 h-4" />
                      <span className="text-[10px] font-bold uppercase tracking-widest">Broadcast</span>
                  </button>
-                 <button className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-4 flex flex-col items-center gap-2 text-gray-600 cursor-not-allowed">
+                 <button className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-4 flex flex-col items-center gap-2 text-gray-600 cursor-not-allowed">
                      <Settings className="w-4 h-4" />
                      <span className="text-[10px] font-bold uppercase tracking-widest">Settings</span>
                  </button>
-                 <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-2xl p-4 flex flex-col items-center gap-2 text-center">
+                 <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-4 flex flex-col items-center gap-2 text-center">
                      <span className="text-[10px] text-gray-600 font-bold uppercase tracking-widest">System</span>
                      <span className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Online</span>
                  </div>
@@ -165,4 +165,5 @@ function Clock({ className }: { className?: string }) {
         </svg>
     );
 }
+
 

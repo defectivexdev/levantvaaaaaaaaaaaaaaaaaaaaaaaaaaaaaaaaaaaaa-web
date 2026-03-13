@@ -31,7 +31,7 @@ export default function ShopPage() {
                     <h1 className="text-2xl font-bold text-white">Pilot Shop</h1>
                     <p className="text-gray-500 text-xs mt-0.5">Spend your hard-earned flight credits</p>
                 </div>
-                <div className="bg-[#0a0a0a] border border-white/[0.06] rounded-xl px-5 py-3 text-right">
+                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-xl px-5 py-3 text-right">
                     <div className="text-[9px] text-gray-500 uppercase tracking-widest font-bold">Balance</div>
                     <div className="text-xl font-bold font-mono text-white">{balance.toLocaleString()} <span className="text-xs text-gray-500">cr</span></div>
                 </div>
@@ -44,7 +44,7 @@ export default function ShopPage() {
                     const canAfford = balance >= item.price;
 
                     return (
-                        <div key={item.id} className={`bg-[#0a0a0a] border rounded-2xl p-5 flex flex-col group transition-all ${owned ? 'border-emerald-500/20' : 'border-white/[0.06] hover:border-white/[0.1]'}`}>
+                        <div key={item.id} className={`bg-panel backdrop-blur-sm border rounded-2xl p-5 flex flex-col group transition-all ${owned ? 'border-emerald-500/20' : 'border-white/5 hover:border-white/[0.1]'}`}>
                              <div className="h-12 flex items-center mb-3">
                                 {item.icon}
                              </div>
@@ -55,7 +55,7 @@ export default function ShopPage() {
                                  <p className="text-xs text-gray-500 leading-relaxed mb-4">{item.desc}</p>
                              </div>
 
-                             <div className="mt-auto pt-4 border-t border-white/[0.06] flex items-center justify-between">
+                             <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
                                  <div className="font-mono text-lg font-bold text-white">{item.price.toLocaleString()}</div>
                                  <button 
                                      onClick={() => handleBuy(item)}
@@ -84,3 +84,4 @@ function PlaneIcon({className}: any) {
         </svg>
     )
 }
+

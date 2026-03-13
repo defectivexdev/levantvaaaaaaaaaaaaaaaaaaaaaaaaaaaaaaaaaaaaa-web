@@ -40,7 +40,7 @@ export default function PostFlightDebriefing({
     const [activeTab, setActiveTab] = useState<'overview' | 'landing' | 'fuel' | 'path' | 'phases' | 'replay'>('overview');
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-panel/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-lg shadow-2xl max-w-7xl w-full max-h-[90vh] overflow-hidden flex flex-col">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">

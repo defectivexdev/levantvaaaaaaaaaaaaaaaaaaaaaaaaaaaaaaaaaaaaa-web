@@ -99,7 +99,7 @@ export default function TourDetailPage() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative h-80 rounded-3xl overflow-hidden border-2 border-white/[0.08]"
+                className="relative h-80 rounded-3xl overflow-hidden border-2 border-white/10"
             >
                 {tour.banner || tour.image ? (
                     <img src={tour.banner || tour.image} alt={tour.name} className="w-full h-full object-cover" />
@@ -142,7 +142,7 @@ export default function TourDetailPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-[#0a0a0a] border-2 border-white/[0.08] rounded-3xl p-6 space-y-6"
+                        className="bg-panel border-2 border-white/10 rounded-3xl p-6 space-y-6"
                     >
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 flex items-center justify-center">
@@ -158,7 +158,7 @@ export default function TourDetailPage() {
                             </div>
 
                             {tour.award_image && (
-                                <div className="bg-white/5 border border-white/[0.08] rounded-2xl p-4 text-center">
+                                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
                                     <p className="text-xs text-gray-400 uppercase font-semibold mb-3">Award Badge</p>
                                     <img
                                         src={tour.award_image}
@@ -175,7 +175,7 @@ export default function TourDetailPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-[#0a0a0a] border-2 border-white/[0.08] rounded-3xl p-6 space-y-4"
+                        className="bg-panel border-2 border-white/10 rounded-3xl p-6 space-y-4"
                     >
                         <h3 className="text-lg font-bold text-white">Tour Info</h3>
                         <div className="space-y-3">
@@ -227,7 +227,7 @@ export default function TourDetailPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="lg:col-span-2 bg-[#0a0a0a] border-2 border-white/[0.08] rounded-3xl p-8"
+                    className="lg:col-span-2 bg-panel border-2 border-white/10 rounded-3xl p-8"
                 >
                     <div className="flex items-center gap-3 mb-8">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center">
@@ -250,7 +250,7 @@ export default function TourDetailPage() {
                                     className={`relative p-6 rounded-2xl border-2 transition-all ${
                                         isVerified
                                             ? 'bg-gradient-to-r from-emerald-500/10 to-green-500/10 border-emerald-500/30'
-                                            : 'bg-white/[0.02] border-white/[0.08] hover:border-white/[0.15]'
+                                            : 'bg-white/[0.02] border-white/10 hover:border-white/[0.15]'
                                     }`}
                                 >
                                     <div className="flex items-start justify-between gap-4">
@@ -299,7 +299,7 @@ export default function TourDetailPage() {
 
                     {/* Report Status */}
                     {latestReport && (
-                        <div className="mt-8 pt-8 border-t border-white/[0.08]">
+                        <div className="mt-8 pt-8 border-t border-white/10">
                             <h4 className="text-lg font-bold text-white mb-4">Your Submission</h4>
                             <div className={`p-6 rounded-2xl border-2 ${
                                 latestReport.status === 'Approved' ? 'bg-emerald-500/10 border-emerald-500/30' :
@@ -360,7 +360,7 @@ export default function TourDetailPage() {
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-[#0a0a0a] rounded-3xl border-2 border-white/[0.08] p-8 max-w-md w-full"
+                            className="bg-panel rounded-3xl border-2 border-white/10 p-8 max-w-md w-full"
                         >
                             <h3 className="text-2xl font-black text-white mb-4">Submit Tour Completion</h3>
                             <p className="text-gray-400 mb-6">

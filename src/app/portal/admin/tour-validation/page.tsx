@@ -173,7 +173,7 @@ export default function TourValidationPage() {
                         </thead>
                         <tbody>
                             {reports.map((report) => (
-                                <tr key={report._id} className="border-t border-white/[0.06] hover:bg-white/5">
+                                <tr key={report._id} className="border-t border-white/5 hover:bg-white/5">
                                     <td className="p-4 text-white">{report.pilot_name}</td>
                                     <td className="p-4 text-white">{report.tour_name}</td>
                                     <td className="p-4">
@@ -216,8 +216,8 @@ export default function TourValidationPage() {
             {/* Review Modal */}
             {showModal && selectedReport && (
                 <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto">
-                    <div className="bg-[#0a0a0a] rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-[#0a0a0a] border-b border-white/10 p-6 z-10">
+                    <div className="bg-panel backdrop-blur-sm rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-panel backdrop-blur-sm border-b border-white/10 p-6 z-10">
                             <h2 className="text-xl font-bold text-white">Review Tour Report</h2>
                             <p className="text-gray-400 text-sm mt-1">
                                 {selectedReport.pilot_name} - {selectedReport.tour_name}
@@ -341,7 +341,7 @@ export default function TourValidationPage() {
                                                 onChange={(e) => setModificationNotes(e.target.value)}
                                                 rows={4}
                                                 placeholder="Explain what needs to be corrected..."
-                                                className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                                className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                             />
                                         </div>
                                     )}
@@ -354,7 +354,7 @@ export default function TourValidationPage() {
                                             onChange={(e) => setAdminNotes(e.target.value)}
                                             rows={3}
                                             placeholder="Internal notes..."
-                                            className="w-full bg-[#111] border border-white/[0.08] rounded px-4 py-3 text-white"
+                                            className="w-full bg-[#111] border border-white/10 rounded px-4 py-3 text-white"
                                         />
                                     </div>
                                 </div>
@@ -386,7 +386,7 @@ export default function TourValidationPage() {
                             )}
                         </div>
 
-                        <div className="sticky bottom-0 bg-[#0a0a0a] border-t border-white/10 p-6 flex justify-end gap-3">
+                        <div className="sticky bottom-0 bg-panel backdrop-blur-sm border-t border-white/10 p-6 flex justify-end gap-3">
                             <button
                                 onClick={() => setShowModal(false)}
                                 className="px-6 py-2 text-gray-400 hover:text-white"
@@ -409,3 +409,4 @@ export default function TourValidationPage() {
         </div>
     );
 }
+
