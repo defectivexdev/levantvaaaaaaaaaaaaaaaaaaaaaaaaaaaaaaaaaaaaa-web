@@ -319,7 +319,6 @@ export default function Sidebar() {
                         </div>
                         <div className="min-w-0">
                             <div className="text-[10px] font-bold text-cyan-400 truncate group-hover:text-cyan-300 transition-colors">{user.customCallsign || user.pilotId || 'Pilot'}</div>
-                            <div className="text-[8px] text-cyan-500/50 font-mono truncate">{user.rank || 'CADET'}</div>
                         </div>
                     </Link>
                 )}
