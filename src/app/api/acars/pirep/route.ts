@@ -462,6 +462,27 @@ export async function POST(request: NextRequest) {
             console.error('Credit calculation error (non-fatal):', crErr);
         }
 
+        // Update pilot rank and check for badges
+        let rankMessage = '';
+        let badgeMessage = '';
+        try {
+            const { updatePilotRank } = await import('@/services/rankService');
+            const { checkAndAwardBadges } = await import('@/services/badgeService');
+            
+            const rankUpdate = await updatePilotRank(pilot.id);
+            const awardedBadges = await checkAndAwardBadges(pilot.id, newFlight._id.toString());
+            
+            if (rankUpdate.updated) {
+                rankMessage = ` RANK PROMOTION: ${rankUpdate.newRank}!`;
+            }
+            
+            if (awardedBadges.length > 0) {
+                badgeMessage = ` 🏆 ${awardedBadges.length} new badge${awardedBadges.length > 1 ? 's' : ''} earned!`;
+            }
+        } catch (rankBadgeErr) {
+            console.error('Rank/Badge update error (non-fatal):', rankBadgeErr);
+        }
+
         let message = `PIREP accepted. Airline Profit: ${netProfit > 0 ? '+' : ''}${netProfit}cr. You earned: ${flightCredits}cr.`;
         if (creditBreakdown) message += ` +${creditBreakdown.total} bonus CR`;
         if (checkrideStatus === 'Passed') message += ` CHECKRIDE PASSED!`;
@@ -469,6 +490,8 @@ export async function POST(request: NextRequest) {
         if (butterBonus > 0) message += ` (Includes ${butterBonus} Butter Bonus!)`;
         if (tourMessage) message += tourMessage;
         if (eventMessage) message += eventMessage;
+        if (rankMessage) message += rankMessage;
+        if (badgeMessage) message += badgeMessage;
 
         return NextResponse.json({
             success: true, message,
