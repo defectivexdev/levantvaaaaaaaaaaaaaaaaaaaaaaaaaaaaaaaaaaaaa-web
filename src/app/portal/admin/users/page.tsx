@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Users, Search, UserX, AlertTriangle, X, Clock, Plane, MapPin, CreditCard, ChevronDown, Shield, Mail, Globe, Hash, ArrowUpDown, KeyRound, Trash2, Lock } from 'lucide-react';
+import { PILOT_RANKS } from '@/config/ranks';
 
 interface User {
     id: string;
@@ -39,7 +40,7 @@ const roleColors: Record<string, string> = {
     'Groupflight': 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
 };
 
-const ranks = ['Cadet', 'Second Officer', 'First Officer', 'Captain', 'Senior Captain'];
+const ranks = PILOT_RANKS.map(r => r.name);
 
 type StatusFilter = 'All' | 'Active' | 'Inactive' | 'Pending' | 'On leave (LOA)' | 'Blacklist';
 type SortKey = 'name' | 'hours' | 'flights' | 'balance' | 'lastActivity';
@@ -194,7 +195,11 @@ export default function AdminUsersPage() {
     }, [users, searchTerm, statusFilter, sortKey, sortAsc]);
 
     const getInitials = (f: string, l: string) => `${f?.[0] || ''}${l?.[0] || ''}`.toUpperCase();
-    const getRankImage = (rank: string) => `/img/ranks/${rank.toLowerCase().replace(/\s/g, '')}.png`;
+    const getRankImage = (rank: string) => {
+        const normalized = (rank || '').trim().toLowerCase();
+        const match = PILOT_RANKS.find(r => r.name.toLowerCase() === normalized || r.id.toLowerCase() === normalized);
+        return match?.image || '/img/ranks/cadet.png';
+    };
     const timeAgo = (d: string | null) => {
         if (!d) return 'Never';
         const diff = Date.now() - new Date(d).getTime();
