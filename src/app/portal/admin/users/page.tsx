@@ -198,7 +198,7 @@ export default function AdminUsersPage() {
     const getRankImage = (rank: string) => {
         const normalized = (rank || '').trim().toLowerCase();
         const match = PILOT_RANKS.find(r => r.name.toLowerCase() === normalized || r.id.toLowerCase() === normalized);
-        return match?.image || '/img/ranks/cadet.png';
+        return match?.image || PILOT_RANKS[0].image;
     };
     const timeAgo = (d: string | null) => {
         if (!d) return 'Never';
