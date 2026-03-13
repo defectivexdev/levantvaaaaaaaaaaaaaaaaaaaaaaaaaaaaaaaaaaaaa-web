@@ -45,7 +45,6 @@ const PILOT_RATINGS: Record<number, string> = {
 
 export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerificationProps) {
     const [ivaoVid, setIvaoVid] = useState(currentIvaoVid || '');
-    const [loading, setLoading] = useState(false);
     const [syncing, setSyncing] = useState(false);
     const [status, setStatus] = useState<VerificationStatus | null>(null);
     const [statusLoading, setStatusLoading] = useState(true);
@@ -57,14 +56,20 @@ export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerifi
 
     const fetchStatus = async () => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) return;
-
-            const res = await fetch('/api/ivao/verify', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
+            let res = await fetch('/api/ivao/verify', {
+                credentials: 'include',
             });
+
+            if (res.status === 401) {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    res = await fetch('/api/ivao/verify', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    });
+                }
+            }
 
             if (res.ok) {
                 const data = await res.json();
@@ -80,45 +85,9 @@ export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerifi
         }
     };
 
-    const handleVerify = async () => {
-        if (!ivaoVid.trim()) {
-            toast.error('Please enter your IVAO VID');
-            return;
-        }
-
-        setLoading(true);
-        const toastId = toast.loading('Verifying IVAO account...');
-
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                toast.error('Not authenticated', { id: toastId });
-                return;
-            }
-
-            const res = await fetch('/api/ivao/verify', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({ ivao_vid: ivaoVid.trim() }),
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-                toast.success('IVAO account verified successfully!', { id: toastId });
-                await fetchStatus();
-            } else {
-                toast.error(data.error || 'Verification failed', { id: toastId });
-            }
-        } catch (error) {
-            console.error('Verification error:', error);
-            toast.error('Failed to verify IVAO account', { id: toastId });
-        } finally {
-            setLoading(false);
-        }
+    const handleLinkIVAO = () => {
+        const redirect = encodeURIComponent('/portal/link-discord');
+        window.location.href = `/api/ivao/oauth/authorize?redirect=${redirect}`;
     };
 
     const handleSync = async () => {
@@ -220,33 +189,13 @@ export default function IVAOVerification({ pilotId, currentIvaoVid }: IVAOVerifi
                         <p className="text-xs text-gray-400">
                             Link your IVAO account to receive Discord roles based on your ratings.
                         </p>
-                        <div className="space-y-2">
-                            <label className="text-xs text-gray-500">IVAO VID</label>
-                            <div className="flex gap-2">
-                                <input
-                                    type="text"
-                                    value={ivaoVid}
-                                    onChange={(e) => setIvaoVid(e.target.value)}
-                                    placeholder="Enter your IVAO VID"
-                                    className="flex-1 px-3 py-2 bg-black/50 border border-white/[0.08] rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-colors"
-                                    disabled={loading}
-                                />
-                                <button
-                                    onClick={handleVerify}
-                                    disabled={loading || !ivaoVid.trim()}
-                                    className="px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
-                                >
-                                    {loading ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 animate-spin" />
-                                            Verifying...
-                                        </>
-                                    ) : (
-                                        'Verify'
-                                    )}
-                                </button>
-                            </div>
-                        </div>
+                        <button
+                            onClick={handleLinkIVAO}
+                            className="w-full px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                        >
+                            <ExternalLink className="w-4 h-4" />
+                            Link with IVAO
+                        </button>
                         <button
                             onClick={handleDiscordLink}
                             disabled={discordLinking}
