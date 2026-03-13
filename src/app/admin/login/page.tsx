@@ -112,7 +112,7 @@ export default function AdminLoginPage() {
                     {/* Card glow */}
                     <div className="absolute -inset-[1px] bg-gradient-to-b from-amber-500/20 via-white/5 to-transparent rounded-2xl" />
                     
-                    <div className="relative bg-[#111118] rounded-2xl p-8 border border-white/[0.06] shadow-2xl shadow-black/50">
+                    <div className="relative bg-[#111118] rounded-2xl p-8 border border-white/5 shadow-2xl shadow-black/50">
                         {/* Status indicator */}
                         <div className="flex items-center justify-center gap-2 mb-8">
                             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -133,7 +133,7 @@ export default function AdminLoginPage() {
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
                                         placeholder="admin@levant-va.com"
-                                        className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl pl-12 pr-4 py-3.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.05] transition-all"
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-xl pl-12 pr-4 py-3.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.05] transition-all"
                                     />
                                 </div>
                             </div>
@@ -151,7 +151,7 @@ export default function AdminLoginPage() {
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                         placeholder="••••••••••••"
-                                        className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl pl-12 pr-4 py-3.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.05] transition-all"
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-xl pl-12 pr-4 py-3.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.05] transition-all"
                                     />
                                 </div>
                             </div>
@@ -177,7 +177,7 @@ export default function AdminLoginPage() {
                         </form>
 
                         {/* Divider */}
-                        <div className="mt-8 pt-6 border-t border-white/[0.06]">
+                        <div className="mt-8 pt-6 border-t border-white/5">
                             <Link
                                 href="/login"
                                 className="flex items-center justify-center gap-2 text-gray-500 hover:text-white text-xs font-medium transition-colors"

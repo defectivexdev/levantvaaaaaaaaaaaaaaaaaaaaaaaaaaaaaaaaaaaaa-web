@@ -31,7 +31,7 @@ export function FlightRow({ flight, className, ...props }: FlightRowProps) {
   return (
     <div
       className={cn(
-        "group flex items-center justify-between p-4 rounded-xl border border-white/5 bg-panel/50 hover:bg-[#121826] transition-colors",
+        "group flex items-center justify-between p-4 rounded-xl border border-white/5 bg-panel/50 hover:bg-panel transition-colors",
         className
       )}
       {...props}

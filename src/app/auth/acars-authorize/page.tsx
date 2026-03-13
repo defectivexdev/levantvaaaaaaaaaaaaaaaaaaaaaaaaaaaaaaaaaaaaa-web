@@ -145,7 +145,7 @@ export default function AcarsAuthorizePage() {
                 </div>
 
                 {/* Card */}
-                <div className="bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-8 shadow-2xl">
+                <div className="bg-white/[0.03] backdrop-blur-xl border border-white/5 rounded-2xl p-8 shadow-2xl">
 
                     {/* INPUT STATE */}
                     {(status === 'input' || status === 'verifying') && (
