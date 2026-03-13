@@ -52,3 +52,5 @@ Publish/
 # Never store binary .ico in git (generated at build time)
 *.ico
 
+
+.vercel
