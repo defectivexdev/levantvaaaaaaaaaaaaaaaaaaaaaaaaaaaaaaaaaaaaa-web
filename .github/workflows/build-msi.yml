@@ -1,0 +1,67 @@
+name: Build LevantACARS MSI Installer
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-msi:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup WiX Toolset
+        run: |
+          dotnet tool install --global wix
+          wix extension add WixToolset.UI.wixext
+          wix extension add WixToolset.Util.wixext
+
+      - name: Restore NuGet packages
+        run: dotnet restore LevantACARS.sln
+        working-directory: ./LevantACARS
+
+      - name: Build LevantACARS Application
+        run: dotnet build LevantACARS.sln --configuration Release --no-restore
+        working-directory: ./LevantACARS
+
+      - name: Build MSI Installer
+        run: msbuild installer/LevantACARS.Installer.wixproj /p:Configuration=Release /p:Platform=x64
+        working-directory: ./LevantACARS
+
+      - name: Upload MSI Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LevantACARS-Installer-${{ github.sha }}
+          path: ./LevantACARS/installer/bin/Release/**/*.msi
+          retention-days: 30
+
+      - name: Create Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./LevantACARS/installer/bin/Release/**/*.msi
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
