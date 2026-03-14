@@ -47,7 +47,7 @@ jobs:
 
       - name: Build MSI Installer
         run: |
-          $buildPath = "..\bin\Release\net8.0-windows"
+          $buildPath = "..\src\LevantACARS.App\bin\Release\net8.0-windows\win-x64"
           $webUIPath = "..\frontend\out"
           $outputPath = ".\Output"
           $version = "1.0.0"
@@ -59,9 +59,8 @@ jobs:
           }
           
           Write-Host "[1/3] Compiling WiX source files..." -ForegroundColor Cyan
-          candle.exe Product.wxs `
+          candle.exe Product-Minimal.wxs `
             -dBuildPath=$buildPath `
-            -dWebUIPath=$webUIPath `
             -dVersion=$version `
             -ext WixUIExtension `
             -ext WixUtilExtension
@@ -69,7 +68,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit 1 }
           
           Write-Host "[2/3] Linking and creating MSI..." -ForegroundColor Cyan
-          light.exe Product.wixobj `
+          light.exe Product-Minimal.wixobj `
             -ext WixUIExtension `
             -ext WixUtilExtension `
             -cultures:en-us `

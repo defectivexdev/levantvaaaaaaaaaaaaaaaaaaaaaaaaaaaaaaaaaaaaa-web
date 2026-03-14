@@ -34,8 +34,6 @@
     
     <!-- Custom UI -->
     <WixVariable Id="WixUILicenseRtf" Value="Assets\License.rtf" />
-    <WixVariable Id="WixUIBannerBmp" Value="Assets\Banner.bmp" />
-    <WixVariable Id="WixUIDialogBmp" Value="Assets\Dialog.bmp" />
     
     <!-- Beautiful Custom UI Sequence -->
     <UI Id="CustomUI">
