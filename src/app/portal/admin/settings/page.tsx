@@ -393,13 +393,18 @@ export default function AdminSettingsPage() {
                 </div>
             </div>
 
-            {/* Sections */}
-            {renderSection('Economy & Tax', <DollarSign size={16} className="text-accent-gold" />, 'accent-gold', economyFields)}
-            {renderSection('Revenue Rates', <Percent size={16} className="text-emerald-400" />, 'emerald', revenueFields)}
-            {renderSection('Damage & Maintenance', <AlertTriangle size={16} className="text-rose-400" />, 'rose', damageFields)}
+            {/* Economy & Revenue Tab */}
+            {activeTab === 'economy' && (
+                <>
+                    {renderSection('Economy & Tax', <DollarSign size={16} className="text-accent-gold" />, 'accent-gold', economyFields)}
+                    {renderSection('Revenue Rates', <Percent size={16} className="text-emerald-400" />, 'emerald', revenueFields)}
+                    {renderSection('Damage & Maintenance', <AlertTriangle size={16} className="text-rose-400" />, 'rose', damageFields)}
+                </>
+            )}
 
-            {/* Pilot Salary Section */}
-            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
+            {/* Pilot Salaries Tab */}
+            {activeTab === 'salary' && (
+                <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
                 <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                     <Wallet size={16} className="text-green-400" />
                     <h2 className="text-sm font-bold text-white uppercase tracking-wider">Weekly Pilot Salary</h2>
@@ -450,7 +455,11 @@ export default function AdminSettingsPage() {
                     </div>
                 </div>
             </div>
+            )}
 
+            {/* Credits System Tab */}
+            {activeTab === 'credits' && (
+                <>
             {/* Credit Bonuses System */}
             {renderSection('Credits — Flight Performance', <Zap size={16} className="text-blue-400" />, 'blue', [
                 { key: 'cr_base_flight', label: 'Base Flight CR', unit: 'CR', step: 10, min: 0, description: 'Base credits awarded for completing any flight' },
@@ -480,7 +489,12 @@ export default function AdminSettingsPage() {
             {renderSection('Credits — Group Flight Events', <Users size={16} className="text-cyan-400" />, 'cyan', [
                 { key: 'cr_group_flight_participation', label: 'Participation Bonus', unit: 'CR', step: 10, min: 0, description: 'Credits awarded for joining a group flight event' },
             ])}
+                </>
+            )}
 
+            {/* Flight Operations Tab */}
+            {activeTab === 'operations' && (
+                <>
             {/* Fleet Operations */}
             <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
                 <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
@@ -503,8 +517,10 @@ export default function AdminSettingsPage() {
                     <p className="text-[9px] text-gray-600 px-1">When enabled, pilots must book aircraft from the airport where it last landed. Encourages tours and realistic operations.</p>
                 </div>
             </div>
+                </>
+            )}
 
-            {/* Formula Preview */}
+            {/* Formula Preview - Show on all tabs */}
             <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden">
                 <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
                     <Sparkles size={16} className="text-purple-400" />

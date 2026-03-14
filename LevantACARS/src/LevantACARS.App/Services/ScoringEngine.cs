@@ -33,22 +33,26 @@ public sealed class ScoringEngine
         string Description
     );
 
-    public static LandingGradeResult GradeLanding(double landingRate, double gForce)
+    public static async Task<LandingGradeResult> GradeLandingAsync(double landingRate, double gForce)
     {
+        var settings = await AirlineConfigService.GetSettingsAsync();
         double absRate = Math.Abs(landingRate);
 
-        // G-Force override
-        if (gForce > 2.5)
+        // G-Force override (use dynamic thresholds)
+        if (gForce > settings.GForceHighThreshold)
             return new(LandingGrade.Crash, 100, 0, $"Crash landing ({gForce:F1}G)");
         if (gForce > 1.7)
             return new(LandingGrade.Hard, 15, 0, $"Hard landing ({gForce:F1}G)");
 
-        // V/S-based grading
+        // V/S-based grading (use dynamic thresholds)
+        double hardThreshold = Math.Abs(settings.HardLandingThreshold);
+        double severeThreshold = Math.Abs(settings.SevereDamageThreshold);
+        
         if (absRate <= 50)  return new(LandingGrade.Butter,     0,  10, $"Butter! ({absRate:F0} fpm)");
         if (absRate <= 150) return new(LandingGrade.VerySmooth,  0,  5,  $"Very smooth ({absRate:F0} fpm)");
         if (absRate <= 250) return new(LandingGrade.Smooth,      0,  2,  $"Smooth ({absRate:F0} fpm)");
-        if (absRate <= 400) return new(LandingGrade.Normal,      0,  0,  $"Normal ({absRate:F0} fpm)");
-        if (absRate <= 600) return new(LandingGrade.Hard,        15, 0,  $"Hard landing ({absRate:F0} fpm)");
+        if (absRate <= hardThreshold) return new(LandingGrade.Normal, 0, 0, $"Normal ({absRate:F0} fpm)");
+        if (absRate <= severeThreshold) return new(LandingGrade.Hard, 15, 0, $"Hard landing ({absRate:F0} fpm)");
         if (absRate <= 900) return new(LandingGrade.VeryHard,    20, 0,  $"Very hard landing ({absRate:F0} fpm)");
 
         return new(LandingGrade.Crash, 100, 0, $"Crash ({absRate:F0} fpm)");
@@ -66,7 +70,7 @@ public sealed class ScoringEngine
         string RejectionReason
     );
 
-    public static ScoreResult CalculateFlightScore(
+    public static async Task<ScoreResult> CalculateFlightScoreAsync(
         IReadOnlyList<Exceedance> exceedances,
         double landingRate,
         double gForce,
@@ -103,7 +107,7 @@ public sealed class ScoringEngine
         int exceedancePenalty = typePenalties.Values.Sum();
 
         // 2. Landing grade penalty
-        var landingGrade = GradeLanding(landingRate, gForce);
+        var landingGrade = await GradeLandingAsync(landingRate, gForce);
         int landingPenalty = landingGrade.Penalty;
 
         // 3. Crash override
