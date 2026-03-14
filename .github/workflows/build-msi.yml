@@ -65,7 +65,7 @@ jobs:
         run: |
           $buildPath = "..\src\LevantACARS.App\bin\Release\net8.0-windows\win-x64\publish"
           $outputPath = ".\Output"
-          $version = "1.0.9"
+          $version = "1.0.10"
           
           Write-Host "Building Levant ACARS MSI Installer v$version" -ForegroundColor Cyan
           
