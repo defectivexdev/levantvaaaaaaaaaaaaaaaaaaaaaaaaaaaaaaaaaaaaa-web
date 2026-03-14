@@ -52,7 +52,7 @@
 
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="MainExecutable" Guid="*">
+      <Component Id="MainExecutable" Guid="A1B2C3D4-E5F6-4789-ABCD-EF1234567890">
         <File Id="LevantACARSExe" 
               Source="$(var.BuildPath)\LevantACARS.App.exe" 
               KeyPath="no" />
