@@ -35,7 +35,7 @@ export default React.memo(function WeatherTile({ icao, label, onQnhUpdate }: Pro
 
   return (
     <div
-      className={`relative flex flex-col justify-between p-2.5 h-full rounded-lg border transition-all duration-500 ${
+      className={`relative flex flex-col p-2.5 rounded-lg border transition-all duration-500 min-h-[180px] max-h-[220px] overflow-y-auto ${
         isSevere
           ? 'bg-red-500/10 border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.1)]'
           : 'bg-slate-900/50 border-white/10'
