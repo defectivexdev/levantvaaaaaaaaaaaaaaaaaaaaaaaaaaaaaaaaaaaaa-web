@@ -5,6 +5,7 @@
 
 import type { FlightPlan, Airport, FuelPlan } from '@/types/flight';
 import { calculateFuelPlan } from './fuelCalculation';
+import { apiFetch } from '@/lib/apiClient';
 
 // ============================================================================
 // TYPES
@@ -91,28 +92,24 @@ export async function fetchSimBriefPlan(
     pilotId: string,
     format: 'json' | 'xml' = 'json'
 ): Promise<SimBriefFlightPlan | null> {
-    try {
-        const url = format === 'json' 
-            ? `${SIMBRIEF_JSON_API}?userid=${pilotId}&json=1`
-            : `${SIMBRIEF_XML_API}?userid=${pilotId}`;
+    const url = format === 'json' 
+        ? `${SIMBRIEF_JSON_API}?userid=${pilotId}&json=1`
+        : `${SIMBRIEF_XML_API}?userid=${pilotId}`;
 
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            console.error('SimBrief API error:', response.status);
-            return null;
-        }
-
-        if (format === 'json') {
-            const data = await response.json();
-            return parseSimBriefJSON(data);
-        } else {
+    if (format === 'json') {
+        const data = await apiFetch<any>(url);
+        return data ? parseSimBriefJSON(data) : null;
+    } else {
+        // For XML, use standard fetch
+        try {
+            const response = await fetch(url);
+            if (!response.ok) return null;
             const xmlText = await response.text();
             return parseSimBriefXML(xmlText);
+        } catch (error) {
+            console.error('Failed to fetch SimBrief XML:', error);
+            return null;
         }
-    } catch (error) {
-        console.error('Failed to fetch SimBrief plan:', error);
-        return null;
     }
 }
 

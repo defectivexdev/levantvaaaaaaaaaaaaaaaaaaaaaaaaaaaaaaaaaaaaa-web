@@ -4,6 +4,7 @@
  */
 
 import type { METAR, TAF, CloudLayer } from '@/types/flight';
+import { cachedFetch, ApiCache } from '@/lib/apiClient';
 
 // ============================================================================
 // CONFIGURATION
@@ -12,8 +13,9 @@ import type { METAR, TAF, CloudLayer } from '@/types/flight';
 const WEATHER_API_BASE = 'https://aviationweather.gov/api/data';
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
 
-// In-memory cache
-const cache = new Map<string, { data: any; timestamp: number }>();
+// Centralized cache for raw API responses
+const metarCache = new ApiCache<any[]>(CACHE_DURATION);
+const tafCache = new ApiCache<any[]>(CACHE_DURATION);
 
 // ============================================================================
 // METAR PARSING & FETCHING
@@ -23,34 +25,14 @@ const cache = new Map<string, { data: any; timestamp: number }>();
  * Fetch METAR for an airport
  */
 export async function fetchMETAR(icao: string): Promise<METAR | null> {
+    const url = `${WEATHER_API_BASE}/metar?ids=${icao.toUpperCase()}&format=json`;
     const cacheKey = `metar_${icao.toUpperCase()}`;
-    const cached = cache.get(cacheKey);
 
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        return cached.data;
-    }
+    const data = await cachedFetch<any[]>(url, metarCache, cacheKey);
+    
+    if (!data || data.length === 0) return null;
 
-    try {
-        const response = await fetch(
-            `${WEATHER_API_BASE}/metar?ids=${icao.toUpperCase()}&format=json`
-        );
-
-        if (!response.ok) {
-            console.error(`Failed to fetch METAR for ${icao}`);
-            return null;
-        }
-
-        const data = await response.json();
-        if (!data || data.length === 0) return null;
-
-        const metar = parseMETAR(data[0]);
-        cache.set(cacheKey, { data: metar, timestamp: Date.now() });
-
-        return metar;
-    } catch (error) {
-        console.error('METAR fetch error:', error);
-        return null;
-    }
+    return parseMETAR(data[0]);
 }
 
 /**
@@ -119,34 +101,14 @@ function getLowestCeiling(clouds: any[]): number {
  * Fetch TAF for an airport
  */
 export async function fetchTAF(icao: string): Promise<TAF | null> {
+    const url = `${WEATHER_API_BASE}/taf?ids=${icao.toUpperCase()}&format=json`;
     const cacheKey = `taf_${icao.toUpperCase()}`;
-    const cached = cache.get(cacheKey);
 
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        return cached.data;
-    }
+    const data = await cachedFetch<any[]>(url, tafCache, cacheKey);
+    
+    if (!data || data.length === 0) return null;
 
-    try {
-        const response = await fetch(
-            `${WEATHER_API_BASE}/taf?ids=${icao.toUpperCase()}&format=json`
-        );
-
-        if (!response.ok) {
-            console.error(`Failed to fetch TAF for ${icao}`);
-            return null;
-        }
-
-        const data = await response.json();
-        if (!data || data.length === 0) return null;
-
-        const taf = parseTAF(data[0]);
-        cache.set(cacheKey, { data: taf, timestamp: Date.now() });
-
-        return taf;
-    } catch (error) {
-        console.error('TAF fetch error:', error);
-        return null;
-    }
+    return parseTAF(data[0]);
 }
 
 /**
@@ -244,5 +206,6 @@ export async function fetchWeatherBrief(icaoCodes: string[]): Promise<{
  * Clear weather cache
  */
 export function clearWeatherCache(): void {
-    cache.clear();
+    metarCache.clear();
+    tafCache.clear();
 }
