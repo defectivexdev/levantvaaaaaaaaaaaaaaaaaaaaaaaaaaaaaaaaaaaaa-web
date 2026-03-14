@@ -99,7 +99,8 @@ export default function AdminStaffPage() {
             const data = await res.json();
             if (data.success) {
                 if (editingMemberId) {
-                    setMembers(members.map(m => m._id === editingMemberId ? data.member : m));
+                    // Refresh the entire list to ensure proper population
+                    await fetchData();
                     toast.success('Staff member updated successfully');
                 } else {
                     setMembers([data.member, ...members]);
@@ -153,6 +154,8 @@ export default function AdminStaffPage() {
     });
 
     const handleEdit = (member: StaffMember) => {
+        console.log('Editing member:', member);
+        console.log('Role title:', member.role_id?.title);
         setEditingMemberId(member._id);
         setPilotIdInput(member.pilot_id?.pilot_id || '');
         setMemberDetails({
