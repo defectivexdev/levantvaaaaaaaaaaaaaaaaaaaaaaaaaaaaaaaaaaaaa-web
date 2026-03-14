@@ -35,7 +35,10 @@ namespace LevantACARS.Services;
 
         public bool IsConnected => _restApiConnected;
 
-        public int PendingPositionBacklogCount => _positionBacklog.Count;\n\n        private DateTimeOffset _lastPositionUpdate = DateTimeOffset.MinValue;\n        private readonly TimeSpan _minPositionUpdateInterval = TimeSpan.FromSeconds(15);
+        public int PendingPositionBacklogCount => _positionBacklog.Count;
+
+        private DateTimeOffset _lastPositionUpdate = DateTimeOffset.MinValue;
+        private readonly TimeSpan _minPositionUpdateInterval = TimeSpan.FromSeconds(15);
 
         public LevantApiClient(HttpClient http, ILogger<LevantApiClient> logger)
         {
