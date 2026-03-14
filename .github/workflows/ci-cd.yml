@@ -39,7 +39,6 @@ jobs:
     name: Build ACARS Client
     runs-on: windows-latest
     needs: validate
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
