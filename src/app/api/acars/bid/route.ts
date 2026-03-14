@@ -227,8 +227,8 @@ async function handleBookFlight(params: any) {
         simbrief_ofp_id, activity_id, client_version
     } = params;
 
-    // Require minimum client version 1.0.9 to place bids
-    const minVersion = '1.0.9';
+    // Require minimum client version 2.0.0 to place bids
+    const minVersion = '2.0.0';
     if (!client_version || compareVersions(client_version, minVersion) < 0) {
         return NextResponse.json({ 
             error: `Client version ${client_version || 'unknown'} is outdated. Please update to v${minVersion} or later to place bids.`,

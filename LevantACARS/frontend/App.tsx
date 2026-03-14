@@ -56,7 +56,7 @@ export default function App() {
       <UpdateOverlay updateStatus={updateStatus} />
       {/* ── Title Bar (Glassmorphism + Gold border) ─────── */}
       <div
-        className="h-[35px] flex items-center justify-between px-4 shrink-0 relative z-50 border-b border-[rgba(197,160,89,0.3)] titlebar-drag"
+        className="h-[35px] flex items-center justify-between px-4 shrink-0 relative z-50 titlebar-drag"
         style={{ background: 'rgba(10, 25, 47, 0.9)', backdropFilter: 'blur(10px)', WebkitAppRegion: 'drag' } as React.CSSProperties}
       >
         <div className="flex items-center gap-3" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
@@ -64,7 +64,7 @@ export default function App() {
             <img src="img/icon.jpg" alt="Levant" className="pilot-badge-img" />
           </div>
           <span className="text-xs font-bold tracking-[0.2em] text-[#CCD6F6]">LEVANT<span className="text-accent-gold ml-1">ACARS</span></span>
-          <span className="text-[10px] text-[#333d55] font-mono">v1.0.10</span>
+          <span className="text-[10px] text-[#333d55] font-mono">v2.0.0</span>
         </div>
         <div className="flex items-center gap-0.5" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
           <button onClick={() => SimBridge.minimizeWindow()} className="p-1.5 rounded text-[#555] hover:text-white hover:bg-white/10 transition-all bg-transparent border-none cursor-pointer"><Minus className="w-3 h-3" strokeWidth={2} /></button>
@@ -95,7 +95,7 @@ export default function App() {
               Sign Out
             </button>
           </div>
-          <div className="px-2.5 pb-2 text-[9px] font-mono text-[#333d55] tracking-wider select-none">Levant VA · v1.0.10</div>
+          <div className="px-2.5 pb-2 text-[9px] font-mono text-[#333d55] tracking-wider select-none">Levant VA · v2.0.0</div>
         </div>
 
         {/* ── Content Area ─────────────────────────────── */}

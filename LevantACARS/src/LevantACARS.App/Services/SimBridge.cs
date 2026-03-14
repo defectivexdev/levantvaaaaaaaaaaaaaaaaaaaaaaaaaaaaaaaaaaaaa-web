@@ -168,7 +168,7 @@ public class SimBridge : IDisposable
         });
     }
 
-    public string GetVersion() => "1.0.10";
+    public string GetVersion() => "2.0.0";
 
     public void MinimizeWindow()
     {

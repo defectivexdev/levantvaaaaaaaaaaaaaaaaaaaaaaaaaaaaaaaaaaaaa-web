@@ -38,8 +38,8 @@ export async function POST(request: NextRequest) {
             client_version
         } = await request.json();
 
-        // Require minimum client version 1.0.9 to place bids from web
-        const minVersion = '1.0.9';
+        // Require minimum client version 2.0.0 to place bids from web
+        const minVersion = '2.0.0';
         if (!client_version || compareVersions(client_version, minVersion) < 0) {
             return NextResponse.json({ 
                 error: `Please download and install Levant ACARS v${minVersion} or later to place bids. Web booking requires the latest desktop client.`,
