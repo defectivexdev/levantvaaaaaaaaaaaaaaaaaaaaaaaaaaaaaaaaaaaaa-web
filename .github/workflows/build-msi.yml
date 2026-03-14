@@ -46,21 +46,21 @@ jobs:
         working-directory: ./LevantACARS
 
       - name: Build MSI Installer
-        run: msbuild installer/LevantACARS.Installer.wixproj /p:Configuration=Release /p:Platform=x64
+        run: msbuild build/installer/LevantACARS.Installer.wixproj /p:Configuration=Release /p:Platform=x64
         working-directory: ./LevantACARS
 
       - name: Upload MSI Artifact
         uses: actions/upload-artifact@v4
         with:
           name: LevantACARS-Installer-${{ github.sha }}
-          path: ./LevantACARS/installer/bin/Release/**/*.msi
+          path: ./LevantACARS/build/installer/bin/Release/**/*.msi
           retention-days: 30
 
       - name: Create Release (on tag)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          files: ./LevantACARS/installer/bin/Release/**/*.msi
+          files: ./LevantACARS/build/installer/bin/Release/**/*.msi
           draft: false
           prerelease: false
         env:
