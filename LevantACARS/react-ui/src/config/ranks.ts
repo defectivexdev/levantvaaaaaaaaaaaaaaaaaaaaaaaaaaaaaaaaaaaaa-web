@@ -1,3 +1,7 @@
+/**
+ * Rank configuration interface matching the web app structure
+ * Synced with src/config/ranks.ts from the main web application
+ */
 export interface RankConfig {
     rank_id: number;
     rank_name: string;
