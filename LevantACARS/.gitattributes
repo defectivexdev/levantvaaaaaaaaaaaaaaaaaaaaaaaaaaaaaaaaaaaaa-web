@@ -1,0 +1,15 @@
+* text=auto
+
+*.cs text diff=csharp
+*.xaml text
+*.json text
+*.md text
+*.lua text
+*.ps1 text
+*.py text
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.dll binary
+*.exe binary
