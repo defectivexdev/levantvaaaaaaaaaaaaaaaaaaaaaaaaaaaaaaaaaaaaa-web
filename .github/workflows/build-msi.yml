@@ -31,7 +31,8 @@ jobs:
       - name: Setup WiX Toolset 3.x
         run: |
           choco install wixtoolset --version=3.14.0 -y
-          echo "$env:WIX\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $wixBinPath = Join-Path $env:WIX "bin"
+          echo $wixBinPath | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Restore NuGet packages
         run: dotnet restore LevantACARS.sln
