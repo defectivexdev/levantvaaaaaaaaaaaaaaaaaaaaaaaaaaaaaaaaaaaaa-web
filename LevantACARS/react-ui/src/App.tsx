@@ -15,7 +15,6 @@ import { UpdateSplash } from './components/UpdateSplash';
 import UpdateOverlay from './components/UpdateOverlay';
 import WeatherTile from './components/WeatherTile';
 import CompactFlightCard from './components/CompactFlightCard';
-import { BackgroundBeams } from './components/ui/background-beams';
 import { AnimatedTooltip } from './components/ui/animated-tooltip';
 import type { TelemetryData, FlightState, ScoreResult, UILogEntry, ConnectionState, AuthState } from './types';
 import { fetchPilotStats, type PilotStats } from './api';
@@ -51,98 +50,94 @@ export default function App() {
   }
 
   return (
-    <BackgroundBeams className="h-screen w-screen bg-[#111827] flex flex-col overflow-hidden font-sans text-white">
+    <div className="h-screen w-screen flex flex-col overflow-hidden font-sans" style={{ background: '#0B1120' }}>
       <ToastOverlay />
       <UpdateSplash />
       <UpdateOverlay updateStatus={updateStatus} />
-      {/* ── Title Bar (Glassmorphism + Gold border) ─────── */}
+      
+      {/* ── Modern Title Bar ─────── */}
       <div
-        className="h-[35px] flex items-center justify-between px-4 shrink-0 relative z-50 border-b border-[rgba(197,160,89,0.3)] titlebar-drag"
-        style={{ background: 'rgba(10, 25, 47, 0.9)', backdropFilter: 'blur(10px)', WebkitAppRegion: 'drag' } as React.CSSProperties}
+        className="h-9 flex items-center justify-between px-4 shrink-0 relative z-50 titlebar-drag"
+        style={{ background: 'linear-gradient(90deg, #0B1120 0%, #0D1528 100%)', borderBottom: '1px solid rgba(197,160,89,0.15)', WebkitAppRegion: 'drag' } as React.CSSProperties}
       >
         <div className="flex items-center gap-3" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
-          <div className="pilot-badge-container !w-6 !h-6">
-            <img src="img/icon.jpg" alt="Levant" className="pilot-badge-img" />
+          <div className="w-5 h-5 rounded-lg overflow-hidden">
+            <img src="img/icon.jpg" alt="Levant" className="w-full h-full object-cover" />
           </div>
-          <span className="text-xs font-bold tracking-[0.2em] text-[#CCD6F6]">LEVANT<span className="text-accent-gold ml-1">ACARS</span></span>
-          <span className="text-[10px] text-[#333d55] font-mono">v3.1.7</span>
+          <span className="text-xs font-bold tracking-wider" style={{ color: '#E8ECEF' }}>LEVANT <span style={{ color: '#C5A059' }}>ACARS</span></span>
+          <span className="text-[9px] font-mono" style={{ color: '#4A5568' }}>v3.3.3</span>
         </div>
-        <div className="flex items-center gap-0.5" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
-          <button onClick={() => SimBridge.minimizeWindow()} className="p-1.5 rounded text-[#555] hover:text-white hover:bg-white/10 transition-all bg-transparent border-none cursor-pointer"><Minus className="w-3 h-3" strokeWidth={2} /></button>
-          <button onClick={() => SimBridge.maximizeWindow()} className="p-1.5 rounded text-[#555] hover:text-white hover:bg-white/10 transition-all bg-transparent border-none cursor-pointer"><Square className="w-2.5 h-2.5" strokeWidth={2} /></button>
-          <button onClick={() => SimBridge.closeWindow()} className="p-1.5 rounded text-[#555] hover:text-white hover:bg-red-500/80 transition-all bg-transparent border-none cursor-pointer"><X className="w-3 h-3" strokeWidth={2} /></button>
+        <div className="flex items-center gap-1" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
+          <button onClick={() => SimBridge.minimizeWindow()} className="p-1.5 rounded transition-all bg-transparent border-none cursor-pointer" style={{ color: '#4A5568' }} onMouseEnter={(e) => { e.currentTarget.style.color = '#E8ECEF'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = '#4A5568'; e.currentTarget.style.background = 'transparent'; }}><Minus className="w-3 h-3" strokeWidth={2} /></button>
+          <button onClick={() => SimBridge.maximizeWindow()} className="p-1.5 rounded transition-all bg-transparent border-none cursor-pointer" style={{ color: '#4A5568' }} onMouseEnter={(e) => { e.currentTarget.style.color = '#E8ECEF'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }} onMouseLeave={(e) => { e.currentTarget.style.color = '#4A5568'; e.currentTarget.style.background = 'transparent'; }}><Square className="w-2.5 h-2.5" strokeWidth={2} /></button>
+          <button onClick={() => SimBridge.closeWindow()} className="p-1.5 rounded transition-all bg-transparent border-none cursor-pointer" style={{ color: '#4A5568' }} onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; e.currentTarget.style.background = '#EF4444'; }} onMouseLeave={(e) => { e.currentTarget.style.color = '#4A5568'; e.currentTarget.style.background = 'transparent'; }}><X className="w-3 h-3" strokeWidth={2} /></button>
         </div>
       </div>
 
-      {/* ── Main Layout ──────────────────────────────────────── */}
-      <div className="flex-1 flex overflow-hidden p-3 pb-0 gap-3">
-        {/* ── Sidebar - Enhanced Beautiful Design ───────────────────── */}
-        <div className="w-[190px] flex flex-col rounded-2xl relative shrink-0 transition-all border border-accent-gold/10 shadow-2xl shadow-black/50" style={{ background: 'linear-gradient(180deg, rgba(10, 25, 47, 0.98) 0%, rgba(13, 31, 56, 0.95) 50%, rgba(8, 20, 40, 0.98) 100%)' }}>
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/20 to-transparent" />
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent-gold/5 via-transparent to-transparent pointer-events-none" />
-          <nav className="flex-1 flex flex-col gap-1 w-full px-3 py-4">
-            <SideNavItem active={activeView === 'dashboard'} onClick={() => setActiveView('dashboard')} icon={<LayoutDashboard size={16} />} label="Dashboard" />
-            <SideNavItem active={activeView === 'livemap'} onClick={() => setActiveView('livemap')} icon={<Globe size={16} />} label="Live Map" />
-            <SideNavItem active={activeView === 'dispatch'} onClick={() => setActiveView('dispatch')} icon={<Plane size={16} />} label="Dispatch" />
-            <SideNavItem active={activeView === 'chat'} onClick={() => setActiveView('chat')} icon={<MessageCircle size={16} />} label="Pilot Chat" />
-            <div className="h-px bg-gradient-to-r from-transparent via-accent-gold/20 to-transparent my-2" />
-            <SideNavItem active={activeView === 'logs'} onClick={() => setActiveView('logs')} icon={<MessageSquare size={16} />} label="Flight Logs" />
-          </nav>
-          <div className="border-t border-white/[0.05] flex flex-col gap-1 px-3 py-3 bg-white/[0.01]">
-            <button onClick={() => SimBridge.logout()} className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-gray-500 hover:text-rose-400 hover:bg-rose-500/10 transition-all bg-transparent border-none cursor-pointer text-xs font-medium tracking-wider border border-transparent hover:border-rose-500/20">
-              <LogOut size={14} />
-              <span className="uppercase">Sign Out</span>
-            </button>
+      {/* ── Modern Main Layout ──────────────────────────────────────── */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* ── Modern Sidebar ───────────────────── */}
+        <div className="w-16 flex flex-col items-center py-4 gap-2 shrink-0" style={{ background: 'linear-gradient(180deg, #0D1528 0%, #0B1120 100%)', borderRight: '1px solid rgba(197,160,89,0.1)' }}>
+          <div className="w-10 h-10 rounded-xl overflow-hidden mb-2" style={{ border: '2px solid #C5A059' }}>
+            <img src="img/icon.jpg" alt="Levant" className="w-full h-full object-cover" />
           </div>
-          <div className="px-3 pb-3 text-[9px] font-mono text-gray-600 tracking-wider select-none flex items-center justify-between">
-            <span>Levant VA</span>
-            <span className="text-accent-gold/50">v3.1.7</span>
-          </div>
+          
+          <div className="h-px w-8" style={{ background: 'linear-gradient(90deg, transparent, rgba(197,160,89,0.3), transparent)' }} />
+          
+          <SideNavItem active={activeView === 'dashboard'} onClick={() => setActiveView('dashboard')} icon={<LayoutDashboard size={18} />} label="Dashboard" />
+          <SideNavItem active={activeView === 'livemap'} onClick={() => setActiveView('livemap')} icon={<Globe size={18} />} label="Live Map" />
+          <SideNavItem active={activeView === 'dispatch'} onClick={() => setActiveView('dispatch')} icon={<Plane size={18} />} label="Dispatch" />
+          <SideNavItem active={activeView === 'chat'} onClick={() => setActiveView('chat')} icon={<MessageCircle size={18} />} label="Pilot Chat" />
+          <SideNavItem active={activeView === 'logs'} onClick={() => setActiveView('logs')} icon={<MessageSquare size={18} />} label="Flight Logs" />
+          
+          <div className="flex-1" />
+          
+          <div className="h-px w-8" style={{ background: 'linear-gradient(90deg, transparent, rgba(197,160,89,0.3), transparent)' }} />
+          
+          <button onClick={() => SimBridge.logout()} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all bg-transparent border-none cursor-pointer group" style={{ color: '#6B7280' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; e.currentTarget.style.color = '#EF4444'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#6B7280'; }}>
+            <LogOut size={18} />
+          </button>
         </div>
 
-        {/* ── Content Area - Enhanced Beautiful Design ─────────────────────────────── */}
-        <div className="flex-1 flex flex-col min-w-0 bg-panel rounded-2xl relative overflow-hidden border border-white/10 shadow-2xl shadow-black/50" style={{ background: 'linear-gradient(135deg, rgba(13, 31, 56, 0.98) 0%, rgba(10, 25, 47, 0.95) 100%)' }}>
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent-gold/5 via-transparent to-cyan-500/5 pointer-events-none" />
-          {/* Header - Enhanced Beautiful Design */}
-          <header className="h-16 flex justify-between items-center px-6 border-b border-white/10 shrink-0 bg-gradient-to-r from-white/[0.02] via-accent-gold/[0.01] to-transparent backdrop-blur-sm relative z-10">
+        {/* ── Modern Content Area ─────────────────────────────── */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Modern Header */}
+          <header className="h-14 flex justify-between items-center px-6 shrink-0" style={{ background: 'linear-gradient(90deg, rgba(13,21,40,0.5) 0%, rgba(11,17,32,0.3) 100%)', borderBottom: '1px solid rgba(197,160,89,0.08)' }}>
             {/* Left: View Title */}
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-accent-gold/25 via-accent-gold/15 to-accent-gold/5 border border-accent-gold/40 shadow-xl shadow-accent-gold/20">
-                {activeView === 'dashboard' && <LayoutDashboard size={16} className="text-accent-gold" />}
-                {activeView === 'livemap' && <Globe size={16} className="text-accent-gold" />}
-                {activeView === 'dispatch' && <Plane size={16} className="text-accent-gold" />}
-                {activeView === 'chat' && <MessageCircle size={16} className="text-accent-gold" />}
-                {activeView === 'logs' && <MessageSquare size={16} className="text-accent-gold" />}
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(197,160,89,0.2) 0%, rgba(197,160,89,0.05) 100%)', border: '1px solid rgba(197,160,89,0.3)' }}>
+                {activeView === 'dashboard' && <LayoutDashboard size={16} style={{ color: '#C5A059' }} />}
+                {activeView === 'livemap' && <Globe size={16} style={{ color: '#C5A059' }} />}
+                {activeView === 'dispatch' && <Plane size={16} style={{ color: '#C5A059' }} />}
+                {activeView === 'chat' && <MessageCircle size={16} style={{ color: '#C5A059' }} />}
+                {activeView === 'logs' && <MessageSquare size={16} style={{ color: '#C5A059' }} />}
               </div>
               <div>
-                <h2 className="text-sm font-bold tracking-tight text-white">
+                <h2 className="text-sm font-bold" style={{ color: '#E8ECEF' }}>
                   {activeView === 'dashboard' && 'Flight Logbook'}
                   {activeView === 'livemap' && 'Live Map'}
                   {activeView === 'dispatch' && 'SimBrief Dispatch'}
                   {activeView === 'chat' && 'Pilot Chat'}
                   {activeView === 'logs' && 'Flight Logs'}
                 </h2>
-                <p className="text-[10px] text-gray-500 font-mono tracking-wider uppercase">Levant Virtual Airlines</p>
+                <p className="text-[9px] font-mono tracking-wider uppercase" style={{ color: '#6B7280' }}>Levant Virtual Airlines</p>
               </div>
             </div>
             
             {/* Right: Pilot Info */}
-            <div className="flex items-center gap-4">
-              {/* Pilot Info */}
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-accent-gold/10 to-accent-gold/5 border border-accent-gold/20 shadow-lg shadow-accent-gold/10">
-                <span className="text-xs text-accent-gold font-mono font-bold tracking-wider drop-shadow-[0_0_8px_rgba(197,160,89,0.4)]">{auth.pilotId}</span>
-                <div className="h-3 w-px bg-accent-gold/30" />
-                <span className="text-xs text-gray-300 font-mono tracking-wider">{auth.pilotRank}</span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: 'linear-gradient(90deg, rgba(197,160,89,0.12) 0%, rgba(197,160,89,0.05) 100%)', border: '1px solid rgba(197,160,89,0.2)' }}>
+                <span className="text-xs font-mono font-bold tracking-wider" style={{ color: '#C5A059' }}>{auth.pilotId}</span>
+                <div className="h-3 w-px" style={{ background: 'rgba(197,160,89,0.3)' }} />
+                <span className="text-xs font-mono" style={{ color: '#9CA3AF' }}>{auth.pilotRank}</span>
               </div>
               
-              {/* Avatar */}
               <AnimatedTooltip items={[{ id: 1, name: auth.pilotName || 'Pilot', designation: `${auth.pilotRank || 'Cadet'} | ${auth.pilotId || '—'}`, image: `https://res.cloudinary.com/dryamvxbg/image/upload/c_fill,w_200,h_200,f_auto,q_auto/avatars/pilot_${auth.pilotId}` }]} />
             </div>
           </header>
 
           {/* View */}
-          <main className="flex-1 overflow-y-auto p-4">
+          <main className="flex-1 overflow-y-auto p-5" style={{ background: '#0B1120' }}>
             {activeView === 'dashboard' && (
               <DashboardView telemetry={telemetry} flight={flight} score={score} activityLog={activityLog} exceedanceLog={exceedanceLog} connection={connection} auth={auth} bid={bid} injectBid={injectBid} addLogEntry={addLogEntry} setQnhOverride={setQnhOverride} cancelFlight={cancelFlight} submitFlight={submitFlight} />
             )}
@@ -156,7 +151,7 @@ export default function App() {
 
       {/* ── Live Telemetry Footer Bar ─────────────────────── */}
       <TelemetryFooter telemetry={telemetry} flight={flight} connection={connection} qnhAltitude={qnhAltitude} />
-    </BackgroundBeams>
+    </div>
   );
 }
 
@@ -226,17 +221,32 @@ function SideNavItem({ active, onClick, icon, label }: { active: boolean; onClic
   return (
     <button
       onClick={onClick}
-      className={`w-full h-10 rounded-lg flex items-center gap-3 px-3 transition-all duration-200 relative bg-transparent border-none cursor-pointer text-xs font-semibold tracking-wider group ${
-        active
-          ? 'text-accent-gold bg-gradient-to-r from-accent-gold/10 to-accent-gold/5 border border-accent-gold/20'
-          : 'text-gray-400 hover:text-white hover:bg-white/[0.03] border border-transparent hover:border-white/[0.05]'
-      }`}
+      title={label}
+      className="w-10 h-10 rounded-xl flex items-center justify-center transition-all bg-transparent border-none cursor-pointer group relative"
+      style={{
+        color: active ? '#C5A059' : '#6B7280',
+        background: active ? 'linear-gradient(135deg, rgba(197,160,89,0.15) 0%, rgba(197,160,89,0.05) 100%)' : 'transparent',
+        border: active ? '1px solid rgba(197,160,89,0.3)' : '1px solid transparent'
+      }}
+      onMouseEnter={(e) => {
+        if (!active) {
+          e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
+          e.currentTarget.style.color = '#E8ECEF';
+          e.currentTarget.style.border = '1px solid rgba(255,255,255,0.08)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!active) {
+          e.currentTarget.style.background = 'transparent';
+          e.currentTarget.style.color = '#6B7280';
+          e.currentTarget.style.border = '1px solid transparent';
+        }
+      }}
     >
-      {active && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-accent-gold rounded-r-full shadow-lg shadow-accent-gold/50" />}
+      {active && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r-full" style={{ background: '#C5A059', boxShadow: '0 0 10px rgba(197,160,89,0.5)' }} />}
       <span className={`relative z-10 transition-all duration-200 ${
         active ? 'drop-shadow-[0_0_8px_rgba(197,160,89,0.5)]' : 'group-hover:scale-110'
       }`}>{icon}</span>
-      <span className="relative z-10 uppercase">{label}</span>
     </button>
   );
 }
