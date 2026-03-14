@@ -133,25 +133,53 @@ jobs:
           echo "C:\Program Files (x86)\WiX Toolset v3.11\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Build MSI Installer
+        shell: pwsh
         run: |
           cd LevantACARS/installer
 
           # Harvest all published files
           heat.exe dir publish -cg PublishedFiles -gg -sfrag -srd -dr INSTALLDIR -nologo -sw5150 -sw5151 -out HarvestedFiles.wxs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) { throw "Heat.exe failed with exit code $LASTEXITCODE" }
 
           # Compile WiX sources
           candle.exe -ext WixUIExtension -ext WixUtilExtension Package.wxs HarvestedFiles.wxs
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) { throw "Candle.exe failed with exit code $LASTEXITCODE" }
 
           # Link into MSI
           light.exe -ext WixUIExtension -ext WixUtilExtension -sval -b publish Package.wixobj HarvestedFiles.wixobj -o "LevantACARS-Build.msi"
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) { throw "Light.exe failed with exit code $LASTEXITCODE" }
+
+          # Verify MSI was created
+          if (-not (Test-Path "LevantACARS-Build.msi")) {
+            throw "MSI file was not created!"
+          }
+          Write-Host "✓ MSI created successfully: $(Get-Item LevantACARS-Build.msi | Select-Object -ExpandProperty Length) bytes"
 
       - name: Create ZIP archive
         shell: pwsh
         run: |
-          Compress-Archive -Path "LevantACARS/installer/publish/*" -DestinationPath "LevantACARS-Build.zip"
+          if (-not (Test-Path "LevantACARS/installer/publish")) {
+            throw "Publish directory not found!"
+          }
+          Compress-Archive -Path "LevantACARS/installer/publish/*" -DestinationPath "LevantACARS-Build.zip" -Force
+          Write-Host "✓ ZIP created successfully: $(Get-Item LevantACARS-Build.zip | Select-Object -ExpandProperty Length) bytes"
+
+      - name: Verify Build Artifacts
+        shell: pwsh
+        run: |
+          Write-Host "Checking for build artifacts..."
+          if (Test-Path "LevantACARS/installer/LevantACARS-Build.msi") {
+            Write-Host "✓ MSI found at: LevantACARS/installer/LevantACARS-Build.msi"
+            Get-Item "LevantACARS/installer/LevantACARS-Build.msi" | Format-List Name, Length, LastWriteTime
+          } else {
+            Write-Host "✗ MSI NOT FOUND at expected path!"
+          }
+          if (Test-Path "LevantACARS-Build.zip") {
+            Write-Host "✓ ZIP found at: LevantACARS-Build.zip"
+            Get-Item "LevantACARS-Build.zip" | Format-List Name, Length, LastWriteTime
+          } else {
+            Write-Host "✗ ZIP NOT FOUND at expected path!"
+          }
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -160,6 +188,7 @@ jobs:
           path: |
             LevantACARS/installer/LevantACARS-Build.msi
             LevantACARS-Build.zip
+          if-no-files-found: error
 
   release:
     name: Semantic Release
