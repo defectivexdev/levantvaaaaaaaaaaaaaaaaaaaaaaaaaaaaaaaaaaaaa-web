@@ -1,0 +1,11 @@
+{
+  "apiBaseUrl": "https://levant-va.com",
+  "deviceName": "LevantACARS",
+  "version": "1.0.0",
+  "autoRefreshInterval": 15000,
+  "features": {
+    "liveFlights": true,
+    "statistics": true,
+    "leaderboards": true
+  }
+}
