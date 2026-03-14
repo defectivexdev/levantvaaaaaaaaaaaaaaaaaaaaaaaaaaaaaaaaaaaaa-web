@@ -50,10 +50,10 @@ jobs:
           Write-Host "Checking publish output directory..." -ForegroundColor Cyan
           $publishPath = "src\LevantACARS.App\bin\Release\net8.0-windows\win-x64\publish"
           if (Test-Path $publishPath) {
-            Write-Host "Contents of $publishPath:" -ForegroundColor Green
+            Write-Host "Contents of ${publishPath}:" -ForegroundColor Green
             Get-ChildItem $publishPath -Recurse | Select-Object FullName
           } else {
-            Write-Host "Publish path does not exist: $publishPath" -ForegroundColor Red
+            Write-Host "Publish path does not exist: ${publishPath}" -ForegroundColor Red
             Write-Host "Searching for actual output location..." -ForegroundColor Yellow
             Get-ChildItem "src\LevantACARS.App\bin" -Recurse -Filter "*.exe" | Select-Object FullName
           }
