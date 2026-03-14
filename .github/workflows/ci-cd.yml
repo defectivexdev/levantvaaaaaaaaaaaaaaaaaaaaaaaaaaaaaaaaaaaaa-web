@@ -135,25 +135,52 @@ jobs:
       - name: Build MSI Installer
         shell: pwsh
         run: |
+          Write-Host "Starting MSI build process..."
           cd LevantACARS/installer
-
-          # Harvest all published files
-          heat.exe dir publish -cg PublishedFiles -gg -sfrag -srd -dr INSTALLDIR -nologo -sw5150 -sw5151 -out HarvestedFiles.wxs
-          if ($LASTEXITCODE -ne 0) { throw "Heat.exe failed with exit code $LASTEXITCODE" }
-
-          # Compile WiX sources
-          candle.exe -ext WixUIExtension -ext WixUtilExtension Package.wxs HarvestedFiles.wxs
-          if ($LASTEXITCODE -ne 0) { throw "Candle.exe failed with exit code $LASTEXITCODE" }
-
-          # Link into MSI
-          light.exe -ext WixUIExtension -ext WixUtilExtension -sval -b publish Package.wixobj HarvestedFiles.wixobj -o "LevantACARS-Build.msi"
-          if ($LASTEXITCODE -ne 0) { throw "Light.exe failed with exit code $LASTEXITCODE" }
-
-          # Verify MSI was created
-          if (-not (Test-Path "LevantACARS-Build.msi")) {
-            throw "MSI file was not created!"
+          
+          Write-Host "Current directory: $(Get-Location)"
+          Write-Host "Checking for publish directory..."
+          if (-not (Test-Path "publish")) {
+            throw "Publish directory not found at LevantACARS/installer/publish"
           }
-          Write-Host "✓ MSI created successfully: $(Get-Item LevantACARS-Build.msi | Select-Object -ExpandProperty Length) bytes"
+          Write-Host "✓ Publish directory exists"
+          
+          Write-Host "Checking for Package.wxs..."
+          if (-not (Test-Path "Package.wxs")) {
+            throw "Package.wxs not found!"
+          }
+          Write-Host "✓ Package.wxs exists"
+
+          Write-Host "Running heat.exe to harvest files..."
+          heat.exe dir publish -cg PublishedFiles -gg -sfrag -srd -dr INSTALLDIR -nologo -sw5150 -sw5151 -out HarvestedFiles.wxs
+          if ($LASTEXITCODE -ne 0) { 
+            Write-Host "ERROR: Heat.exe failed with exit code $LASTEXITCODE"
+            throw "Heat.exe failed"
+          }
+          Write-Host "✓ Heat.exe completed successfully"
+
+          Write-Host "Running candle.exe to compile..."
+          candle.exe -ext WixUIExtension -ext WixUtilExtension Package.wxs HarvestedFiles.wxs
+          if ($LASTEXITCODE -ne 0) { 
+            Write-Host "ERROR: Candle.exe failed with exit code $LASTEXITCODE"
+            throw "Candle.exe failed"
+          }
+          Write-Host "✓ Candle.exe completed successfully"
+
+          Write-Host "Running light.exe to create MSI..."
+          light.exe -ext WixUIExtension -ext WixUtilExtension -sval -b publish Package.wixobj HarvestedFiles.wixobj -o "LevantACARS-Build.msi"
+          if ($LASTEXITCODE -ne 0) { 
+            Write-Host "ERROR: Light.exe failed with exit code $LASTEXITCODE"
+            throw "Light.exe failed"
+          }
+          Write-Host "✓ Light.exe completed successfully"
+
+          if (-not (Test-Path "LevantACARS-Build.msi")) {
+            throw "MSI file was not created at expected location!"
+          }
+          
+          $msiSize = (Get-Item "LevantACARS-Build.msi").Length
+          Write-Host "✓ MSI created successfully: $msiSize bytes ($([math]::Round($msiSize/1MB, 2)) MB)"
 
       - name: Create ZIP archive
         shell: pwsh
