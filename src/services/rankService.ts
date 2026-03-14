@@ -14,23 +14,23 @@ export async function updatePilotRank(pilotId: string): Promise<{ updated: boole
         const currentRankConfig = getRankByHours(totalHours);
         
         // Check if rank needs updating
-        if (pilot.rank !== currentRankConfig.name) {
+        if (pilot.rank !== currentRankConfig.rank_name) {
             const oldRank = pilot.rank;
-            pilot.rank = currentRankConfig.name;
+            pilot.rank = currentRankConfig.rank_name;
             await pilot.save();
 
             // Send notification about rank promotion
             await createNotification({
                 pilotId: new mongoose.Types.ObjectId(pilotId),
                 type: 'system',
-                title: `Rank Promotion: ${currentRankConfig.name}`,
-                message: `Congratulations! You've been promoted to ${currentRankConfig.name} with ${Math.floor(totalHours)} flight hours.`
+                title: `Rank Promotion: ${currentRankConfig.rank_name}`,
+                message: `Congratulations! You've been promoted to ${currentRankConfig.rank_name} with ${Math.floor(totalHours)} flight hours.`
             });
 
             return {
                 updated: true,
                 oldRank,
-                newRank: currentRankConfig.name
+                newRank: currentRankConfig.rank_name
             };
         }
 
@@ -50,33 +50,33 @@ export async function getPilotRankInfo(pilotId: string) {
         const currentRank = getRankByHours(totalHours);
         
         // Find next rank
-        const currentIndex = PILOT_RANKS.findIndex(r => r.id === currentRank.id);
-        const nextRank = currentIndex < PILOT_RANKS.length - 1 ? PILOT_RANKS[currentIndex + 1] : null;
+        const currentRankIndex = PILOT_RANKS.findIndex(r => r.rank_id === currentRank.rank_id);
+        const nextRank = currentRankIndex < PILOT_RANKS.length - 1 ? PILOT_RANKS[currentRankIndex + 1] : null;
         
         // Calculate progress to next rank
         let progress = 100;
         let hoursToNext = 0;
         
         if (nextRank) {
-            const hoursInCurrentRank = totalHours - currentRank.minHours;
-            const hoursNeededForNext = nextRank.minHours - currentRank.minHours;
+            const hoursInCurrentRank = totalHours - currentRank.required_hours;
+            const hoursNeededForNext = nextRank.required_hours - currentRank.required_hours;
             progress = Math.min((hoursInCurrentRank / hoursNeededForNext) * 100, 100);
-            hoursToNext = nextRank.minHours - totalHours;
+            hoursToNext = nextRank.required_hours - totalHours;
         }
 
         return {
             currentRank: {
-                id: currentRank.id,
-                name: currentRank.name,
-                image: currentRank.image,
-                minHours: currentRank.minHours,
-                maxHours: currentRank.maxHours
+                id: currentRank.rank_id,
+                name: currentRank.rank_name,
+                image: currentRank.rank_image,
+                minHours: currentRank.required_hours,
+                maxHours: currentRank.required_hours /* TODO maxHours? */
             },
             nextRank: nextRank ? {
-                id: nextRank.id,
-                name: nextRank.name,
-                image: nextRank.image,
-                minHours: nextRank.minHours
+                id: nextRank.rank_id,
+                name: nextRank.rank_name,
+                image: nextRank.rank_image,
+                minHours: nextRank.required_hours
             } : null,
             totalHours,
             progress,

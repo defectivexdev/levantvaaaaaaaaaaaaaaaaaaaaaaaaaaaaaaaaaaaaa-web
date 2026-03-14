@@ -327,12 +327,12 @@ export function useTelemetry() {
     return unsub;
   }, [handleMessage]);
 
-  // Auto-fetch bid when logged in + periodic poll (every 30s)
+  // Auto-fetch bid when logged in 
   const prevLoggedIn = useRef(false);
   const prevPilotId = useRef('');
   useEffect(() => {
     if (auth.isLoggedIn && !prevLoggedIn.current) {
-      // Just logged in — fetch bid + run one-time Discord diagnostic
+      // Just logged in - fetch bid + run one-time Discord diagnostic
       if (auth.pilotId) SimBridge.fetchBid();
       runDiscordDiagnostic()
         .then(() => { setDiscordVerified(localStorage.getItem('LVT_DISCORD_VERIFIED') === 'true'); })
@@ -344,13 +344,12 @@ export function useTelemetry() {
       SimBridge.fetchBid();
     }
     prevLoggedIn.current = auth.isLoggedIn;
-    prevPilotId.current = auth.pilotId || '';
+    prevPilotId.current = auth.pilotId !== '';
 
     if (!auth.isLoggedIn) return;
-    const iv = setInterval(() => {
-      if (!flight.isActive && auth.pilotId) SimBridge.fetchBid();
-    }, 30000);
-    return () => clearInterval(iv);
+    // No need to constantly poll bid every 30s. Bid should be refreshed manually or upon login/booking.
+    // Polling frequently causes unnecessary API traffic and re-renders.
+    // SimBridge.fetchBid() is already called when logging in or when pilotId becomes available.
   }, [auth.isLoggedIn, auth.pilotId, flight.isActive]);
 
   const clearScore = useCallback(() => setScore(null), []);

@@ -46,7 +46,7 @@ public sealed class AppConfig
     public int TelemetryBufferInterval { get; set; } = 4;
 
     [JsonPropertyName("position_update_interval")]
-    public int PositionUpdateInterval { get; set; } = 5;
+    public int PositionUpdateInterval { get; set; } = 75; // 15 seconds at 5Hz
 
     // ── Discord ───────────────────────────────────────────────────────
     [JsonPropertyName("discord_client_id")]

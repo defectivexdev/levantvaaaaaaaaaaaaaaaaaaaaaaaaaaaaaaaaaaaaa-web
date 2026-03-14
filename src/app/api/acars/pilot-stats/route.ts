@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import connectDB from '@/lib/database';
 import Flight from '@/models/Flight';
 import Bid from '@/models/Bid';
 import { findPilot, corsHeaders } from '@/lib/acars/helpers';
+import { getPilotRankInfo, getTierByHours, getTierBadge, getTierName } from '@/services/rankService';
 import mongoose from 'mongoose';
 
 export const dynamic = 'force-dynamic';

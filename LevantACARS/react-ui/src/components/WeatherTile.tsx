@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { CloudRain, CheckCircle2, Wind, Eye, Thermometer, Gauge, RefreshCw } from 'lucide-react';
 import { fetchMetar, fetchTaf, type MetarResult, type TafResult } from '../services/weather';
 
@@ -8,7 +8,7 @@ interface Props {
   onQnhUpdate?: (qnh: number) => void;
 }
 
-export default function WeatherTile({ icao, label, onQnhUpdate }: Props) {
+export default React.memo(function WeatherTile({ icao, label, onQnhUpdate }: Props) {
   const [metar, setMetar] = useState<MetarResult | null>(null);
   const [taf, setTaf] = useState<TafResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -24,10 +24,10 @@ export default function WeatherTile({ icao, label, onQnhUpdate }: Props) {
     setLoading(false);
   }, [icao, onQnhUpdate]);
 
-  // Fetch on mount & every 120s
+  // Fetch on mount & every 5 minutes (300s)
   useEffect(() => {
     refresh();
-    const iv = setInterval(refresh, 120_000);
+    const iv = setInterval(refresh, 300_000);
     return () => clearInterval(iv);
   }, [refresh]);
 

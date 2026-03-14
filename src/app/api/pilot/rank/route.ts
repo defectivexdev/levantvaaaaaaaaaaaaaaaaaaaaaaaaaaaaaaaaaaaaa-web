@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import connectDB from '@/lib/database';
 import { getPilotRankInfo, getTierByHours, getTierBadge, getTierName } from '@/services/rankService';
 import { jwtVerify } from 'jose';

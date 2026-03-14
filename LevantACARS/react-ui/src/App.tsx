@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Minus, Square, X, LayoutDashboard, Globe, MessageCircle, MessageSquare, LogOut, Plane } from 'lucide-react';
 import { useTelemetry } from './hooks/useTelemetry';
 import { SimBridge } from './bridge';
@@ -267,8 +267,9 @@ function DashboardView({
   useEffect(() => {
     if (!auth.pilotId) return;
     fetchPilotStats(auth.pilotId).then(setStats);
-    const iv = setInterval(() => fetchPilotStats(auth.pilotId).then(setStats), 60000);
-    return () => clearInterval(iv);
+    
+    // Pilot stats rarely change during a flight, no need to poll every 60s
+    // We will fetch on mount or when pilotId changes.
   }, [auth.pilotId]);
 
   const departureIcao = flight.departureIcao || bid?.departureIcao || '';
@@ -317,11 +318,11 @@ function DashboardView({
 
 // ── Stat Card ─────────────────────────────────────────────────────
 
-function StatCard({ label, value, color, small }: { label: string; value: string; color: string; small?: boolean }) {
+const StatCard = React.memo(function StatCard({ label, value, color, small }: { label: string; value: string; color: string; small?: boolean }) {
   return (
     <div className="rounded-xl p-3 border border-[var(--acars-border)] bg-[var(--acars-screen)] crt-glow card-hover-glow flex flex-col items-center justify-center gap-1">
       <span className={`${small ? 'text-sm' : 'text-lg'} font-bold font-mono ${color}`} style={{ textShadow: '0 0 8px currentColor' }}>{value}</span>
       <span className="text-[9px] font-mono text-[#555] uppercase tracking-[0.2em]">{label}</span>
     </div>
   );
-}
+});

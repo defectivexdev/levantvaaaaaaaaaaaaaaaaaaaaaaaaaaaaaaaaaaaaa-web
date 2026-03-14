@@ -122,8 +122,8 @@ export async function PUT(request: NextRequest) {
         const combinedHours = newTotalHours + newTransferHours;
         
         // Dynamic import of rank config since this is a server route
-        const { getRankByHours } = await import('@/config/ranks');
-        const calculatedRank = getRankByHours(combinedHours).name;
+        const { calculatePilotRank } = await import('@/config/ranks');
+        const calculatedRank = calculatePilotRank(combinedHours, user.total_flights || 0).rank_name;
         
         if (calculatedRank !== user.rank) {
             updateData.rank = calculatedRank;

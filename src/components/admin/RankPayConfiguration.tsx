@@ -64,15 +64,15 @@ export default function RankPayConfiguration({ initialRates, onSave }: RankPayCo
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {PILOT_RANKS.map((rank) => (
-                    <div key={rank.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                    <div key={rank.rank_id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                         <div className="flex items-center gap-3 mb-3">
                             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-                                {rank.order}
+                                {rank.priority_order}
                             </div>
                             <div className="flex-1">
-                                <h4 className="font-medium text-gray-900 dark:text-white">{rank.name}</h4>
+                                <h4 className="font-medium text-gray-900 dark:text-white">{rank.rank_name}</h4>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    {rank.minHours}–{rank.maxHours === Infinity ? '∞' : rank.maxHours} hours
+                                    {rank.required_hours}+ hours
                                 </p>
                             </div>
                         </div>
@@ -82,8 +82,8 @@ export default function RankPayConfiguration({ initialRates, onSave }: RankPayCo
                             </div>
                             <input
                                 type="number"
-                                value={rates[rank.id as keyof RankPayRates]}
-                                onChange={(e) => updateRate(rank.id as keyof RankPayRates, parseFloat(e.target.value) || 0)}
+                                value={rates[rank.rank_name.toLowerCase().replace(/ /g, '_') as keyof RankPayRates] || 0}
+                                onChange={(e) => updateRate(rank.rank_name.toLowerCase().replace(/ /g, '_') as keyof RankPayRates, parseFloat(e.target.value) || 0)}
                                 className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 step="0.01"
                                 min="0"

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Plane, Briefcase, Route, Shield, Timer, PlayCircle, XCircle, Clock, Users, Package, PlaneTakeoff, RefreshCw, Loader2, Zap } from 'lucide-react';
 import { SimBridge } from '../bridge';
 import { cn } from './ui/utils';
@@ -52,7 +52,7 @@ function useCountdown(expiresAt: string | undefined) {
 let _autoStartFired = false;
 let _lastStartTime = 0;
 
-export default function FlightPlan({ flight, telemetry, bid, pilotId, injectBid, addLogEntry, cancelFlight, submitFlight }: Props) {
+const FlightPlan = React.memo(function FlightPlan({ flight, telemetry, bid, pilotId, injectBid, addLogEntry, cancelFlight, submitFlight }: Props) {
   const active = flight.isActive && flight.flightNumber;
   const hasBid = !active && bid && bid.callsign;
   const { remaining, pct, expired } = useCountdown(bid?.expiresAt);

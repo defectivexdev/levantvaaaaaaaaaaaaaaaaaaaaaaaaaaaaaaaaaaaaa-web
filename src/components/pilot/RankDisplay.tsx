@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { TrendingUp, Clock } from 'lucide-react';
+import { TrendingUp, Clock, Zap } from 'lucide-react';
 
 interface RankInfo {
     currentRank: {

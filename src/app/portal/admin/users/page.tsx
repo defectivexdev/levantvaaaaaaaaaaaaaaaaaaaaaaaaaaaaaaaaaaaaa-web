@@ -40,7 +40,7 @@ const roleColors: Record<string, string> = {
     'Groupflight': 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
 };
 
-const ranks = PILOT_RANKS.map(r => r.name);
+const ranks = PILOT_RANKS.map(r => r.rank_name);
 
 type StatusFilter = 'All' | 'Active' | 'Inactive' | 'Pending' | 'On leave (LOA)' | 'Blacklist';
 type SortKey = 'name' | 'hours' | 'flights' | 'balance' | 'lastActivity';
@@ -197,8 +197,8 @@ export default function AdminUsersPage() {
     const getInitials = (f: string, l: string) => `${f?.[0] || ''}${l?.[0] || ''}`.toUpperCase();
     const getRankImage = (rank: string) => {
         const normalized = (rank || '').trim().toLowerCase();
-        const match = PILOT_RANKS.find(r => r.name.toLowerCase() === normalized || r.id.toLowerCase() === normalized);
-        return match?.image || PILOT_RANKS[0].image;
+        const match = PILOT_RANKS.find(r => r.rank_name.toLowerCase() === normalized || String(r.rank_id).toLowerCase() === normalized);
+        return match?.rank_image || PILOT_RANKS[0].rank_image;
     };
     const timeAgo = (d: string | null) => {
         if (!d) return 'Never';
