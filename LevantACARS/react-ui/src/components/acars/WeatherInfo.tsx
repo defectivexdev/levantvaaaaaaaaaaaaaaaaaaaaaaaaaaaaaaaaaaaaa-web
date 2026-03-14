@@ -20,8 +20,8 @@ interface WeatherData {
 }
 
 interface WeatherInfoProps {
-  departure: WeatherData;
-  arrival: WeatherData;
+  departure?: WeatherData;
+  arrival?: WeatherData;
 }
 
 function WindRose({ dir, speed, size = 80 }: { dir: number; speed: number; size?: number }) {

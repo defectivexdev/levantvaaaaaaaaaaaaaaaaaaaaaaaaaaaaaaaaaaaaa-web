@@ -5,7 +5,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "rec
 
 interface SystemItem {
   name: string;
-  status: "OPERATIONAL" | "WARNING" | "OFFLINE" | "STANDBY";
+  status: "OPERATIONAL" | "WARNING" | "CRITICAL" | "OFFLINE" | "STANDBY";
   value?: string;
   health?: number;
   subsystem?: string;
