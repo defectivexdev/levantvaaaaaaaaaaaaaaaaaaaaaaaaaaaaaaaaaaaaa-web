@@ -1,0 +1,119 @@
+name: Manual Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.5.9)'
+        required: true
+        type: string
+      create_release:
+        description: 'Create GitHub Release'
+        required: true
+        type: boolean
+        default: true
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  PROJECT_PATH: 'src/LevantACARS.App/LevantACARS.csproj'
+  PACKAGE_WXS_PATH: 'build/installer/Package.wxs'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup WiX Toolset
+        shell: pwsh
+        run: |
+          dotnet tool install --global wix --version 5.0.0
+          wix extension add WixToolset.UI.wixext
+          wix extension add WixToolset.Util.wixext
+
+      - name: Update versions
+        shell: pwsh
+        run: |
+          $version = "${{ github.event.inputs.version }}"
+          
+          # Update csproj
+          [xml]$csproj = Get-Content "${{ env.PROJECT_PATH }}"
+          $csproj.Project.PropertyGroup.Version = $version
+          $csproj.Save("${{ env.PROJECT_PATH }}")
+          
+          # Update Package.wxs
+          $wxs = Get-Content "${{ env.PACKAGE_WXS_PATH }}" -Raw
+          $wxs = $wxs -replace 'Version="[\d\.]+"', "Version=`"$version`""
+          $wxs = $wxs -replace '<RegistryValue Name="Version" Type="string" Value="[\d\.]+" />', 
+                               "<RegistryValue Name=`"Version`" Type=`"string`" Value=`"$version`" />"
+          Set-Content -Path "${{ env.PACKAGE_WXS_PATH }}" -Value $wxs
+          
+          Write-Host "✅ Updated version to: $version"
+
+      - name: Build and Publish
+        shell: pwsh
+        run: |
+          dotnet publish "${{ env.PROJECT_PATH }}" `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            --output publish
+          
+          # Copy favicon
+          Copy-Item "src/LevantACARS.App/Assets/favicon.ico" "publish/Assets/" -Force
+
+      - name: Generate WiX files
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem -Path publish -Recurse -File
+          $header = '<?xml version="1.0" encoding="UTF-8"?><Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"><Fragment><ComponentGroup Id="PublishedFiles" Directory="INSTALLDIR">'
+          $footer = '</ComponentGroup></Fragment></Wix>'
+          $components = @()
+          
+          $id = 1
+          foreach ($file in $files) {
+            $rel = $file.FullName.Substring((Resolve-Path publish).Path.Length + 1)
+            $guid = [guid]::NewGuid().ToString().ToUpper()
+            $components += "<Component Id=`"File_$id`" Guid=`"$guid`"><File Id=`"File_${id}_File`" Source=`"publish\$rel`" KeyPath=`"yes`" /></Component>"
+            $id++
+          }
+          
+          $wxs = $header + ($components -join '') + $footer
+          Set-Content "build/installer/PublishedFiles.wxs" $wxs
+
+      - name: Build MSI
+        shell: pwsh
+        run: |
+          $version = "${{ github.event.inputs.version }}"
+          wix build -arch x64 -ext WixToolset.UI.wixext -ext WixToolset.Util.wixext -out "LevantACARS-$version.msi" "${{ env.PACKAGE_WXS_PATH }}" "build/installer/PublishedFiles.wxs"
+
+      - name: Create Release
+        if: ${{ github.event.inputs.create_release == 'true' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: LevantACARS v${{ github.event.inputs.version }}
+          body: |
+            ## 📦 LevantACARS v${{ github.event.inputs.version }}
+            
+            **Download:** `LevantACARS-${{ github.event.inputs.version }}.msi`
+            
+            ### Requirements
+            - Windows 10/11 (64-bit)
+            - WebView2 Runtime (auto-installed)
+          files: LevantACARS-${{ github.event.inputs.version }}.msi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LevantACARS-${{ github.event.inputs.version }}
+          path: LevantACARS-${{ github.event.inputs.version }}.msi
