@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { FileText, Download, Clock, BarChart2, Fuel, Navigation, CheckCircle2, Send, RefreshCw } from "lucide-react";
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, Legend, BarChart, Bar,
@@ -305,3 +305,4 @@ export function Reports() {
     </div>
   );
 }
+

@@ -148,3 +148,4 @@ export function AttitudeIndicator({ pitch = 2, roll = 0, size = 130 }: AttitudeI
     </svg>
   );
 }
+

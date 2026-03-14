@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
 import { AlertCircle, CheckCircle2, Settings, Wifi, Database, Activity, Zap, Wind, Cpu, AlertTriangle } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -270,3 +270,4 @@ export function SystemStatus({ systems }: SystemStatusProps) {
     </div>
   );
 }
+

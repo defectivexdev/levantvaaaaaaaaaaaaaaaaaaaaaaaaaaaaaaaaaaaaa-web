@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
 import { Plane, Clock, MapPin, User } from "lucide-react";
 
 interface FlightStatusProps {

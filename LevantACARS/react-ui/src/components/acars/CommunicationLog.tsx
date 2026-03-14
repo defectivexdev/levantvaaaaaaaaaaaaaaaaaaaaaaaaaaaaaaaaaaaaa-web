@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { ScrollArea } from "./ui/scroll-area";
-import { Badge } from "./ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Radio, Send, Download, Mic, RefreshCw, ChevronDown } from "lucide-react";
 
 interface Message {
@@ -259,3 +259,4 @@ export function CommunicationLog({ messages }: CommunicationLogProps) {
     </div>
   );
 }
+

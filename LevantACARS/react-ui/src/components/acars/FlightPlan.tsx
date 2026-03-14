@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
 import { Map, Navigation2, CheckCircle2, Clock, Fuel, ChevronRight } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -238,3 +238,4 @@ export function FlightPlan({ waypoints }: FlightPlanProps) {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Activity, Thermometer, Fuel, Weight } from "lucide-react";
 import { FlightGauge } from "./FlightGauge";
 import { AttitudeIndicator } from "./AttitudeIndicator";
@@ -286,3 +286,4 @@ export function AircraftData({
     </div>
   );
 }
+

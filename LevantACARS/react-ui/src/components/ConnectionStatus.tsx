@@ -1,5 +1,5 @@
 import { Wifi, WifiOff, Database } from 'lucide-react';
-import Badge from './ui/Badge';
+import Badge from './ui/badge';
 
 interface ConnectionStatusProps {
   isConnected: boolean;

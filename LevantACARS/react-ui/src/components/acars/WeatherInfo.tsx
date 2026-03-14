@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Cloud, CloudRain, Sun, Wind, Eye, Droplets, Thermometer, Gauge, AlertTriangle } from "lucide-react";
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 
 interface WeatherData {
   location: string;
@@ -324,3 +324,4 @@ export function WeatherInfo({ departure, arrival }: WeatherInfoProps) {
     </div>
   );
 }
+

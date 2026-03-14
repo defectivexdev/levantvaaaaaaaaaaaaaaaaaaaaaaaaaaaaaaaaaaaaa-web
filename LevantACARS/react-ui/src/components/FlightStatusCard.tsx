@@ -1,6 +1,6 @@
 import { Plane, MapPin } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
-import Badge from './ui/Badge';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import Badge from './ui/badge';
 import { Pilot } from '@/types';
 
 interface FlightStatusCardProps {

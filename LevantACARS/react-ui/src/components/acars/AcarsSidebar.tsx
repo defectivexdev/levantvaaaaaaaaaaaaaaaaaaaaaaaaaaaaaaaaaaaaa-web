@@ -1,5 +1,5 @@
 import { Plane, Activity, Radio, Map, Settings, Cloud, BarChart3, FileText, Wifi } from "lucide-react";
-import { cn } from "./ui/utils";
+import { cn } from "../ui/utils";
 
 interface SidebarProps {
   activeTab: string;
@@ -157,3 +157,4 @@ export function Sidebar({ activeTab, onTabChange, altitude, speed, fuel, phase, 
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
 import { ZoomIn, ZoomOut, Maximize2, Layers, Filter } from 'lucide-react';
-import Button from './ui/Button';
+import { Button } from './ui/button';
 
 interface MapControlsProps {
   onZoomIn?: () => void;

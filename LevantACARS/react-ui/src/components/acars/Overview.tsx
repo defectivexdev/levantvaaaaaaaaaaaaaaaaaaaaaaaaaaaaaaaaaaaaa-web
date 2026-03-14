@@ -1,6 +1,6 @@
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Plane, Clock, MapPin, Gauge, Fuel, Navigation, Wind, Thermometer, ArrowUp, Users, Weight } from "lucide-react";
-import { Progress } from "./ui/progress";
+import { Progress } from "../ui/progress";
 
 interface OverviewProps {
   flightNumber: string;
@@ -366,3 +366,4 @@ export function Overview({
     </div>
   );
 }
+
