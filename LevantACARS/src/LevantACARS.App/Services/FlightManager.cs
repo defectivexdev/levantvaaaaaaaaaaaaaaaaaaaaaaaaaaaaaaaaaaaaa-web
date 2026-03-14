@@ -517,7 +517,7 @@ public sealed class FlightManager : IDisposable
 
         // Calculate score
         var exceedances = _exceedanceBuffer.ToArray();
-        var score = ScoringEngine.CalculateFlightScore(
+        var score = await ScoringEngine.CalculateFlightScoreAsync(
             exceedances, _landingRate, _landingGForce, flightTimeMinutes, _crashed);
 
         _logger.LogInformation("[FlightManager] Flight submitted: Score={Score}%, XP={Xp}, Grade={Grade}, {Status}",
