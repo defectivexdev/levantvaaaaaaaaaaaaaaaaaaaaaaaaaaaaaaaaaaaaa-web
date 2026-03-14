@@ -1,6 +1,24 @@
 # LevantACARS
 
-ACARS (Aircraft Communications Addressing and Reporting System) application for Levant Virtual Airlines.
+Flight tracking and ACARS system for Levant Virtual Airlines.
+
+## 🚀 Quick Start
+
+**ใช้ Vite project ที่มีอยู่แล้ว:**
+
+```bash
+cd "C:\Users\Administrator\Downloads\All website files\Levant Virtual Airline\LevantACARS\react-ui"
+npm install
+npm run build
+```
+
+ไฟล์ที่ build จะอยู่ที่ `dist/` - copy ไปใช้กับ C# project ได้เลย
+
+## 📁 Project Location
+
+**Main ACARS UI:** `C:\Users\Administrator\Downloads\All website files\Levant Virtual Airline\LevantACARS\react-ui`
+
+**สถานะ:** พร้อมใช้งาน 
 
 ## 📁 โครงสร้างโปรเจค
 
