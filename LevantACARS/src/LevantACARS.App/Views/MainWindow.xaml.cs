@@ -1,7 +1,9 @@
 using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Web.WebView2.Core;
 using LevantACARS.Services;
@@ -34,7 +36,62 @@ public partial class MainWindow : Window
         // Resolve icon with fallback: favicon.ico → favicon.jpg → logo.png → embedded default
         ResolveWindowIcon();
 
+        // Handle window state changes to update maximize/restore icon
+        StateChanged += MainWindow_StateChanged;
+
         Loaded += async (_, _) => await InitWebView2Async();
+    }
+
+    private void MainWindow_StateChanged(object? sender, EventArgs e)
+    {
+        UpdateMaximizeRestoreIcon();
+    }
+
+    private void UpdateMaximizeRestoreIcon()
+    {
+        if (MaximizeIcon == null) return;
+
+        if (WindowState == WindowState.Maximized)
+        {
+            // Restore icon (two overlapping squares)
+            MaximizeIcon.Data = Geometry.Parse("M 0,2 H 8 V 10 H 0 Z M 2,0 H 10 V 8");
+            MaximizeButton.ToolTip = "Restore Down";
+        }
+        else
+        {
+            // Maximize icon (single square)
+            MaximizeIcon.Data = Geometry.Parse("M 0,0 H 10 V 10 H 0 Z");
+            MaximizeButton.ToolTip = "Maximize";
+        }
+    }
+
+    private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+        {
+            // Double-click to maximize/restore
+            MaximizeButton_Click(sender, e);
+        }
+        else
+        {
+            // Single click to drag
+            DragMove();
+        }
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 
     /// <summary>

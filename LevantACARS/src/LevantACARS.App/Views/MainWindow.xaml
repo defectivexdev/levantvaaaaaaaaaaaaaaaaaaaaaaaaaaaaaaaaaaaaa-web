@@ -13,11 +13,129 @@
         Icon="pack://application:,,,/Assets/logo.png">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0"
+        <WindowChrome CaptionHeight="40"
                       ResizeBorderThickness="6"
                       GlassFrameThickness="0"
                       CornerRadius="0" />
     </WindowChrome.WindowChrome>
 
-    <wv2:WebView2 x:Name="WebView" />
+    <Grid>
+        <!-- Custom Title Bar -->
+        <Grid Height="40" VerticalAlignment="Top" Background="#0f172a" Panel.ZIndex="1000">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- App Icon and Title -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center">
+                <Image Source="pack://application:,,,/Assets/logo.png" 
+                       Width="20" Height="20" 
+                       Margin="0,0,8,0"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock Text="Levant ACARS" 
+                           Foreground="#94a3b8" 
+                           FontSize="13" 
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Draggable Area -->
+            <Border Grid.Column="1" Background="Transparent" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown"/>
+
+            <!-- Window Control Buttons -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <!-- Minimize Button -->
+                <Button x:Name="MinimizeButton" 
+                        Click="MinimizeButton_Click"
+                        Width="46" Height="40"
+                        Style="{StaticResource TitleBarButtonStyle}"
+                        ToolTip="Minimize">
+                    <Path Data="M 0,0 H 10" 
+                          Stroke="#94a3b8" 
+                          StrokeThickness="1.5"
+                          Stretch="None"/>
+                </Button>
+
+                <!-- Maximize/Restore Button -->
+                <Button x:Name="MaximizeButton" 
+                        Click="MaximizeButton_Click"
+                        Width="46" Height="40"
+                        Style="{StaticResource TitleBarButtonStyle}"
+                        ToolTip="Maximize">
+                    <Path x:Name="MaximizeIcon"
+                          Data="M 0,0 H 10 V 10 H 0 Z" 
+                          Stroke="#94a3b8" 
+                          StrokeThickness="1.5"
+                          Stretch="None"/>
+                </Button>
+
+                <!-- Close Button -->
+                <Button x:Name="CloseButton" 
+                        Click="CloseButton_Click"
+                        Width="46" Height="40"
+                        Style="{StaticResource TitleBarCloseButtonStyle}"
+                        ToolTip="Close">
+                    <Path Data="M 0,0 L 10,10 M 10,0 L 0,10" 
+                          Stroke="#94a3b8" 
+                          StrokeThickness="1.5"
+                          Stretch="None"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- WebView2 Content -->
+        <wv2:WebView2 x:Name="WebView" Margin="0,40,0,0"/>
+    </Grid>
+
+    <Window.Resources>
+        <!-- Title Bar Button Style -->
+        <Style x:Key="TitleBarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#94a3b8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1e293b"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#334155"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Close Button Style (Red on Hover) -->
+        <Style x:Key="TitleBarCloseButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#94a3b8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#dc2626"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#b91c1c"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 </Window>
