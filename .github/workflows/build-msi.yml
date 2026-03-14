@@ -45,6 +45,20 @@ jobs:
         run: dotnet publish src/LevantACARS.App/LevantACARS.csproj --configuration Release --no-restore --runtime win-x64 --self-contained true
         working-directory: ./LevantACARS
 
+      - name: Debug - List publish output
+        run: |
+          Write-Host "Checking publish output directory..." -ForegroundColor Cyan
+          $publishPath = "src\LevantACARS.App\bin\Release\net8.0-windows\win-x64\publish"
+          if (Test-Path $publishPath) {
+            Write-Host "Contents of $publishPath:" -ForegroundColor Green
+            Get-ChildItem $publishPath -Recurse | Select-Object FullName
+          } else {
+            Write-Host "Publish path does not exist: $publishPath" -ForegroundColor Red
+            Write-Host "Searching for actual output location..." -ForegroundColor Yellow
+            Get-ChildItem "src\LevantACARS.App\bin" -Recurse -Filter "*.exe" | Select-Object FullName
+          }
+        working-directory: ./LevantACARS
+
       - name: Build MSI Installer
         run: |
           $buildPath = "..\src\LevantACARS.App\bin\Release\net8.0-windows\win-x64\publish"
