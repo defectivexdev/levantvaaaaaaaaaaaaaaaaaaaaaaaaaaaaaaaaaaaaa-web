@@ -167,45 +167,45 @@ export default function OpsCenterPage() {
     );
 
     return (
-        <div className="space-y-6 max-w-[1600px] mx-auto pb-12 h-[calc(100vh-120px)] flex flex-col">
+        <div className="space-y-3 max-w-[1600px] mx-auto h-[calc(100vh-100px)] flex flex-col overflow-hidden">
             {/* Header / Stats Bar */}
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 shrink-0">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-accent-gold rounded-2xl flex items-center justify-center animate-pulse">
-                        <Activity className="text-dark-900 w-6 h-6" />
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-3 shrink-0">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-accent-gold rounded-xl flex items-center justify-center animate-pulse">
+                        <Activity className="text-dark-900 w-5 h-5" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-display font-bold text-white uppercase tracking-tight">Live Operations Center</h1>
-                        <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-400 uppercase tracking-widest">
-                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
-                            System Active // Real-time Synchronization
+                        <h1 className="text-xl font-display font-bold text-white uppercase tracking-tight">Live Operations Center</h1>
+                        <div className="flex items-center gap-2 text-[9px] font-mono text-emerald-400 uppercase tracking-widest">
+                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
+                            System Active // Real-time Sync
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-auto">
-                    <MiniStat label="Airborne" value={stats.airborne} icon={<Navigation className="text-blue-400" />} />
-                    <MiniStat label="Dispatching" value={stats.preflight} icon={<Clock className="text-yellow-400" />} />
-                    <MiniStat label="Total Flights" value={flights.length} icon={<Wifi className="text-emerald-400" />} />
-                    <MiniStat label="Network Avg" value="99.9%" icon={<Signal className="text-purple-400" />} />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 w-full lg:w-auto">
+                    <MiniStat label="Airborne" value={stats.airborne} icon={<Navigation className="text-blue-400 w-4 h-4" />} />
+                    <MiniStat label="Dispatching" value={stats.preflight} icon={<Clock className="text-yellow-400 w-4 h-4" />} />
+                    <MiniStat label="Total Flights" value={flights.length} icon={<Wifi className="text-emerald-400 w-4 h-4" />} />
+                    <MiniStat label="Network Avg" value="99.9%" icon={<Signal className="text-purple-400 w-4 h-4" />} />
                 </div>
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 overflow-hidden min-h-0">
+            <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-3 overflow-hidden min-h-0">
                 {/* Left: Global Flight Board */}
                 <div className="lg:col-span-1 glass-card flex flex-col min-h-0">
-                    <div className="p-4 border-b border-white/5 flex items-center justify-between">
+                    <div className="p-3 border-b border-white/5 flex items-center justify-between">
                         <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
                             <Globe className="w-3 h-3 text-accent-gold" /> Global Flight Board
                         </h2>
                         <span className="text-[10px] font-mono text-gray-600">{flights.length} Active</span>
                     </div>
                     
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
                         {flights.filter(f => f.network === 'LEVANT').map((f) => ( // Only show Levant flights in list
-                            <div key={f._id} className="bg-white/[0.02] border border-white/5 rounded-xl p-4 hover:bg-white/5 transition-all group">
-                                <div className="flex justify-between items-start mb-3">
+                            <div key={f._id} className="bg-white/[0.02] border border-white/5 rounded-xl p-3 hover:bg-white/5 transition-all group">
+                                <div className="flex justify-between items-start mb-2">
                                     <div>
                                         <p className="text-sm font-black text-white group-hover:text-accent-gold transition-colors">{f.callsign}</p>
                                         <p className="text-[10px] text-gray-500 font-mono">{f.pilot_name}</p>
@@ -217,7 +217,7 @@ export default function OpsCenterPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between gap-2 mb-3">
+                                <div className="flex items-center justify-between gap-2 mb-2">
                                     <div className="text-center">
                                         <p className="text-xs font-bold text-white">{f.departure_icao}</p>
                                         <p className="text-[8px] text-gray-600 uppercase">DEP</p>
@@ -233,7 +233,7 @@ export default function OpsCenterPage() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-2 pt-3 border-t border-white/5">
+                                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/5">
                                     <div className="flex items-center gap-1.5 font-mono text-[9px] text-gray-500 uppercase">
                                         <Navigation size={10} className="text-blue-500" /> {Math.round(f.altitude)} ft
                                     </div>
@@ -261,7 +261,7 @@ export default function OpsCenterPage() {
 
                 {/* Right: Operations Map */}
                 <div className="lg:col-span-3 glass-card relative overflow-hidden flex flex-col">
-                    <div className="p-4 border-b border-white/5 bg-[#080808]/50 relative z-20 flex items-center justify-between">
+                    <div className="p-3 border-b border-white/5 bg-[#080808]/50 relative z-20 flex items-center justify-between">
                         <h2 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
                             <MapIcon className="w-3 h-3 text-blue-400" /> Live Map
                         </h2>
@@ -277,8 +277,8 @@ export default function OpsCenterPage() {
                     </div>
 
                     {/* Overlay: Fleet Health / ATC Status (Floating) */}
-                    <div className="absolute bottom-6 left-6 z-20 space-y-3 pointer-events-none">
-                        <div className="glass-panel p-4 rounded-2xl border border-white/10 max-w-[200px] backdrop-blur-2xl">
+                    <div className="absolute bottom-4 left-4 z-20 space-y-2 pointer-events-none">
+                        <div className="glass-panel p-3 rounded-xl border border-white/10 max-w-[180px] backdrop-blur-2xl">
                              <p className="text-[10px] font-black text-gray-500 uppercase mb-2 tracking-widest">Main Hubs Status</p>
                              <div className="space-y-2">
                                  <HubStatus icao="OJAI" status="Active" pilots={flights.filter(f => f.departure_icao === 'OJAI').length} />
@@ -289,9 +289,9 @@ export default function OpsCenterPage() {
                     </div>
 
                     {/* Overlay: Delays & Flight Wings (Right side) */}
-                    <div className="absolute bottom-6 right-6 z-20 space-y-3 pointer-events-none max-w-[240px]">
+                    <div className="absolute bottom-4 right-4 z-20 space-y-2 pointer-events-none max-w-[220px]">
                         {delays.length > 0 && (
-                            <div className="glass-panel p-4 rounded-2xl border border-orange-500/20 backdrop-blur-2xl pointer-events-auto">
+                            <div className="glass-panel p-3 rounded-xl border border-orange-500/20 backdrop-blur-2xl pointer-events-auto">
                                 <p className="text-[10px] font-black text-orange-400 uppercase mb-2 tracking-widest flex items-center gap-1.5">
                                     <AlertTriangle size={10} /> Current Delays
                                 </p>
@@ -314,7 +314,7 @@ export default function OpsCenterPage() {
                             </div>
                         )}
                         {wings.length > 0 && (
-                            <div className="glass-panel p-4 rounded-2xl border border-blue-500/20 backdrop-blur-2xl pointer-events-auto">
+                            <div className="glass-panel p-3 rounded-xl border border-blue-500/20 backdrop-blur-2xl pointer-events-auto">
                                 <p className="text-[10px] font-black text-blue-400 uppercase mb-2 tracking-widest flex items-center gap-1.5">
                                     <Users size={10} /> Flight Wings
                                 </p>
@@ -344,10 +344,10 @@ export default function OpsCenterPage() {
 
 function MiniStat({ label, value, icon }: any) {
     return (
-        <div className="glass-panel px-4 py-3 rounded-xl border border-white/5 flex items-center gap-3 min-w-[140px]">
+        <div className="glass-panel px-3 py-2 rounded-lg border border-white/5 flex items-center gap-2 min-w-[120px]">
             <div className="shrink-0">{icon}</div>
             <div>
-                <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest leading-none mb-1">{label}</p>
+                <p className="text-[8px] text-gray-500 font-bold uppercase tracking-widest leading-none mb-0.5">{label}</p>
                 <p className="text-sm font-display font-black text-white leading-none">{value}</p>
             </div>
         </div>
