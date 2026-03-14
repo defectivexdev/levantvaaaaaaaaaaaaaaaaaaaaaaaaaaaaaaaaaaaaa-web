@@ -1,10 +1,10 @@
 import MainLayout from './layouts/MainLayout';
-import DemoPage from './pages/DemoPage';
+import LiveMapPage from './pages/LiveMapPage';
 
 function App() {
   return (
     <MainLayout>
-      <DemoPage />
+      <LiveMapPage />
     </MainLayout>
   );
 }

@@ -14,12 +14,12 @@ env:
 
 jobs:
   version-bump:
-    name: Auto Version Bump
+    name: Get Current Version
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     outputs:
-      new_version: ${{ steps.bump.outputs.new_version }}
-      version_changed: ${{ steps.bump.outputs.version_changed }}
+      new_version: ${{ steps.version.outputs.current_version }}
+      version_changed: ${{ steps.version.outputs.version_changed }}
     permissions:
       contents: write
     steps:
@@ -35,38 +35,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Configure Git
+      - name: Get Current Version
+        id: version
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Auto Increment Version
-        id: bump
-        run: |
-          # Get current version from package.json
+          # Get current version from package.json (keep at v1.0.0)
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
-          
-          # Increment patch version
-          npm version patch --no-git-tag-version
-          NEW_VERSION=$(node -p "require('./package.json').version")
-          echo "New version: $NEW_VERSION"
-          
-          # Update version in LevantACARS react-ui
-          cd LevantACARS/react-ui
-          npm version $NEW_VERSION --no-git-tag-version --allow-same-version
-          cd ../..
-          
-          # Commit version bump
-          git add package.json package-lock.json LevantACARS/react-ui/package.json LevantACARS/react-ui/package-lock.json
-          git commit -m "chore: bump version to v$NEW_VERSION [skip ci]" || echo "No changes to commit"
-          git push origin main || echo "Nothing to push"
-          
-          # Create and push tag
-          git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
-          git push origin "v$NEW_VERSION"
-          
-          echo "new_version=v$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: v$CURRENT_VERSION"
+          echo "current_version=v$CURRENT_VERSION" >> $GITHUB_OUTPUT
           echo "version_changed=true" >> $GITHUB_OUTPUT
 
   validate:
