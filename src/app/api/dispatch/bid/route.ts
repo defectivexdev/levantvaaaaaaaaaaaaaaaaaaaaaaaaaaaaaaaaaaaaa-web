@@ -5,6 +5,18 @@ import Bid from '@/models/Bid';
 import { PilotModel } from '@/models';
 import mongoose from 'mongoose';
 
+function compareVersions(v1: string, v2: string): number {
+    const parts1 = v1.split('.').map(Number);
+    const parts2 = v2.split('.').map(Number);
+    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
+        const p1 = parts1[i] || 0;
+        const p2 = parts2[i] || 0;
+        if (p1 > p2) return 1;
+        if (p1 < p2) return -1;
+    }
+    return 0;
+}
+
 // POST - Create a new flight bid
 export async function POST(request: NextRequest) {
     const session = await verifyAuth();
@@ -22,8 +34,20 @@ export async function POST(request: NextRequest) {
             pax,
             cargo,
             simbrief_ofp_id,
-            activity_id
+            activity_id,
+            client_version
         } = await request.json();
+
+        // Require minimum client version 1.0.9 to place bids from web
+        const minVersion = '1.0.9';
+        if (!client_version || compareVersions(client_version, minVersion) < 0) {
+            return NextResponse.json({ 
+                error: `Please download and install Levant ACARS v${minVersion} or later to place bids. Web booking requires the latest desktop client.`,
+                updateRequired: true,
+                minVersion,
+                downloadUrl: 'https://github.com/defectivexdev/levantvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-web/releases/latest'
+            }, { status: 426 });
+        }
 
         if (!departure || !arrival || !aircraft) {
             return NextResponse.json(
