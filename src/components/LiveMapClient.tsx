@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { io, Socket } from 'socket.io-client';
 import FlightStatusBadge from './FlightStatusBadge';
 import { Plane } from 'lucide-react';
 
@@ -26,13 +25,10 @@ interface FlightData {
   last_update: string;
 }
 
-const LIVE_SERVER_URL = process.env.NEXT_PUBLIC_LIVE_SERVER_URL || 'http://localhost:3001';
-
 export default function LiveMapClient() {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
-  const socketRef = useRef<Socket | null>(null);
   const [flights, setFlights] = useState<FlightData[]>([]);
   const [selectedFlight, setSelectedFlight] = useState<FlightData | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -58,52 +54,6 @@ export default function LiveMapClient() {
     return () => {
       map.remove();
       mapRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    const socket = io(LIVE_SERVER_URL, {
-      transports: ['websocket', 'polling'],
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 5
-    });
-
-    socketRef.current = socket;
-
-    socket.on('connect', () => {
-      console.log('Connected to live server');
-      setIsConnected(true);
-      socket.emit('request_all_flights');
-    });
-
-    socket.on('disconnect', () => {
-      console.log('Disconnected from live server');
-      setIsConnected(false);
-    });
-
-    socket.on('all_flights', (flightsData: FlightData[]) => {
-      console.log('Received all flights:', flightsData.length);
-      setFlights(flightsData);
-      flightsData.forEach(flight => updateAircraftMarker(flight));
-    });
-
-    socket.on('flight_update', (flight: FlightData) => {
-      console.log('Flight update:', flight.callsign);
-      setFlights(prev => {
-        const index = prev.findIndex(f => f.pilot_id === flight.pilot_id);
-        if (index >= 0) {
-          const updated = [...prev];
-          updated[index] = flight;
-          return updated;
-        }
-        return [...prev, flight];
-      });
-      updateAircraftMarker(flight);
-    });
-
-    return () => {
-      socket.disconnect();
     };
   }, []);
 
