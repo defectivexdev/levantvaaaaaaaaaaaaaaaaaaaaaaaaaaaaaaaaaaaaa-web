@@ -168,9 +168,9 @@ public sealed class AuthService
             var decoded = Encoding.UTF8.GetString(Convert.FromBase64String(config.AuthToken));
             var pilotId = decoded.Split(':')[0];
 
-            // Use the existing ACARS auth API to get fresh pilot data
-            var payload = JsonSerializer.Serialize(new { action = "bid", pilotId });
-            var res = await _http.PostAsync(config.ApiBaseUrl + "bid",
+            // Use the profile API to get fresh pilot data
+            var payload = JsonSerializer.Serialize(new { pilotId });
+            var res = await _http.PostAsync(config.ApiBaseUrl + "profile",
                 new StringContent(payload, Encoding.UTF8, "application/json"));
 
             if (res.IsSuccessStatusCode)

@@ -57,7 +57,9 @@ export async function POST(request: NextRequest) {
                         hoppieCode: pilot.hoppie_code || '',
                         simMode: pilot.sim_mode || 'fsuipc',
                         simbriefId: pilot.simbrief_id || '',
-                        avatarUrl: `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME || ''}/image/upload/c_fill,w_200,h_200,f_auto,q_auto/avatars/pilot_${pilot.pilot_id}`
+                        avatarUrl: `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME || 'dxvfbxnfx'}/image/upload/c_fill,w_200,h_200,f_auto,q_auto/levant-va/pilots/pilot_${pilot.pilot_id}`,
+                        xp: pilot.xp || 0,
+                        weightUnit: pilot.weight_unit || 'lbs'
                     },
                 }, { headers: corsHeaders() });
             }
