@@ -77,7 +77,6 @@ export default function App() {
       <div className="flex-1 flex overflow-hidden p-3 pb-0 gap-3">
         {/* ── Sidebar (Levant Navy) ───────────────────── */}
         <div className="w-[170px] flex flex-col rounded-xl relative shrink-0 transition-all sidebar-glow" style={{ background: 'rgba(10, 25, 47, 0.95)' }}>
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-gold/20 to-transparent" />
           <nav className="flex-1 flex flex-col gap-0.5 w-full px-2.5 py-3">
             <SideNavItem active={activeView === 'dashboard'} onClick={() => setActiveView('dashboard')} icon={<LayoutDashboard size={16} />} label="Dashboard" />
             <SideNavItem active={activeView === 'livemap'} onClick={() => setActiveView('livemap')} icon={<Globe size={16} />} label="Live Map" />

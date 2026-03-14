@@ -127,9 +127,6 @@ export default function AcarsApp() {
           <div className="absolute inset-0 rounded-2xl opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-500" 
                style={{ background: 'linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, transparent 50%, rgba(197, 160, 89, 0.1) 100%)' }} />
           
-          {/* Top gradient line */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent" />
-          
           <nav className="flex-1 flex flex-col gap-1 w-full px-3 py-4 relative z-10">
             <SideNavItem active={activeView === 'dashboard'} onClick={() => setActiveView('dashboard')} icon={<LayoutDashboard size={17} />} label="Dashboard" />
             <SideNavItem active={activeView === 'livemap'} onClick={() => setActiveView('livemap')} icon={<Globe size={17} />} label="Live Map" />
