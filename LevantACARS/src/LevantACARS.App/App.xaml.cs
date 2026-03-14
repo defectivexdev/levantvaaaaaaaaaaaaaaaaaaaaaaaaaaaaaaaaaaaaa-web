@@ -31,13 +31,17 @@ public partial class App : Application
             if (!Directory.Exists(logDir))
                 Directory.CreateDirectory(logDir);
 
-            var logPath = Path.Combine(logDir, "levant-acars-.log");
+            // Include timestamp in log filename for easier debugging
+            var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+            var logPath = Path.Combine(logDir, $"levant-acars-{timestamp}-.log");
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(Enum.Parse<Serilog.Events.LogEventLevel>(config.LogLevel))
                 .WriteTo.Console()
                 .WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
+            
+            Log.Information("[App] LevantACARS starting - Log file: {LogPath}", logPath);
         }
         catch
         {
