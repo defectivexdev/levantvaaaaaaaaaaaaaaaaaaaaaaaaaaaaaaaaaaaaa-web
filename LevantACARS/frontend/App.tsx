@@ -135,7 +135,7 @@ export default function App() {
                   <span className="text-xs text-gray-400 font-mono tracking-widest uppercase">{auth.pilotRank}</span>
                 </div>
               </div>
-              <AnimatedTooltip items={[{ id: 1, name: auth.pilotName || 'Pilot', designation: `${auth.pilotRank || 'Cadet'} | ${auth.pilotId || '—'}`, image: auth.pilotAvatar || 'img/icon.jpg' }]} />
+              <AnimatedTooltip items={[{ id: 1, name: auth.pilotName || 'Pilot', designation: `${auth.pilotRank || 'Cadet'} | ${auth.pilotId || '—'}`, image: auth.pilotAvatar || 'https://res.cloudinary.com/dxvfbxnfx/image/upload/v1/levant-va/pilots/default-avatar' }]} />
             </div>
           </header>
 
