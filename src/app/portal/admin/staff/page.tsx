@@ -68,7 +68,10 @@ export default function AdminStaffPage() {
         try {
             const res = await fetch('/api/staff/members');
             const data = await res.json();
-            if (data.success) setMembers(data.members);
+            if (data.success) {
+                console.log('Staff members:', data.members);
+                setMembers(data.members);
+            }
         } catch (e) {
             console.error('Failed to fetch staff data', e);
         } finally {
@@ -289,9 +292,20 @@ export default function AdminStaffPage() {
                                             {/* Avatar */}
                                             <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-gray-800 to-black p-0.5 flex-shrink-0">
                                                 <div className="w-full h-full rounded-[10px] overflow-hidden bg-zinc-900 flex items-center justify-center">
-                                                    {member.discord ? (
+                                                    {member.picture ? (
                                                         <img 
-                                                            src={`https://cdn.discordapp.com/avatars/${member.discord}/${member.discord}.png?size=128`} 
+                                                            src={member.picture} 
+                                                            alt="" 
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                e.currentTarget.style.display = 'none';
+                                                                const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                                                                if (fallback) fallback.classList.remove('hidden');
+                                                            }}
+                                                        />
+                                                    ) : member.discord ? (
+                                                        <img 
+                                                            src={`https://cdn.discordapp.com/embed/avatars/${parseInt(member.discord) % 5}.png`} 
                                                             alt="" 
                                                             className="w-full h-full object-cover"
                                                             onError={(e) => {
@@ -301,7 +315,7 @@ export default function AdminStaffPage() {
                                                             }}
                                                         />
                                                     ) : null}
-                                                    <span className={`text-xl font-bold text-gray-600 uppercase ${member.discord ? 'hidden' : ''}`}>
+                                                    <span className={`text-xl font-bold text-gray-600 uppercase ${member.picture || member.discord ? 'hidden' : ''}`}>
                                                         {memberName[0]}
                                                     </span>
                                                 </div>

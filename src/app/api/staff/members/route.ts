@@ -7,6 +7,27 @@ import Pilot from '@/models/Pilot';
 // Ensure models are registered
 const _ = { StaffRole, Pilot };
 
+// Helper function to fetch Discord avatar
+async function fetchDiscordAvatar(userId: string): Promise<string | null> {
+    try {
+        const response = await fetch(`https://discord.com/api/v10/users/${userId}`, {
+            headers: {
+                'Authorization': `Bot ${process.env.DISCORD_BOT_TOKEN}`
+            }
+        });
+        
+        if (response.ok) {
+            const user = await response.json();
+            if (user.avatar) {
+                return `https://cdn.discordapp.com/avatars/${userId}/${user.avatar}.png?size=128`;
+            }
+        }
+    } catch (error) {
+        console.error('Failed to fetch Discord avatar:', error);
+    }
+    return null;
+}
+
 // GET: List all staff members
 export async function GET() {
     await dbConnect();
@@ -14,9 +35,23 @@ export async function GET() {
         const members = await StaffMember.find({})
             .populate('pilot_id', 'first_name last_name rank pilot_id country')
             .populate('role_id', 'title category color order')
-            .sort('-assigned_at'); // Sorting logic can be refined on client-side based on Role Order
+            .sort('-assigned_at');
+        
+        // Fetch Discord avatars for members with discord IDs
+        const membersWithAvatars = await Promise.all(
+            members.map(async (member) => {
+                const memberObj = member.toObject();
+                if (memberObj.discord && !memberObj.picture) {
+                    const avatar = await fetchDiscordAvatar(memberObj.discord);
+                    if (avatar) {
+                        memberObj.picture = avatar;
+                    }
+                }
+                return memberObj;
+            })
+        );
             
-        return NextResponse.json({ success: true, members });
+        return NextResponse.json({ success: true, members: membersWithAvatars });
     } catch (error: any) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
@@ -94,13 +129,20 @@ export async function POST(req: Request) {
              return NextResponse.json({ success: false, error: 'Pilot already assigned to this role' }, { status: 400 });
         }
 
+        // Fetch Discord avatar if discord ID provided
+        let picture = null;
+        if (discord) {
+            picture = await fetchDiscordAvatar(discord);
+        }
+
         const member = await StaffMember.create({ 
             pilot_id: finalPilotId, 
             role_id: finalRoleId,
             name,
             callsign,
             email,
-            discord
+            discord,
+            picture
         });
         // Populate for immediate return
         await member.populate(['pilot_id', 'role_id']);

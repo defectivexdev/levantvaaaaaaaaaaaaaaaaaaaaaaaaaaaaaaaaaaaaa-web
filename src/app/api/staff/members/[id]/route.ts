@@ -3,6 +3,27 @@ import dbConnect from '@/lib/database';
 import StaffMember from '@/models/StaffMember';
 import StaffRole from '@/models/StaffRole';
 
+// Helper function to fetch Discord avatar
+async function fetchDiscordAvatar(userId: string): Promise<string | null> {
+    try {
+        const response = await fetch(`https://discord.com/api/v10/users/${userId}`, {
+            headers: {
+                'Authorization': `Bot ${process.env.DISCORD_BOT_TOKEN}`
+            }
+        });
+        
+        if (response.ok) {
+            const user = await response.json();
+            if (user.avatar) {
+                return `https://cdn.discordapp.com/avatars/${userId}/${user.avatar}.png?size=128`;
+            }
+        }
+    } catch (error) {
+        console.error('Failed to fetch Discord avatar:', error);
+    }
+    return null;
+}
+
 // Role title to category mapping
 const roleTitleToCategoryMap: { [key: string]: { category: string; color: string; order: number } } = {
     'Chief Executive Officer': { category: 'Board of Governor', color: 'text-accent-gold', order: 1 },
@@ -54,11 +75,18 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
             finalRoleId = role.id;
         }
 
+        // Fetch Discord avatar if discord ID provided
+        let picture = null;
+        if (discord) {
+            picture = await fetchDiscordAvatar(discord);
+        }
+
         const member = await StaffMember.findByIdAndUpdate(id, {
             role_id: finalRoleId,
             name,
             email,
-            discord
+            discord,
+            ...(picture && { picture })
         }, { new: true }).populate(['pilot_id', 'role_id']);
 
         return NextResponse.json({ success: true, member });
