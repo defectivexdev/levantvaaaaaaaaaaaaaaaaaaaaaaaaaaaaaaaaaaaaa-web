@@ -64,9 +64,8 @@ jobs:
       - name: Build MSI Installer
         run: |
           $buildPath = "..\src\LevantACARS.App\bin\Release\net8.0-windows\win-x64\publish"
-          $webUIPath = "..\frontend\out"
           $outputPath = ".\Output"
-          $version = "1.0.0"
+          $version = "1.0.2"
           
           Write-Host "Building Levant ACARS MSI Installer v$version" -ForegroundColor Cyan
           
@@ -74,8 +73,24 @@ jobs:
             New-Item -ItemType Directory -Path $outputPath | Out-Null
           }
           
-          Write-Host "[1/3] Compiling WiX source files..." -ForegroundColor Cyan
-          candle.exe Product-Minimal.wxs `
+          Write-Host "[1/4] Harvesting published files with heat.exe..." -ForegroundColor Cyan
+          heat.exe dir "$buildPath" `
+            -cg HarvestedFiles `
+            -gg `
+            -scom `
+            -sreg `
+            -srd `
+            -dr INSTALLFOLDER `
+            -var var.BuildPath `
+            -out HarvestedFiles.wxs
+          
+          if ($LASTEXITCODE -ne 0) { 
+            Write-Host "Heat.exe failed!" -ForegroundColor Red
+            exit 1 
+          }
+          
+          Write-Host "[2/4] Compiling WiX source files..." -ForegroundColor Cyan
+          candle.exe Product-Minimal.wxs HarvestedFiles.wxs `
             "-dBuildPath=$buildPath" `
             "-dVersion=$version" `
             -ext WixUIExtension `
@@ -83,8 +98,8 @@ jobs:
           
           if ($LASTEXITCODE -ne 0) { exit 1 }
           
-          Write-Host "[2/3] Linking and creating MSI..." -ForegroundColor Cyan
-          light.exe Product-Minimal.wixobj `
+          Write-Host "[3/4] Linking and creating MSI..." -ForegroundColor Cyan
+          light.exe Product-Minimal.wixobj HarvestedFiles.wixobj `
             -ext WixUIExtension `
             -ext WixUtilExtension `
             -cultures:en-us `
@@ -92,7 +107,8 @@ jobs:
           
           if ($LASTEXITCODE -ne 0) { exit 1 }
           
-          Write-Host "[3/3] MSI created successfully!" -ForegroundColor Green
+          Write-Host "[4/4] MSI created successfully!" -ForegroundColor Green
+          Write-Host "Output: $outputPath\LevantACARS-$version.msi" -ForegroundColor Green
         working-directory: ./LevantACARS/Installer
 
       - name: Upload MSI Artifact

@@ -35,6 +35,7 @@
              Description="Levant ACARS Application"
              Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="HarvestedFiles" />
     </Feature>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -51,33 +52,37 @@
   </Product>
 
   <Fragment>
-    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="MainExecutable" Guid="A1B2C3D4-E5F6-4789-ABCD-EF1234567890">
-        <File Id="LevantACARSExe" 
-              Source="$(var.BuildPath)\LevantACARS.exe" 
-              KeyPath="no" />
+    <ComponentGroup Id="ProductComponents">
+      <Component Id="StartMenuShortcutComponent" Directory="ProgramMenuFolder" Guid="B1C2D3E4-F5A6-4789-BCDE-EF2345678901">
+        <Shortcut Id="StartMenuShortcut"
+                  Name="Levant ACARS"
+                  Description="Professional Flight Management System"
+                  Target="[INSTALLFOLDER]LevantACARS.exe"
+                  Icon="AppIcon.ico"
+                  WorkingDirectory="INSTALLFOLDER" />
         <RegistryValue Root="HKCU" 
                       Key="Software\LevantVA\LevantACARS" 
                       Name="installed" 
                       Type="integer" 
                       Value="1" 
                       KeyPath="yes" />
-        <Shortcut Id="StartMenuShortcut"
-                  Directory="ProgramMenuFolder"
-                  Name="Levant ACARS"
-                  Description="Professional Flight Management System"
-                  Target="[INSTALLFOLDER]LevantACARS.exe"
-                  Icon="AppIcon.ico"
-                  WorkingDirectory="INSTALLFOLDER" />
+        <RemoveFolder Id="RemoveProgramMenuFolder" On="uninstall" />
+      </Component>
+      
+      <Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="C2D3E4F5-A6B7-4789-CDEF-EF3456789012">
         <Shortcut Id="DesktopShortcut"
-                  Directory="DesktopFolder"
                   Name="Levant ACARS"
                   Description="Professional Flight Management System"
                   Target="[INSTALLFOLDER]LevantACARS.exe"
                   Icon="AppIcon.ico"
                   WorkingDirectory="INSTALLFOLDER" />
-        <RemoveFolder Id="RemoveProgramMenuFolder" Directory="ProgramMenuFolder" On="uninstall" />
-        <RemoveFolder Id="RemoveDesktopFolder" Directory="DesktopFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" 
+                      Key="Software\LevantVA\LevantACARS" 
+                      Name="desktopShortcut" 
+                      Type="integer" 
+                      Value="1" 
+                      KeyPath="yes" />
+        <RemoveFolder Id="RemoveDesktopFolder" On="uninstall" />
       </Component>
     </ComponentGroup>
   </Fragment>
