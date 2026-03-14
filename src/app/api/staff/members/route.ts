@@ -80,13 +80,13 @@ export async function POST(req: Request) {
         
         let finalPilotId = pilotId;
 
-        // If pilotId looks like a pilot_id string (e.g. LVT...), find the pilot first
-        if (pilotId && pilotId.startsWith('LVT')) {
+        // Always convert pilot_id string to ObjectId
+        if (pilotId) {
             const pilot = await Pilot.findOne({ pilot_id: pilotId });
             if (!pilot) {
                 return NextResponse.json({ success: false, error: 'Pilot not found with this ID' }, { status: 404 });
             }
-            finalPilotId = pilot.id;
+            finalPilotId = pilot._id;
         }
 
         let finalRoleId = roleId;
@@ -145,7 +145,10 @@ export async function POST(req: Request) {
             picture
         });
         // Populate for immediate return
-        await member.populate(['pilot_id', 'role_id']);
+        await member.populate([
+            { path: 'pilot_id', select: 'first_name last_name rank pilot_id country' },
+            { path: 'role_id', select: 'title category color order' }
+        ]);
         
         return NextResponse.json({ success: true, member });
     } catch (error: any) {

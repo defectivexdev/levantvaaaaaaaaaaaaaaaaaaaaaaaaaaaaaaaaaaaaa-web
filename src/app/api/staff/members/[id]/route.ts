@@ -87,7 +87,10 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
             email,
             discord,
             ...(picture && { picture })
-        }, { new: true }).populate(['pilot_id', 'role_id']);
+        }, { new: true }).populate([
+            { path: 'pilot_id', select: 'first_name last_name rank pilot_id country' },
+            { path: 'role_id', select: 'title category color order' }
+        ]);
 
         return NextResponse.json({ success: true, member });
     } catch (error: any) {
