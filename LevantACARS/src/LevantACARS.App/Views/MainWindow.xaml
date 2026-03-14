@@ -6,6 +6,8 @@
         Height="920" Width="1440"
         MinHeight="780" MinWidth="1200"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
         Background="#111827"
         Icon="pack://application:,,,/Assets/logo.png">
 
