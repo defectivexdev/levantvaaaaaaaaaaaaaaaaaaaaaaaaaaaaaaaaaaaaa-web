@@ -85,7 +85,7 @@ export default function AcarsApp() {
             <span className="text-[9px] text-accent-gold/60 font-mono tracking-wider">Flight Management System</span>
           </div>
           <div className="px-2 py-0.5 rounded-md bg-accent-gold/10 border border-accent-gold/30">
-            <span className="text-[10px] text-accent-gold font-mono font-bold">v2.0.0</span>
+            <span className="text-[10px] text-accent-gold font-mono font-bold">v2.0.2</span>
           </div>
         </div>
         
@@ -155,7 +155,7 @@ export default function AcarsApp() {
           {/* Footer with gradient */}
           <div className="px-3 pb-3 relative z-10">
             <div className="text-[9px] font-mono text-accent-gold/40 tracking-wider select-none text-center py-2 rounded-lg bg-accent-gold/5 border border-accent-gold/10">
-              Levant VA · v2.0.0
+              Levant VA · v2.0.2
             </div>
           </div>
         </div>

@@ -64,7 +64,7 @@ export default function App() {
             <img src="img/icon.jpg" alt="Levant" className="pilot-badge-img" />
           </div>
           <span className="text-xs font-bold tracking-[0.2em] text-[#CCD6F6]">LEVANT<span className="text-accent-gold ml-1">ACARS</span></span>
-          <span className="text-[10px] text-[#333d55] font-mono">v2.0.0</span>
+          <span className="text-[10px] text-[#333d55] font-mono">v2.0.2</span>
         </div>
         <div className="flex items-center gap-0.5" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
           <button onClick={() => SimBridge.minimizeWindow()} className="p-1.5 rounded text-[#555] hover:text-white hover:bg-white/10 transition-all bg-transparent border-none cursor-pointer"><Minus className="w-3 h-3" strokeWidth={2} /></button>
@@ -90,7 +90,7 @@ export default function App() {
               Sign Out
             </button>
           </div>
-          <div className="px-2.5 pb-2 text-[9px] font-mono text-[#333d55] tracking-wider select-none">Levant VA · v2.0.0</div>
+          <div className="px-2.5 pb-2 text-[9px] font-mono text-[#333d55] tracking-wider select-none">Levant VA · v2.0.2</div>
         </div>
 
         {/* ── Content Area ─────────────────────────────── */}
