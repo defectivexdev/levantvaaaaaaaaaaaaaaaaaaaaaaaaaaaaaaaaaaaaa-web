@@ -41,13 +41,13 @@ jobs:
         run: dotnet restore LevantACARS.sln
         working-directory: ./LevantACARS
 
-      - name: Build LevantACARS Application
-        run: dotnet build LevantACARS.sln --configuration Release --no-restore
+      - name: Publish LevantACARS Application
+        run: dotnet publish src/LevantACARS.App/LevantACARS.csproj --configuration Release --no-restore --runtime win-x64 --self-contained true
         working-directory: ./LevantACARS
 
       - name: Build MSI Installer
         run: |
-          $buildPath = "..\src\LevantACARS.App\bin\Release\net8.0-windows\win-x64"
+          $buildPath = "..\src\LevantACARS.App\bin\Release\net8.0-windows\win-x64\publish"
           $webUIPath = "..\frontend\out"
           $outputPath = ".\Output"
           $version = "1.0.0"
