@@ -181,6 +181,11 @@ jobs:
           
           $msiSize = (Get-Item "LevantACARS-Build.msi").Length
           Write-Host "✓ MSI created successfully: $msiSize bytes ($([math]::Round($msiSize/1MB, 2)) MB)"
+          
+          # Copy MSI to workspace root for easier artifact upload
+          Write-Host "Copying MSI to workspace root..."
+          Copy-Item "LevantACARS-Build.msi" "../../LevantACARS-Build.msi" -Force
+          Write-Host "✓ MSI copied to workspace root"
 
       - name: Create ZIP archive
         shell: pwsh
@@ -199,11 +204,8 @@ jobs:
           Write-Host "Listing all files in workspace root:"
           Get-ChildItem -Path . -File | Format-Table Name, Length, LastWriteTime -AutoSize
           Write-Host ""
-          Write-Host "Listing all files in LevantACARS/installer:"
-          Get-ChildItem -Path "LevantACARS/installer" -File | Format-Table Name, Length, LastWriteTime -AutoSize
-          Write-Host ""
           
-          $msiPath = "LevantACARS/installer/LevantACARS-Build.msi"
+          $msiPath = "LevantACARS-Build.msi"
           $zipPath = "LevantACARS-Build.zip"
           
           $msiExists = Test-Path $msiPath
@@ -214,8 +216,15 @@ jobs:
             Write-Host "✓ MSI found: $msiPath ($([math]::Round($msiSize/1MB, 2)) MB)"
           } else {
             Write-Host "✗ MSI NOT FOUND at: $msiPath"
-            Write-Host "ERROR: MSI file is missing!"
-            exit 1
+            Write-Host "Checking in installer directory..."
+            if (Test-Path "LevantACARS/installer/LevantACARS-Build.msi") {
+              Write-Host "Found MSI in installer directory, copying to root..."
+              Copy-Item "LevantACARS/installer/LevantACARS-Build.msi" "LevantACARS-Build.msi" -Force
+              Write-Host "✓ MSI copied to workspace root"
+            } else {
+              Write-Host "ERROR: MSI file is missing from both locations!"
+              exit 1
+            }
           }
           
           if ($zipExists) {
@@ -229,13 +238,16 @@ jobs:
           
           Write-Host ""
           Write-Host "=== Both artifacts verified successfully ==="
+          Write-Host "Final artifact locations:"
+          Get-Item "LevantACARS-Build.msi" | Format-Table Name, Length, FullName -AutoSize
+          Get-Item "LevantACARS-Build.zip" | Format-Table Name, Length, FullName -AutoSize
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: LevantACARS-Artifacts
           path: |
-            LevantACARS/installer/LevantACARS-Build.msi
+            LevantACARS-Build.msi
             LevantACARS-Build.zip
           if-no-files-found: error
           retention-days: 90
@@ -332,15 +344,43 @@ jobs:
         id: tag
         run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
+      - name: List Downloaded Artifacts
+        run: |
+          echo "=== Downloaded Artifacts ==="
+          ls -lah release-artifacts/
+          echo ""
+          echo "Checking for required files:"
+          if [ -f "release-artifacts/LevantACARS-Build.msi" ]; then
+            echo "✓ MSI found"
+          else
+            echo "✗ MSI NOT FOUND"
+          fi
+          if [ -f "release-artifacts/LevantACARS-Build.zip" ]; then
+            echo "✓ ZIP found"
+          else
+            echo "✗ ZIP NOT FOUND"
+          fi
+
       - name: Rename Artifacts with Version
         run: |
           cd release-artifacts
           if [ -f "LevantACARS-Build.msi" ]; then
             mv LevantACARS-Build.msi "LevantACARS-${{ steps.tag.outputs.version }}.msi"
+            echo "✓ MSI renamed to LevantACARS-${{ steps.tag.outputs.version }}.msi"
+          else
+            echo "ERROR: MSI file not found!"
+            exit 1
           fi
           if [ -f "LevantACARS-Build.zip" ]; then
             mv LevantACARS-Build.zip "LevantACARS-${{ steps.tag.outputs.version }}.zip"
+            echo "✓ ZIP renamed to LevantACARS-${{ steps.tag.outputs.version }}.zip"
+          else
+            echo "ERROR: ZIP file not found!"
+            exit 1
           fi
+          echo ""
+          echo "Final files:"
+          ls -lah
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
