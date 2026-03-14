@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Settings, Save, Loader2, DollarSign, AlertTriangle, Percent, RotateCcw, Sparkles, Wallet, Zap, Plane, ShieldAlert, Users } from 'lucide-react';
+import { Settings, Save, Loader2, DollarSign, AlertTriangle, Percent, RotateCcw, Sparkles, Wallet, Zap, Plane, ShieldAlert, Users, Search, Download, Upload, Copy, Check, Info, TrendingUp, TrendingDown } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ConfigValues {
@@ -134,6 +134,9 @@ export default function AdminSettingsPage() {
     const [original, setOriginal] = useState<ConfigValues>(defaultConfig);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [activeTab, setActiveTab] = useState('economy');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showPresets, setShowPresets] = useState(false);
 
     const fetchConfig = async () => {
         try {
@@ -227,8 +230,54 @@ export default function AdminSettingsPage() {
         );
     }
 
+    // Preset configurations
+    const presets = {
+        conservative: { ...defaultConfig, penalty_multiplier: 3, fuel_tax_percent: 5, cr_event_multiplier: 1.5 },
+        balanced: defaultConfig,
+        generous: { ...defaultConfig, penalty_multiplier: 2, cr_base_flight: 150, cr_greaser_bonus: 75, cr_event_multiplier: 2.5 },
+    };
+
+    const applyPreset = (preset: keyof typeof presets) => {
+        setConfig(presets[preset]);
+        toast.success(`Applied ${preset} preset`);
+        setShowPresets(false);
+    };
+
+    const exportSettings = () => {
+        const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `airline-settings-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        toast.success('Settings exported');
+    };
+
+    const importSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const imported = JSON.parse(event.target?.result as string);
+                setConfig({ ...defaultConfig, ...imported });
+                toast.success('Settings imported');
+            } catch {
+                toast.error('Invalid settings file');
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    const tabs = [
+        { id: 'economy', label: 'Economy & Revenue', icon: <DollarSign size={16} /> },
+        { id: 'credits', label: 'Credits System', icon: <Zap size={16} /> },
+        { id: 'operations', label: 'Flight Operations', icon: <Plane size={16} /> },
+        { id: 'salary', label: 'Pilot Salaries', icon: <Wallet size={16} /> },
+    ];
+
     return (
-        <div className="space-y-6 max-w-5xl mx-auto">
+        <div className="space-y-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
@@ -246,6 +295,49 @@ export default function AdminSettingsPage() {
                             {changedCount} unsaved
                         </span>
                     )}
+                    
+                    {/* Presets Dropdown */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowPresets(!showPresets)}
+                            className="px-4 py-2 rounded-xl text-sm font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 transition-all flex items-center gap-2"
+                        >
+                            <Sparkles className="w-3.5 h-3.5" /> Presets
+                        </button>
+                        {showPresets && (
+                            <div className="absolute right-0 mt-2 w-56 bg-gray-900 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                                <div className="p-2 space-y-1">
+                                    <button onClick={() => applyPreset('conservative')} className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-sm text-gray-300 transition-colors">
+                                        <div className="font-bold">Conservative</div>
+                                        <div className="text-xs text-gray-500">Lower penalties, stricter economy</div>
+                                    </button>
+                                    <button onClick={() => applyPreset('balanced')} className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-sm text-gray-300 transition-colors">
+                                        <div className="font-bold">Balanced (Default)</div>
+                                        <div className="text-xs text-gray-500">Recommended settings</div>
+                                    </button>
+                                    <button onClick={() => applyPreset('generous')} className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-sm text-gray-300 transition-colors">
+                                        <div className="font-bold">Generous</div>
+                                        <div className="text-xs text-gray-500">Higher rewards, lower penalties</div>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Export */}
+                    <button
+                        onClick={exportSettings}
+                        className="px-4 py-2 rounded-xl text-sm font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 transition-all flex items-center gap-2"
+                    >
+                        <Download className="w-3.5 h-3.5" />
+                    </button>
+
+                    {/* Import */}
+                    <label className="px-4 py-2 rounded-xl text-sm font-bold bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 transition-all flex items-center gap-2 cursor-pointer">
+                        <Upload className="w-3.5 h-3.5" />
+                        <input type="file" accept=".json" onChange={importSettings} className="hidden" />
+                    </label>
+
                     <button
                         onClick={() => setConfig(original)}
                         disabled={!hasChanges}
@@ -263,6 +355,41 @@ export default function AdminSettingsPage() {
                         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                         Save
                     </button>
+                </div>
+            </div>
+
+            {/* Tabs & Search */}
+            <div className="bg-panel backdrop-blur-sm border border-white/5 rounded-2xl p-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    {/* Tabs */}
+                    <div className="flex items-center gap-2 overflow-x-auto">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 whitespace-nowrap ${
+                                    activeTab === tab.id
+                                        ? 'bg-accent-gold/10 text-accent-gold border border-accent-gold/20'
+                                        : 'text-gray-400 hover:text-gray-300 hover:bg-white/5'
+                                }`}
+                            >
+                                {tab.icon}
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Search */}
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                        <input
+                            type="text"
+                            placeholder="Search settings..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="pl-10 pr-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white text-sm focus:border-accent-gold/50 focus:outline-none transition-colors w-full md:w-64"
+                        />
+                    </div>
                 </div>
             </div>
 
