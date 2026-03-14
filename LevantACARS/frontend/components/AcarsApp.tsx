@@ -147,13 +147,6 @@ export default function AcarsApp() {
           {/* Action buttons with modern styling */}
           <div className="border-t border-accent-gold/10 flex flex-col gap-1 px-3 py-3 relative z-10 bg-black/10">
             <button 
-              onClick={() => SimBridge.checkForUpdate()} 
-              className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-cyan-400/80 hover:text-cyan-300 hover:bg-cyan-500/10 hover:scale-[1.02] transition-all duration-200 bg-transparent border border-transparent hover:border-cyan-500/20 cursor-pointer text-[11px] font-medium tracking-wide group/btn"
-            >
-              <RefreshCw size={13} className="group-hover/btn:rotate-180 transition-transform duration-500" />
-              <span>Check Update</span>
-            </button>
-            <button 
               onClick={() => SimBridge.logout()} 
               className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-rose-400/70 hover:text-rose-300 hover:bg-rose-500/10 hover:scale-[1.02] transition-all duration-200 bg-transparent border border-transparent hover:border-rose-500/20 cursor-pointer text-[11px] font-medium tracking-wide group/btn"
             >
