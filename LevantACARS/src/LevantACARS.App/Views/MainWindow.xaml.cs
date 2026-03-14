@@ -192,6 +192,10 @@ public partial class MainWindow : Window
                 wwwroot,
                 CoreWebView2HostResourceAccessKind.Allow);
 
+            // Initialize FlightManager to start FSUIPC polling
+            var flightManager = _services.GetRequiredService<FlightManager>();
+            await flightManager.InitializeAsync();
+
             // Attach SimBridge for COM interop + telemetry streaming
             _simBridge = _services.GetRequiredService<SimBridge>();
             _simBridge.Attach(coreWv);
