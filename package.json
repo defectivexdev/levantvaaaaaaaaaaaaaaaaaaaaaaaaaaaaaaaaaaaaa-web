@@ -1,6 +1,6 @@
 {
   "name": "levant-virtual-airline",
-  "version": "3.2.7",
+  "version": "3.2.8",
   "description": "Levant Virtual Airlines - Next.js Application",
   "main": "index.js",
   "engines": {
