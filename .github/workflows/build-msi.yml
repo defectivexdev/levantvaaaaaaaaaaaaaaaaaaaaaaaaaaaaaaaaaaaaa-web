@@ -50,7 +50,7 @@ jobs:
           $buildPath = "..\bin\Release\net8.0-windows"
           $webUIPath = "..\frontend\out"
           $outputPath = ".\Output"
-          $version = "1.5.8"
+          $version = "1.0.0"
           
           Write-Host "Building Levant ACARS MSI Installer v$version" -ForegroundColor Cyan
           

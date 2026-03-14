@@ -31,7 +31,6 @@
     <!-- Add/Remove Programs Configuration -->
     <Property Id="ARPHELPLINK" Value="https://levant-va.com/support" />
     <Property Id="ARPURLINFOABOUT" Value="https://levant-va.com" />
-    <Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />
     
     <!-- Custom UI -->
     <WixVariable Id="WixUILicenseRtf" Value="Assets\License.rtf" />
