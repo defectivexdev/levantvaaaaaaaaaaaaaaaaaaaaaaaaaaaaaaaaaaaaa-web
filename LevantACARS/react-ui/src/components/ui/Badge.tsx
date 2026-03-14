@@ -1,39 +1,46 @@
-import { HTMLAttributes, forwardRef } from 'react';
-import { cn } from '@/utils/cn';
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
 
-interface BadgeProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'glow';
-  pulse?: boolean;
-}
+import { cn } from "./utils";
 
-const Badge = forwardRef<HTMLDivElement, BadgeProps>(
-  ({ className, variant = 'default', pulse = false, children, ...props }, ref) => {
-    const variants = {
-      default: 'bg-slate-700/80 text-slate-200 border border-slate-600/50 backdrop-blur-sm',
-      success: 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 shadow-emerald-500/20 shadow-lg',
-      warning: 'bg-amber-600/20 text-amber-300 border border-amber-500/40 shadow-amber-500/20 shadow-lg',
-      danger: 'bg-red-600/20 text-red-300 border border-red-500/40 shadow-red-500/20 shadow-lg',
-      info: 'bg-blue-600/20 text-blue-300 border border-blue-500/40 shadow-blue-500/20 shadow-lg',
-      glow: 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-pink-300 border border-pink-500/40 shadow-pink-500/30 shadow-xl',
-    };
-    
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          'inline-flex items-center rounded-full px-3 py-1 text-xs font-bold tracking-wide transition-all duration-200 hover:scale-105',
-          variants[variant],
-          pulse && 'animate-pulse',
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
+const badgeVariants = cva(
+  "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
+  {
+    variants: {
+      variant: {
+        default:
+          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+        destructive:
+          "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        outline:
+          "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
 );
 
-Badge.displayName = 'Badge';
+function Badge({
+  className,
+  variant,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"span"> &
+  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
+  const Comp = asChild ? Slot : "span";
 
-export default Badge;
+  return (
+    <Comp
+      data-slot="badge"
+      className={cn(badgeVariants({ variant }), className)}
+      {...props}
+    />
+  );
+}
+
+export { Badge, badgeVariants };

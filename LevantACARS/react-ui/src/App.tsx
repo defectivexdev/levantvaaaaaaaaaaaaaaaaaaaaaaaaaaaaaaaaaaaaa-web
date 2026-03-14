@@ -1,12 +1,7 @@
-import MainLayout from './layouts/MainLayout';
-import LiveMapPage from './pages/LiveMapPage';
+import AcarsPage from './pages/AcarsPage';
 
 function App() {
-  return (
-    <MainLayout>
-      <LiveMapPage />
-    </MainLayout>
-  );
+  return <AcarsPage />;
 }
 
 export default App;
