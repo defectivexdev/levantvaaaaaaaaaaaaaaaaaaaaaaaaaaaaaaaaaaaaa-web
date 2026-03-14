@@ -1,4 +1,4 @@
-import type { BadgeDefinition, TourDefinition, TourProgress, LegReport } from './types';
+import type { BadgeDefinition, TourDefinition, TourProgress, LegReport } from '@/types/acars';
 
 const API_BASE = 'https://www.levant-va.com/api/acars';
 
@@ -532,3 +532,4 @@ export async function sendTourReportWebhook(payload: {
     return false;
   }
 }
+

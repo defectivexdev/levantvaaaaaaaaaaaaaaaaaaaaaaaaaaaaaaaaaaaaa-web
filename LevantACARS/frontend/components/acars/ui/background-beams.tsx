@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { motion, useMotionTemplate, useMotionValue, animate } from 'motion/react';
-import { cn } from './utils';
+import { cn } from '@/components/acars/utils';
 
 const BEAM_COLORS = ['#C5A059', '#2DCE89', '#C5A059'];
 
@@ -35,3 +35,4 @@ export function BackgroundBeams({ className, children }: { className?: string; c
     </div>
   );
 }
+

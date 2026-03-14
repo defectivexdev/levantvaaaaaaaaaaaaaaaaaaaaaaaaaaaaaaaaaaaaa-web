@@ -68,3 +68,4 @@ export default function AltitudeTape({ altitude, displayAltitude }: Props) {
     </div>
   );
 }
+

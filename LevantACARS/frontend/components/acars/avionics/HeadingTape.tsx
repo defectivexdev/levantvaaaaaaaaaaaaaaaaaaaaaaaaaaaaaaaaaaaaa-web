@@ -82,3 +82,4 @@ export default function HeadingTape({ heading }: Props) {
     </div>
   );
 }
+

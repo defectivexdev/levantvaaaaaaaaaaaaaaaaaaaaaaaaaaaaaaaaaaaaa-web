@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { cn } from './utils';
+import { cn } from '@/components/acars/utils';
 
 export function WobbleCard({
   children,
@@ -40,3 +40,4 @@ export function WobbleCard({
     </motion.div>
   );
 }
+

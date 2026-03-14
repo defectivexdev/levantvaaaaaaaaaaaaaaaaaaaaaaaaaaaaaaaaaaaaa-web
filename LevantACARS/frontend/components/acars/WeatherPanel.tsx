@@ -1,5 +1,5 @@
 import { Cloud } from 'lucide-react';
-import type { WeatherData } from '../types';
+import type { WeatherData } from '@/components/types';
 
 interface Props {
   weather: WeatherData | null;
@@ -47,3 +47,4 @@ function WxCell({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+

@@ -1,6 +1,6 @@
 import { memo, useState, useEffect, useCallback } from 'react';
 import { Plane, Clock, ArrowRight, RefreshCw, TrendingUp } from 'lucide-react';
-import { fetchPilotStats, type RecentFlight } from '../api';
+import { fetchPilotStats, type RecentFlight } from '@/components/api';
 
 interface Props {
   pilotId: string;
@@ -127,3 +127,4 @@ function FlightHistoryPanel({ pilotId }: Props) {
 }
 
 export default memo(FlightHistoryPanel);
+

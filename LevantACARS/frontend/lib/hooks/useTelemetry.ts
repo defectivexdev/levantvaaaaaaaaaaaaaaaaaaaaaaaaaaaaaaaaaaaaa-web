@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { onBridgeMessage, SimBridge } from '../bridge';
+import { onBridgeMessage, SimBridge } from '@/lib/bridge';
 import {
   runDiscordDiagnostic,
   getLandingGrade,
   getLandingScore,
   saveFlightToLogbook,
-} from '../discord';
-import { pushToast } from '../components/ToastOverlay';
+} from '@/lib/discord';
+import { pushToast } from '@/components/acars/ToastOverlay';
 import type {
   TelemetryData,
   AuthState,
@@ -18,7 +18,7 @@ import type {
   WeatherData,
   BidData,
   TouchdownPoint,
-} from '../types';
+} from '@/types/acars';
 
 // ── Default state factories ───────────────────────────────────────
 
@@ -429,3 +429,4 @@ export function useTelemetry() {
     submitFlight,
   };
 }
+

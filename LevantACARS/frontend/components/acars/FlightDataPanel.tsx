@@ -1,9 +1,9 @@
 import { memo } from 'react';
 import { MoveUp, MoveDown, Activity, Navigation, Heart, Gauge, TriangleAlert } from 'lucide-react';
-import { BentoGrid, BentoGridItem } from './ui/bento-grid';
-import { GlowCard } from './ui/glowing-border';
-import { cn } from './ui/utils';
-import type { TelemetryData } from '../types';
+import { BentoGrid, BentoGridItem } from '@/components/acars/ui/bento-grid';
+import { GlowCard } from '@/components/acars/ui/glowing-border';
+import { cn } from '@/components/acars/ui/utils';
+import type { TelemetryData } from '@/components/types';
 
 interface Props {
   telemetry: TelemetryData;
@@ -179,3 +179,4 @@ function StatusDot({ label, active, color }: { label: string; active: boolean; c
 }
 
 export default memo(FlightDataPanel);
+

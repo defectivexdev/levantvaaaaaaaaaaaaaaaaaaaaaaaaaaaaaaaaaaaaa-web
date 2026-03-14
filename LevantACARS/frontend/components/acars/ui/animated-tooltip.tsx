@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { cn } from './utils';
+import { cn } from '@/components/acars/utils';
 
 interface TooltipItem {
   id: number;
@@ -66,3 +66,4 @@ export function AnimatedTooltip({ items }: { items: TooltipItem[] }) {
     </div>
   );
 }
+

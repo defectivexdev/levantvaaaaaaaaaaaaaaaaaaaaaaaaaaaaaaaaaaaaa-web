@@ -69,3 +69,4 @@ export default function VSI({ verticalSpeed }: Props) {
     </div>
   );
 }
+

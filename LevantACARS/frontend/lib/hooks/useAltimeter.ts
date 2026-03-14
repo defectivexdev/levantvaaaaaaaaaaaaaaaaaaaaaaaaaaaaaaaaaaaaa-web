@@ -104,3 +104,4 @@ export function useAltimeter(
     setLocalQnh: setLocalQnhCb,
   };
 }
+

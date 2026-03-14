@@ -270,3 +270,4 @@ export function getLogbook(): LogbookEntry[] {
 export function clearLogbook(): void {
   localStorage.removeItem(LOGBOOK_KEY);
 }
+

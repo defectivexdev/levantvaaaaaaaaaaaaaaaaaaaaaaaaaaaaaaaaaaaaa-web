@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { CloudRain, CheckCircle2, Wind, Eye, Thermometer, Gauge, RefreshCw } from 'lucide-react';
-import { fetchMetar, fetchTaf, type MetarResult, type TafResult } from '../services/weather';
+import { fetchMetar, fetchTaf, type MetarResult, type TafResult } from '@/components/services/weather';
 
 interface Props {
   icao: string;
@@ -140,3 +140,4 @@ function WeatherField({
     </div>
   );
 }
+

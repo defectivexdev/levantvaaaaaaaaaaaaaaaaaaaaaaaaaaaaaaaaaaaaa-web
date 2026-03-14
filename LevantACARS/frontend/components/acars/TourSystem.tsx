@@ -10,9 +10,9 @@ import {
   fetchTours, createTour, fetchTourProgress, submitLegReport,
   fetchPendingReports, modifyLegReport,
   reviewLegReport, sendTourReportWebhook,
-} from '../api';
-import { pushToast } from './ToastOverlay';
-import type { TourDefinition, TourProgress, LegReport, TourLeg } from '../types';
+} from '@/components/api';
+import { pushToast } from '@/components/acars/ToastOverlay';
+import type { TourDefinition, TourProgress, LegReport, TourLeg } from '@/components/types';
 
 // ── Fleet Restriction (No A380) ────────────────────────────────
 
@@ -942,3 +942,4 @@ export default function TourSystem({ pilotId, pilotName }: { pilotId: string; pi
     </div>
   );
 }
+

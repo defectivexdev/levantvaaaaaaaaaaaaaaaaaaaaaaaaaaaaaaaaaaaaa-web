@@ -1,6 +1,6 @@
 import { LayoutDashboard, FileText, Cloud, Map, LogOut } from 'lucide-react';
-import { SimBridge } from '../bridge';
-import type { AuthState, ConnectionState } from '../types';
+import { SimBridge } from '@/components/bridge';
+import type { AuthState, ConnectionState } from '@/components/types';
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from './ui/sidebar';
+} from '@/components/acars/ui/sidebar';
 
 interface Props {
   auth: AuthState;
@@ -95,3 +95,4 @@ export default function AppSidebar({ auth, connection, activeView, onViewChange 
     </Sidebar>
   );
 }
+

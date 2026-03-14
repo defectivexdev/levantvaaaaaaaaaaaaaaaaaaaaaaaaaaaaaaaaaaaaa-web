@@ -1,9 +1,9 @@
 import { MapPin, Plane, Send } from 'lucide-react';
-import { SimBridge } from '../bridge';
-import PrimaryFlightDisplay from './avionics/PrimaryFlightDisplay';
-import FlightDataPanel from './FlightDataPanel';
-import FlightLogs from './FlightLogs';
-import type { TelemetryData, FlightState, ScoreResult, UILogEntry } from '../types';
+import { SimBridge } from '@/components/bridge';
+import PrimaryFlightDisplay from '@/components/acars/avionics/PrimaryFlightDisplay';
+import FlightDataPanel from '@/components/acars/FlightDataPanel';
+import FlightLogs from '@/components/acars/FlightLogs';
+import type { TelemetryData, FlightState, ScoreResult, UILogEntry } from '@/components/types';
 
 interface Props {
   telemetry: TelemetryData;
@@ -237,3 +237,4 @@ function ScoreItem({ label, value, className }: { label: string; value: string; 
     </div>
   );
 }
+

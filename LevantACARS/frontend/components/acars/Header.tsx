@@ -1,6 +1,6 @@
 import { LogOut } from 'lucide-react';
-import { SimBridge } from '../bridge';
-import type { AuthState, ConnectionState } from '../types';
+import { SimBridge } from '@/components/bridge';
+import type { AuthState, ConnectionState } from '@/components/types';
 
 interface Props {
   auth: AuthState;
@@ -74,3 +74,4 @@ function StatusPill({ label, connected }: { label: string; connected: boolean })
     </div>
   );
 }
+

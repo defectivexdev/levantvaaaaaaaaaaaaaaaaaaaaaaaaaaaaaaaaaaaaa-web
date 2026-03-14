@@ -257,3 +257,4 @@ export default function ChatPanel({ pilotId, pilotName }: Props) {
     </div>
   );
 }
+

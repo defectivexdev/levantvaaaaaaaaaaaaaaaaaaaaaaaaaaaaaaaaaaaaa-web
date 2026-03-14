@@ -1,4 +1,4 @@
-import { cn } from './utils';
+import { cn } from '@/components/acars/utils';
 
 export function BentoGrid({ className, children }: { className?: string; children?: React.ReactNode }) {
   return (
@@ -41,3 +41,4 @@ export function BentoGridItem({
     </div>
   );
 }
+

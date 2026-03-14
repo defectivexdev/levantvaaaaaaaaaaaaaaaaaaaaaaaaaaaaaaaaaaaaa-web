@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Plane, Briefcase, Route, Shield, Timer, PlayCircle, XCircle, Clock, Users, Package, PlaneTakeoff, RefreshCw, Loader2, Zap } from 'lucide-react';
-import { SimBridge } from '../bridge';
-import { cn } from './ui/utils';
-import { HoverBorderGradient } from './ui/hover-border-gradient';
-import { pushToast } from './ToastOverlay';
-import { fetchActiveBid } from '../api';
-import type { FlightState, TelemetryData, BidData } from '../types';
+import { SimBridge } from '@/components/bridge';
+import { cn } from '@/components/acars/ui/utils';
+import { HoverBorderGradient } from '@/components/acars/ui/hover-border-gradient';
+import { pushToast } from '@/components/acars/ToastOverlay';
+import { fetchActiveBid } from '@/components/api';
+import type { FlightState, TelemetryData, BidData } from '@/components/types';
 
 interface Props {
   flight: FlightState;
@@ -546,3 +546,4 @@ function EmptyState({ pilotId, injectBid, addLogEntry }: { pilotId?: string; inj
     </div>
   );
 }
+
