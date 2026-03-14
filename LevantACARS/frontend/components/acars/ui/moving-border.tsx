@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { motion, useMotionTemplate, useMotionValue, animate } from 'motion/react';
-import { cn } from '@/components/acars/utils';
+import { cn } from '@/lib/utils';
 
 export function MovingBorder({
   children,
@@ -45,4 +45,6 @@ export function MovingBorder({
     </div>
   );
 }
+
+
 

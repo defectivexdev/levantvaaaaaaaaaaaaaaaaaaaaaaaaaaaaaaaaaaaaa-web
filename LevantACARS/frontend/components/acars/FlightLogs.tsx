@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { Activity, Zap, CheckSquare } from 'lucide-react';
-import type { UILogEntry } from '@/components/types';
+import type { UILogEntry } from '@/types/acars';
 
 interface Props {
   activityLog: UILogEntry[];
@@ -47,4 +47,6 @@ function FlightLogs({ activityLog, exceedanceLog }: Props) {
 }
 
 export default memo(FlightLogs);
+
+
 

@@ -2,7 +2,7 @@ import { WobbleCard } from '@/components/acars/ui/wobble-card';
 import { Meteors } from '@/components/acars/ui/meteors';
 import { TextGenerateEffect } from '@/components/acars/ui/text-generate-effect';
 import { cn } from '@/components/acars/ui/utils';
-import type { ScoreResult, FlightState } from '@/components/types';
+import type { ScoreResult, FlightState } from '@/types/acars';
 
 interface Props {
   score: ScoreResult;
@@ -109,4 +109,6 @@ export default function LandingSummary({ score, flight }: Props) {
     </div>
   );
 }
+
+
 

@@ -1,6 +1,6 @@
 import { LayoutDashboard, FileText, Cloud, Map, LogOut } from 'lucide-react';
-import { SimBridge } from '@/components/bridge';
-import type { AuthState, ConnectionState } from '@/components/types';
+import { SimBridge } from '@/lib/bridge';
+import type { AuthState, ConnectionState } from '@/types/acars';
 import {
   Sidebar,
   SidebarContent,
@@ -95,4 +95,6 @@ export default function AppSidebar({ auth, connection, activeView, onViewChange 
     </Sidebar>
   );
 }
+
+
 

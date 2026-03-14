@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { cn } from '@/components/acars/utils';
+import { cn } from '@/lib/utils';
 
 export function TextGenerateEffect({
   words,
@@ -49,4 +49,6 @@ export function TextGenerateEffect({
     </div>
   );
 }
+
+
 

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Plus, Trash2, Pencil, X, Award, Shield, Loader2, ImageIcon, Upload, Link as LinkIcon } from 'lucide-react';
-import { fetchBadges, createBadge, updateBadge, deleteBadge } from '@/components/api';
+import { fetchBadges, createBadge, updateBadge, deleteBadge } from '@/lib/api';
 import { pushToast } from '@/components/acars/ToastOverlay';
-import type { BadgeDefinition } from '@/components/types';
+import type { BadgeDefinition } from '@/types/acars';
 
 type FormData = {
   name: string;
@@ -454,4 +454,6 @@ export default function BadgeManagement() {
     </div>
   );
 }
+
+
 

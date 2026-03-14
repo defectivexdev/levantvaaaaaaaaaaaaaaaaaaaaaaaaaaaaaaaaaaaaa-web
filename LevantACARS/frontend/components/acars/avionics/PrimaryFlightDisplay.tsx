@@ -1,9 +1,10 @@
-import { AnimatePresence, motion } from 'motion/react';
-import AltitudeTape from '@/components/acars/AltitudeTape';
-import VSI from '@/components/acars/VSI';
-import HeadingTape from '@/components/acars/HeadingTape';
-import { useAltimeter } from '@/components/../hooks/useAltimeter';
-import type { TelemetryData } from '@/components/../types';
+import React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import AltitudeTape from '@/components/acars/avionics/AltitudeTape';
+import VSI from '@/components/acars/avionics/VSI';
+import HeadingTape from '@/components/acars/avionics/HeadingTape';
+import { useAltimeter } from '@/lib/hooks/useAltimeter';
+import { TelemetryData } from '@/types/acars';
 
 interface Props {
   telemetry: TelemetryData;
@@ -159,4 +160,6 @@ export default function PrimaryFlightDisplay({ telemetry }: Props) {
     </div>
   );
 }
+
+
 

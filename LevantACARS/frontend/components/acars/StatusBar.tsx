@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 import { Wifi, Clock, Signal, Plane } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { AuthState, ConnectionState } from '@/components/types';
-import { SimBridge } from '@/components/bridge';
+import type { AuthState, ConnectionState } from '@/types/acars';
+import { SimBridge } from '@/lib/bridge';
 
 interface Props {
   auth: AuthState;
@@ -113,4 +113,6 @@ export default function StatusBar({ auth, connection }: Props) {
     </motion.div>
   );
 }
+
+
 

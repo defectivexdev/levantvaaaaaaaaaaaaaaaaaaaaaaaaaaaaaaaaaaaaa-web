@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useMotionTemplate, useMotionValue, animate } from 'motion/react';
-import { cn } from '@/components/acars/utils';
+import { cn } from '@/lib/utils';
 
 const GRADIENT_COLORS = ['#d4af37', '#cd7f32', '#22d3ee', '#d4af37'];
 
@@ -55,4 +55,6 @@ export function HoverBorderGradient({
     </motion.div>
   );
 }
+
+
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Minus, Square, X, ShieldCheck, Globe, CheckCircle } from 'lucide-react';
-import { SimBridge, isWebView2 } from '@/components/bridge';
-import type { AuthState, ConnectionState } from '@/components/types';
+import { SimBridge, isWebView2 } from '@/lib/bridge';
+import type { AuthState, ConnectionState } from '@/types/acars';
 
 interface Props {
   auth: AuthState;
@@ -129,4 +129,6 @@ function Badge({ label }: { label: string }) {
     </div>
   );
 }
+
+
 

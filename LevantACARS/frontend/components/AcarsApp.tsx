@@ -17,7 +17,7 @@ import UpdateOverlay from '@/components/acars/UpdateOverlay';
 import WeatherTile from '@/components/acars/WeatherTile';
 import { BackgroundBeams } from '@/components/acars/ui/background-beams';
 import { AnimatedTooltip } from '@/components/acars/ui/animated-tooltip';
-import type { TelemetryData, FlightState, ScoreResult, UILogEntry, ConnectionState, AuthState, BidData, TouchdownPoint } from '@/types/acars';
+import type { TelemetryData, FlightState, ScoreResult, UILogEntry, ConnectionState, AuthState, BidData } from '@/types/acars';
 import { fetchPilotStats, type PilotStats } from '@/lib/api';
 
 export type View = 'dashboard' | 'livemap' | 'chat' | 'logs';

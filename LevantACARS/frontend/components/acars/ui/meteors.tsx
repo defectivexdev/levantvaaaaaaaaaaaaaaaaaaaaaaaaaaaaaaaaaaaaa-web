@@ -1,4 +1,4 @@
-import { cn } from '@/components/acars/utils';
+import { cn } from '@/lib/utils';
 
 export function Meteors({ number = 15, className }: { number?: number; className?: string }) {
   const meteors = new Array(number).fill(null);
@@ -25,4 +25,6 @@ export function Meteors({ number = 15, className }: { number?: number; className
     </div>
   );
 }
+
+
 

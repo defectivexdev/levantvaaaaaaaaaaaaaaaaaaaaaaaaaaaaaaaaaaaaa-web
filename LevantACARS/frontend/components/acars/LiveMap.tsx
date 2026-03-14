@@ -2,8 +2,8 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { RefreshCw, Plane, Users } from 'lucide-react';
-import { fetchTraffic, type TrafficFlight } from '@/components/api';
-import type { TelemetryData, TouchdownPoint } from '@/components/types';
+import { fetchTraffic, type TrafficFlight } from '@/lib/api';
+import type { TelemetryData, TouchdownPoint } from '@/types/acars';
 
 // Fix Leaflet default icon issue in bundlers
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -386,4 +386,6 @@ export default function LiveMap({ telemetry, touchdownPoint }: Props) {
     </div>
   );
 }
+
+
 

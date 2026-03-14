@@ -430,7 +430,7 @@ export async function fetchPendingReports(tourId?: string): Promise<LegReport[]>
   }
 }
 
-export async function updateTourLegs(tourId: string, legs: import('./types').TourLeg[]): Promise<boolean> {
+export async function updateTourLegs(tourId: string, legs: import('@/types/acars').TourLeg[]): Promise<boolean> {
   try {
     const res = await fetch(API_BASE, {
       method: 'POST',
@@ -532,4 +532,6 @@ export async function sendTourReportWebhook(payload: {
     return false;
   }
 }
+
+
 
