@@ -85,7 +85,7 @@ export default function AcarsApp() {
             <span className="text-[9px] text-accent-gold/60 font-mono tracking-wider">Flight Management System</span>
           </div>
           <div className="px-2 py-0.5 rounded-md bg-accent-gold/10 border border-accent-gold/30">
-            <span className="text-[10px] text-accent-gold font-mono font-bold">v2.0.2</span>
+            <span className="text-[10px] text-accent-gold font-mono font-bold">v2.0.3</span>
           </div>
         </div>
         
@@ -155,7 +155,7 @@ export default function AcarsApp() {
           {/* Footer with gradient */}
           <div className="px-3 pb-3 relative z-10">
             <div className="text-[9px] font-mono text-accent-gold/40 tracking-wider select-none text-center py-2 rounded-lg bg-accent-gold/5 border border-accent-gold/10">
-              Levant VA · v2.0.2
+              Levant VA · v2.0.3
             </div>
           </div>
         </div>
@@ -481,31 +481,6 @@ function DashboardView({
 
       {/* Landing Summary (after flight) */}
       {score && <LandingSummary score={score} flight={flight} />}
-
-      {/* Recent Flights */}
-      {stats && stats.recentFlights.length > 0 && (
-        <div className="glass-card rounded-xl border border-white/5 p-4">
-          <div className="text-xs font-bold text-accent-gold/60 uppercase tracking-[0.2em] mb-3">Recent Flights</div>
-          <div className="space-y-1">
-            {stats.recentFlights.slice(0, 5).map((f, i) => (
-              <div key={i} className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-dark-950/40 border border-white/[0.03]">
-                <span className="text-xs font-bold text-white w-16 truncate">{f.callsign}</span>
-                <span className="text-xs font-mono text-accent-gold/70">{f.departureIcao}</span>
-                <span className="text-xs text-gray-700">→</span>
-                <span className="text-xs font-mono text-white/50">{f.arrivalIcao}</span>
-                <span className="text-xs text-gray-600 ml-auto">{f.aircraftType}</span>
-                <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${f.landingGrade === 'Butter' ? 'bg-accent-gold/10 text-accent-gold' : f.landingGrade === 'Smooth' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-gray-400'}`}>
-                  {f.landingGrade || '—'}
-                </span>
-                <span className="text-xs font-mono text-gray-500 w-8 text-right">{f.score}%</span>
-                <span className={`text-xs font-bold uppercase tracking-wider px-1 py-0.5 rounded ${f.status === 'Approved' ? 'text-emerald-400' : f.status === 'Rejected' ? 'text-rose-400' : 'text-amber-400'}`}>
-                  {f.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Activity Log — flex-1 takes all remaining vertical space */}
       <div className="flex-1 min-h-[160px] rounded-xl bg-dark-900/40 backdrop-blur-md border border-white/[0.04] overflow-hidden">

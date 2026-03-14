@@ -41,7 +41,7 @@ export default function LinkScreen({ auth, connection: _connection }: Props) {
             <img src="img/icon.jpg" alt="Levant" className="pilot-badge-img" />
           </div>
           <span className="text-sm font-bold tracking-widest">LEVANT<span className="text-accent-gold ml-1">ACARS</span></span>
-          <span className="text-xs text-white/30 font-mono">v2.0.2</span>
+          <span className="text-xs text-white/30 font-mono">v2.0.3</span>
         </div>
         <div className="flex items-center gap-1" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
           <button onClick={() => SimBridge.minimizeWindow()} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/10 transition-all bg-transparent border-none cursor-pointer"><Minus className="w-3.5 h-3.5" strokeWidth={2} /></button>
