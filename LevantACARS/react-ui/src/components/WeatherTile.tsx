@@ -117,7 +117,7 @@ export default React.memo(function WeatherTile({ icao, label, onQnhUpdate }: Pro
       )}
     </div>
   );
-}
+});
 
 function WeatherField({
   icon,

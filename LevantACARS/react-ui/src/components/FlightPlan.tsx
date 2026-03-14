@@ -428,7 +428,7 @@ const FlightPlan = React.memo(function FlightPlan({ flight, telemetry, bid, pilo
       )}
     </div>
   );
-}
+});
 
 function MetricCell({ icon, label, value, color }: { icon?: React.ReactNode; label: string; value: string; color?: string }) {
   return (
@@ -564,3 +564,5 @@ function EmptyState({ pilotId, injectBid, addLogEntry }: { pilotId?: string; inj
     </div>
   );
 }
+
+export default FlightPlan;

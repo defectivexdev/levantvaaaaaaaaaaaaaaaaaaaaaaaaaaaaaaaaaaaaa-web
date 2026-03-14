@@ -344,7 +344,7 @@ export function useTelemetry() {
       SimBridge.fetchBid();
     }
     prevLoggedIn.current = auth.isLoggedIn;
-    prevPilotId.current = auth.pilotId !== '';
+    prevPilotId.current = auth.pilotId || '';
 
     if (!auth.isLoggedIn) return;
     // No need to constantly poll bid every 30s. Bid should be refreshed manually or upon login/booking.
