@@ -19,8 +19,10 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // ── Load AppConfig from %AppData%/LevantACARS/config.json ────────
-        var config = AppConfig.Current;
+        try
+        {
+            // ── Load AppConfig from %AppData%/LevantACARS/config.json ────────
+            var config = AppConfig.Current;
 
         // ── Serilog ────────────────────────────────────────────────────────
         try
@@ -72,9 +74,25 @@ public partial class App : Application
             catch { /* Non-critical */ }
         }
 
-        // ── Show main window ──────────────────────────────────────────────
-        var mainWindow = _serviceProvider.GetRequiredService<Views.MainWindow>();
-        mainWindow.Show();
+            // ── Show main window ──────────────────────────────────────────────
+            Log.Information("[App] Creating main window...");
+            var mainWindow = _serviceProvider.GetRequiredService<Views.MainWindow>();
+            Log.Information("[App] Showing main window...");
+            mainWindow.Show();
+            Log.Information("[App] Startup complete");
+        }
+        catch (Exception ex)
+        {
+            var errorMsg = $"Startup failed:\n\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}";
+            if (ex.InnerException != null)
+            {
+                errorMsg += $"\n\nInner Exception:\n{ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+            }
+            
+            MessageBox.Show(errorMsg, "LevantACARS Startup Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Log.Fatal(ex, "[App] Fatal startup error");
+            Shutdown(1);
+        }
     }
 
     private static void ConfigureServices(IServiceCollection services)
@@ -116,7 +134,7 @@ public partial class App : Application
         services.AddSingleton<RunwayDetector>();
         services.AddSingleton<AirportDbService>();
         services.AddSingleton<SimBriefService>();
-        services.AddSingleton<ScoringEngine>();
+        // ScoringEngine removed - uses static methods only
         services.AddSingleton<FlightManager>();
         services.AddSingleton<DiscordService>();
         services.AddSingleton<DiscordWebhookService>();
