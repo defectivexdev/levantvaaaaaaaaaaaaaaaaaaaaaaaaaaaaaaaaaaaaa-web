@@ -59,7 +59,7 @@ jobs:
           }
           
           Write-Host "[1/3] Compiling WiX source files..." -ForegroundColor Cyan
-          candle.exe Product.wxs CustomUI.wxs `
+          candle.exe Product.wxs `
             -dBuildPath=$buildPath `
             -dWebUIPath=$webUIPath `
             -dVersion=$version `
@@ -69,7 +69,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit 1 }
           
           Write-Host "[2/3] Linking and creating MSI..." -ForegroundColor Cyan
-          light.exe Product.wixobj CustomUI.wixobj `
+          light.exe Product.wixobj `
             -ext WixUIExtension `
             -ext WixUtilExtension `
             -cultures:en-us `
