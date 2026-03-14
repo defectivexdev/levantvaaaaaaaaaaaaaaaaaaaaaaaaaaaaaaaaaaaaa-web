@@ -1,10 +1,8 @@
-name: CI/CD Pipeline
+name: Automated CI/CD Pipeline
 
 on:
   push:
     branches: [main]
-    tags:
-      - 'v*.*.*'
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -12,41 +10,130 @@ on:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  NODE_VERSION: '22'
 
 jobs:
-  validate:
-    name: Validation & Linting
+  version-bump:
+    name: Auto Version Bump
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    outputs:
+      new_version: ${{ steps.bump.outputs.new_version }}
+      version_changed: ${{ steps.bump.outputs.version_changed }}
+    permissions:
+      contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Needed for semantic-release
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Auto Increment Version
+        id: bump
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Increment patch version
+          npm version patch --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "New version: $NEW_VERSION"
+          
+          # Update version in LevantACARS react-ui
+          cd LevantACARS/react-ui
+          npm version $NEW_VERSION --no-git-tag-version --allow-same-version
+          cd ../..
+          
+          # Commit version bump
+          git add package.json package-lock.json LevantACARS/react-ui/package.json LevantACARS/react-ui/package-lock.json
+          git commit -m "chore: bump version to v$NEW_VERSION [skip ci]" || echo "No changes to commit"
+          git push origin main || echo "Nothing to push"
+          
+          # Create and push tag
+          git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
+          git push origin "v$NEW_VERSION"
+          
+          echo "new_version=v$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "version_changed=true" >> $GITHUB_OUTPUT
+
+  validate:
+    name: Validation & Linting
+    runs-on: ubuntu-latest
+    needs: [version-bump]
+    if: always()
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install Web Dependencies
         run: npm ci --legacy-peer-deps
 
+      - name: Run ESLint
+        run: npm run lint || true
+
       - name: TypeScript Check
         run: npx tsc --noEmit
 
+      - name: Check for Unused Dependencies
+        run: |
+          npx depcheck --ignores="@types/*,eslint-*,prettier,typescript" || true
+
+      - name: Auto-fix Lint Issues
+        if: failure()
+        run: |
+          npm run lint -- --fix || true
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: auto-fix lint issues [skip ci]" || echo "No fixes to commit"
+          git push origin main || echo "Nothing to push"
+
   build-acars:
-    name: Build ACARS Client
+    name: Build ACARS Desktop Client
     runs-on: windows-latest
-    needs: validate
+    needs: [version-bump, validate]
+    if: always() && needs.validate.result == 'success'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Get Version
+        id: version
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          echo "version=v$version" >> $env:GITHUB_OUTPUT
+          echo "Version: v$version"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: LevantACARS/react-ui/package-lock.json
 
@@ -62,7 +149,11 @@ jobs:
 
       - name: Install React UI dependencies
         working-directory: LevantACARS/react-ui
-        run: npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint React UI
+        working-directory: LevantACARS/react-ui
+        run: npm run lint || true
 
       - name: Build React UI
         working-directory: LevantACARS/react-ui
@@ -132,267 +223,146 @@ jobs:
           choco install wixtoolset -y
           echo "C:\Program Files (x86)\WiX Toolset v3.11\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
+      - name: Update MSI Version
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          $wxsPath = "LevantACARS/installer/Package.wxs"
+          
+          if (Test-Path $wxsPath) {
+            $content = Get-Content $wxsPath -Raw
+            $content = $content -replace 'Version="[0-9.]+"', "Version=`"$version`""
+            Set-Content $wxsPath $content
+            Write-Host "✓ Updated MSI version to $version"
+          }
+
       - name: Build MSI Installer
         shell: pwsh
         run: |
-          Write-Host "Starting MSI build process..."
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          Write-Host "Building MSI for version v$version"
+          
           cd LevantACARS/installer
           
-          Write-Host "Current directory: $(Get-Location)"
-          Write-Host "Checking for publish directory..."
           if (-not (Test-Path "publish")) {
-            throw "Publish directory not found at LevantACARS/installer/publish"
+            throw "Publish directory not found!"
           }
-          Write-Host "✓ Publish directory exists"
           
-          Write-Host "Checking for Package.wxs..."
-          if (-not (Test-Path "Package.wxs")) {
-            throw "Package.wxs not found!"
-          }
-          Write-Host "✓ Package.wxs exists"
-
-          Write-Host "Running heat.exe to harvest files..."
+          Write-Host "Running WiX toolset..."
           heat.exe dir publish -cg PublishedFiles -gg -sfrag -srd -dr INSTALLDIR -nologo -sw5150 -sw5151 -out HarvestedFiles.wxs
-          if ($LASTEXITCODE -ne 0) { 
-            Write-Host "ERROR: Heat.exe failed with exit code $LASTEXITCODE"
-            throw "Heat.exe failed"
-          }
-          Write-Host "✓ Heat.exe completed successfully"
-
-          Write-Host "Running candle.exe to compile..."
+          if ($LASTEXITCODE -ne 0) { throw "Heat.exe failed" }
+          
           candle.exe -ext WixUIExtension -ext WixUtilExtension Package.wxs HarvestedFiles.wxs
-          if ($LASTEXITCODE -ne 0) { 
-            Write-Host "ERROR: Candle.exe failed with exit code $LASTEXITCODE"
-            throw "Candle.exe failed"
-          }
-          Write-Host "✓ Candle.exe completed successfully"
-
-          Write-Host "Running light.exe to create MSI..."
-          light.exe -ext WixUIExtension -ext WixUtilExtension -sval -b publish Package.wixobj HarvestedFiles.wixobj -o "LevantACARS-Build.msi"
-          if ($LASTEXITCODE -ne 0) { 
-            Write-Host "ERROR: Light.exe failed with exit code $LASTEXITCODE"
-            throw "Light.exe failed"
-          }
-          Write-Host "✓ Light.exe completed successfully"
-
-          if (-not (Test-Path "LevantACARS-Build.msi")) {
-            throw "MSI file was not created at expected location!"
+          if ($LASTEXITCODE -ne 0) { throw "Candle.exe failed" }
+          
+          light.exe -ext WixUIExtension -ext WixUtilExtension -sval -b publish Package.wixobj HarvestedFiles.wixobj -o "LevantACARS-v$version.msi"
+          if ($LASTEXITCODE -ne 0) { throw "Light.exe failed" }
+          
+          if (-not (Test-Path "LevantACARS-v$version.msi")) {
+            throw "MSI file was not created!"
           }
           
-          $msiSize = (Get-Item "LevantACARS-Build.msi").Length
-          Write-Host "✓ MSI created successfully: $msiSize bytes ($([math]::Round($msiSize/1MB, 2)) MB)"
+          $msiSize = (Get-Item "LevantACARS-v$version.msi").Length
+          Write-Host "✓ MSI created: $([math]::Round($msiSize/1MB, 2)) MB"
           
-          # Copy MSI to workspace root for easier artifact upload
-          Write-Host "Copying MSI to workspace root..."
-          Copy-Item "LevantACARS-Build.msi" "../../LevantACARS-Build.msi" -Force
-          Write-Host "✓ MSI copied to workspace root"
+          Copy-Item "LevantACARS-v$version.msi" "../../LevantACARS-v$version.msi" -Force
+          Write-Host "✓ MSI ready for upload"
 
       - name: Create ZIP archive
         shell: pwsh
         run: |
+          $version = (Get-Content package.json | ConvertFrom-Json).version
           if (-not (Test-Path "LevantACARS/installer/publish")) {
             throw "Publish directory not found!"
           }
-          Compress-Archive -Path "LevantACARS/installer/publish/*" -DestinationPath "LevantACARS-Build.zip" -Force
-          Write-Host "✓ ZIP created successfully: $(Get-Item LevantACARS-Build.zip | Select-Object -ExpandProperty Length) bytes"
+          Compress-Archive -Path "LevantACARS/installer/publish/*" -DestinationPath "LevantACARS-v$version.zip" -Force
+          $zipSize = (Get-Item "LevantACARS-v$version.zip").Length
+          Write-Host "✓ ZIP created: $([math]::Round($zipSize/1MB, 2)) MB"
 
       - name: Verify Build Artifacts
         shell: pwsh
         run: |
-          Write-Host "=== Verifying Build Artifacts ==="
-          Write-Host ""
-          Write-Host "Listing all files in workspace root:"
-          Get-ChildItem -Path . -File | Format-Table Name, Length, LastWriteTime -AutoSize
-          Write-Host ""
+          $version = (Get-Content package.json | ConvertFrom-Json).version
+          Write-Host "=== Verifying Build Artifacts for v$version ==="
           
-          $msiPath = "LevantACARS-Build.msi"
-          $zipPath = "LevantACARS-Build.zip"
+          $msiPath = "LevantACARS-v$version.msi"
+          $zipPath = "LevantACARS-v$version.zip"
           
-          $msiExists = Test-Path $msiPath
-          $zipExists = Test-Path $zipPath
-          
-          if ($msiExists) {
-            $msiSize = (Get-Item $msiPath).Length
-            Write-Host "✓ MSI found: $msiPath ($([math]::Round($msiSize/1MB, 2)) MB)"
-          } else {
-            Write-Host "✗ MSI NOT FOUND at: $msiPath"
-            Write-Host "Checking in installer directory..."
-            if (Test-Path "LevantACARS/installer/LevantACARS-Build.msi") {
-              Write-Host "Found MSI in installer directory, copying to root..."
-              Copy-Item "LevantACARS/installer/LevantACARS-Build.msi" "LevantACARS-Build.msi" -Force
-              Write-Host "✓ MSI copied to workspace root"
-            } else {
-              Write-Host "ERROR: MSI file is missing from both locations!"
-              exit 1
-            }
-          }
-          
-          if ($zipExists) {
-            $zipSize = (Get-Item $zipPath).Length
-            Write-Host "✓ ZIP found: $zipPath ($([math]::Round($zipSize/1MB, 2)) MB)"
-          } else {
-            Write-Host "✗ ZIP NOT FOUND at: $zipPath"
-            Write-Host "ERROR: ZIP file is missing!"
+          if (-not (Test-Path $msiPath)) {
+            Write-Host "ERROR: MSI not found at $msiPath"
             exit 1
           }
           
-          Write-Host ""
-          Write-Host "=== Both artifacts verified successfully ==="
-          Write-Host "Final artifact locations:"
-          Get-Item "LevantACARS-Build.msi" | Format-Table Name, Length, FullName -AutoSize
-          Get-Item "LevantACARS-Build.zip" | Format-Table Name, Length, FullName -AutoSize
+          if (-not (Test-Path $zipPath)) {
+            Write-Host "ERROR: ZIP not found at $zipPath"
+            exit 1
+          }
+          
+          $msiSize = (Get-Item $msiPath).Length
+          $zipSize = (Get-Item $zipPath).Length
+          
+          Write-Host "✓ MSI: $([math]::Round($msiSize/1MB, 2)) MB"
+          Write-Host "✓ ZIP: $([math]::Round($zipSize/1MB, 2)) MB"
+          Write-Host "✓ All artifacts verified for v$version"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: LevantACARS-Artifacts
+          name: LevantACARS-${{ steps.version.outputs.version }}
           path: |
-            LevantACARS-Build.msi
-            LevantACARS-Build.zip
+            LevantACARS-*.msi
+            LevantACARS-*.zip
           if-no-files-found: error
           retention-days: 90
 
-  release:
-    name: Semantic Release
+  create-release:
+    name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [validate, build-acars]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    outputs:
-      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
-      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GH_PAT_TOKEN || secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Install Dependencies
-        run: npm ci --legacy-peer-deps
-
-      - name: Download ACARS Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: LevantACARS-Artifacts
-          path: release-artifacts
-
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Run Semantic Release
-        id: semantic
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT_TOKEN || secrets.GITHUB_TOKEN }}
-          GIT_AUTHOR_NAME: github-actions[bot]
-          GIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
-          GIT_COMMITTER_NAME: github-actions[bot]
-          GIT_COMMITTER_EMAIL: github-actions[bot]@users.noreply.github.com
-        run: |
-          # Run semantic-release and capture output
-          npx semantic-release 2>&1 | tee release_output.txt
-          
-          # Check if release was created
-          if grep -q "Published release" release_output.txt || grep -q "Created tag" release_output.txt; then
-            # Get the latest tag
-            version=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-            
-            if [[ -n "$version" ]]; then
-              echo "new_release_published=true" >> $GITHUB_OUTPUT
-              echo "new_release_version=${version}" >> $GITHUB_OUTPUT
-              
-              # Rename artifacts with the new version
-              if [ -f "release-artifacts/LevantACARS-Build.msi" ]; then
-                mv release-artifacts/LevantACARS-Build.msi "release-artifacts/LevantACARS-${version}.msi"
-              fi
-              if [ -f "release-artifacts/LevantACARS-Build.zip" ]; then
-                mv release-artifacts/LevantACARS-Build.zip "release-artifacts/LevantACARS-${version}.zip"
-              fi
-              
-              # Upload the versioned assets to the release
-              gh release upload $version "release-artifacts/LevantACARS-${version}.msi" "release-artifacts/LevantACARS-${version}.zip" --clobber || true
-            fi
-          else
-            echo "new_release_published=false" >> $GITHUB_OUTPUT
-            echo "No release created - no releasable commits found"
-          fi
-
-  manual-tag-release:
-    name: Create Release from Manual Tag
-    runs-on: ubuntu-latest
-    needs: build-acars
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [version-bump, build-acars]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.version-bump.outputs.version_changed == 'true'
     permissions:
       contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Download ACARS Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: LevantACARS-Artifacts
+          name: LevantACARS-${{ needs.version-bump.outputs.new_version }}
           path: release-artifacts
 
-      - name: Get Tag Name
-        id: tag
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: List Downloaded Artifacts
+      - name: Generate Release Notes
+        id: notes
         run: |
-          echo "=== Downloaded Artifacts ==="
-          ls -lah release-artifacts/
-          echo ""
-          echo "Checking for required files:"
-          if [ -f "release-artifacts/LevantACARS-Build.msi" ]; then
-            echo "✓ MSI found"
-          else
-            echo "✗ MSI NOT FOUND"
-          fi
-          if [ -f "release-artifacts/LevantACARS-Build.zip" ]; then
-            echo "✓ ZIP found"
-          else
-            echo "✗ ZIP NOT FOUND"
-          fi
-
-      - name: Rename Artifacts with Version
-        run: |
-          cd release-artifacts
-          if [ -f "LevantACARS-Build.msi" ]; then
-            mv LevantACARS-Build.msi "LevantACARS-${{ steps.tag.outputs.version }}.msi"
-            echo "✓ MSI renamed to LevantACARS-${{ steps.tag.outputs.version }}.msi"
-          else
-            echo "ERROR: MSI file not found!"
-            exit 1
-          fi
-          if [ -f "LevantACARS-Build.zip" ]; then
-            mv LevantACARS-Build.zip "LevantACARS-${{ steps.tag.outputs.version }}.zip"
-            echo "✓ ZIP renamed to LevantACARS-${{ steps.tag.outputs.version }}.zip"
-          else
-            echo "ERROR: ZIP file not found!"
-            exit 1
-          fi
-          echo ""
-          echo "Final files:"
-          ls -lah
+          VERSION="${{ needs.version-bump.outputs.new_version }}"
+          echo "## 🚀 Release $VERSION" > release_notes.md
+          echo "" >> release_notes.md
+          echo "### 📦 What's Included" >> release_notes.md
+          echo "- ✅ LevantACARS Desktop Client (Windows MSI)" >> release_notes.md
+          echo "- ✅ Portable ZIP Archive" >> release_notes.md
+          echo "- ✅ Web Application (Auto-deployed to Vercel)" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### 📝 Changes" >> release_notes.md
+          git log --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> release_notes.md || echo "- Initial release" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "---" >> release_notes.md
+          echo "*Automatically generated and deployed by GitHub Actions*" >> release_notes.md
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.tag.outputs.version }}
-          name: Release ${{ steps.tag.outputs.version }}
+          tag_name: ${{ needs.version-bump.outputs.new_version }}
+          name: Release ${{ needs.version-bump.outputs.new_version }}
+          body_path: release_notes.md
           draft: false
           prerelease: false
           files: |
-            release-artifacts/LevantACARS-${{ steps.tag.outputs.version }}.msi
-            release-artifacts/LevantACARS-${{ steps.tag.outputs.version }}.zip
-          generate_release_notes: true
+            release-artifacts/LevantACARS-*.msi
+            release-artifacts/LevantACARS-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -408,7 +378,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -439,16 +409,18 @@ jobs:
   deploy-production:
     name: Vercel Production Deployment
     runs-on: ubuntu-latest
-    needs: [validate, build-acars, release]
+    needs: [version-bump, validate, build-acars]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -460,4 +432,16 @@ jobs:
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --archive=tgz --token=${{ secrets.VERCEL_TOKEN }}
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --archive=tgz --token=${{ secrets.VERCEL_TOKEN }})
+          echo "deployment_url=$URL" >> $GITHUB_OUTPUT
+          echo "✅ Deployed to: $URL"
+
+      - name: Create Deployment Summary
+        run: |
+          echo "## 🚀 Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.version-bump.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.deployment_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ✅ Live" >> $GITHUB_STEP_SUMMARY
