@@ -49,8 +49,8 @@ Releases/
 
 Publish/
 
-# Never store binary .ico in git (generated at build time)
-*.ico
+# Let git track icons
+# *.ico
 
 
 .vercel
