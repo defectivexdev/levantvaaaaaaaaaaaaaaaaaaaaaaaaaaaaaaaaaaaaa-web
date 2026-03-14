@@ -6,9 +6,9 @@ import { verifyAuth } from '@/lib/auth';
 export async function POST(request: NextRequest) {
     try {
         // Verify admin authentication
-        const authResult = await verifyAuth(request);
-        if (!authResult.authenticated || authResult.role !== 'admin') {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        const session = await verifyAuth();
+        if (!session || !session.isAdmin) {
+            return NextResponse.json({ error: 'Unauthorized - Admin access required' }, { status: 401 });
         }
 
         await connectDB();
